@@ -10,6 +10,12 @@
 /node_modules
 npm-debug.log
 yarn-error.log
+.pnpm-debug.log
+package-lock.json
+yarn.lock
+.env
+.env.local
+.env.*.local
 
 # IDEs and editors
 .idea/
@@ -40,3 +46,20 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Testing
+/coverage
+/.nyc_output
+/cypress/videos/
+/cypress/screenshots/
+
+# Build
+/.angular
+/.next
+/.nuxt
+/.vuepress/dist
+/.serverless
+
+# Logs
+logs
+*.log
