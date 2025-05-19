@@ -1,0 +1,65 @@
+<app-auth-layout 
+  title="Iniciar sesión" 
+  subtitle="Accede a tu cuenta de boki-ai">
+  
+  <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-5">
+    <div>
+      <app-form-input 
+        type="email" 
+        id="email" 
+        name="email" 
+        placeholder="Correo electrónico"
+        formControlName="email">
+      </app-form-input>
+      <div *ngIf="submitted && loginForm.controls['email'].errors" class="text-red-500 text-xs mt-1 pl-1">
+        <span *ngIf="loginForm.controls['email'].errors['required']">El correo es obligatorio</span>
+        <span *ngIf="loginForm.controls['email'].errors['email']">Ingrese un correo válido</span>
+      </div>
+    </div>
+    
+    <div>
+      <app-form-input 
+        type="password" 
+        id="password" 
+        name="password" 
+        placeholder="Contraseña"
+        formControlName="password">
+      </app-form-input>
+      <div *ngIf="submitted && loginForm.controls['password'].errors" class="text-red-500 text-xs mt-1 pl-1">
+        <span *ngIf="loginForm.controls['password'].errors['required']">La contraseña es obligatoria</span>
+      </div>
+    </div>
+    
+    <div class="flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <input type="checkbox" id="remember" formControlName="remember" class="rounded border-gray-700 bg-gray-900/60 text-blue-500">
+        <label for="remember" class="text-gray-300 text-sm">Recordarme</label>
+      </div>
+      <a href="#" class="text-blue-400 text-sm hover:underline">¿Olvidaste tu contraseña?</a>
+    </div>
+    
+    <app-base-button 
+      type="submit" 
+      variant="primary" 
+      [fullWidth]="true"
+      [loading]="loading"
+      size="large">
+      Iniciar sesión
+    </app-base-button>
+  </form>
+  
+  <div class="my-6 relative flex items-center">
+    <div class="flex-grow border-t border-gray-700"></div>
+    <span class="mx-4 flex-shrink text-gray-400 text-sm">O</span>
+    <div class="flex-grow border-t border-gray-700"></div>
+  </div>
+  
+  <app-social-login
+    (googleLogin)="loginWithGoogle()"
+    (microsoftLogin)="loginWithMicrosoft()">
+  </app-social-login>
+  
+  <div class="mt-6 text-center text-sm text-gray-400">
+    ¿No tienes una cuenta? <a routerLink="/auth/register" class="text-blue-400 hover:underline">Regístrate aquí</a>
+  </div>
+</app-auth-layout> 

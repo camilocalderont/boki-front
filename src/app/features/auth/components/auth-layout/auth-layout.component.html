@@ -1,0 +1,24 @@
+<div class="min-h-screen bg-gradient-to-br from-black via-gray-900 to-blue-900 flex justify-center items-center relative p-4">
+  <!-- Patrón de fondo -->
+  <div class="absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg%20width%3D%22100%22%20height%3D%22100%22%20viewBox%3D%220%200%20100%20100%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cpath%20d%3D%22M25%2C25%20L75%2C25%20L75%2C75%20L25%2C75%20Z%22%20fill%3D%22none%22%20stroke%3D%22rgba(203%2C%20213%2C%20225%2C%200.05)%22%20stroke-width%3D%220.5%22%2F%3E%3C%2Fsvg%3E')] pointer-events-none"></div>
+  
+  <div class="w-full max-w-sm z-10 flex flex-col items-center">
+    <!-- Logo - Más grande y prominente -->
+    <div class="flex items-center justify-center mb-10">
+      <img src="assets/logos/bokibot_logo.png" alt="Boki Logo" class="h-14 mr-3">
+      <span class="text-5xl font-bold">
+        <span class="text-white">boki</span><span class="text-[#3B82F6]"> AI</span>
+      </span>
+    </div>
+    
+    <!-- Contenedor del formulario -->
+    <div class="w-full bg-black/40 backdrop-blur-sm rounded-lg border border-blue-500/20 shadow-lg p-8">
+      <div class="text-center mb-8">
+        <h1 class="text-2xl font-bold text-white mb-1">{{ title }}</h1>
+        <p class="text-gray-300 text-sm">{{ subtitle }}</p>
+      </div>
+      
+      <ng-content></ng-content>
+    </div>
+  </div>
+</div> 

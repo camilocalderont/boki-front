@@ -6,70 +6,8 @@ import { CommonModule } from '@angular/common';
   selector: 'app-input',
   standalone: true,
   imports: [CommonModule],
-  template: `
-    <div class="input-container">
-      <input
-        [type]="type"
-        [id]="id"
-        [name]="name"
-        [placeholder]="placeholder"
-        [value]="value"
-        (input)="onInputChange($event)"
-        (blur)="onBlur()"
-        class="input-field"
-      />
-      <button *ngIf="type === 'password' && value" 
-              type="button" 
-              class="toggle-visibility"
-              (click)="toggleVisibility()"
-              tabindex="-1">
-        <span>👁️</span>
-      </button>
-    </div>
-  `,
-  styles: [`
-    .input-container {
-      position: relative;
-      width: 100%;
-    }
-    
-    .input-field {
-      width: 100%;
-      padding: 12px 14px;
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      border-radius: 6px;
-      background-color: rgba(15, 23, 42, 0.7);
-      font-size: 14px;
-      color: #FFFFFF;
-      transition: border-color 0.15s ease, background-color 0.15s ease;
-      backdrop-filter: blur(4px);
-    }
-    
-    .input-field:focus {
-      border-color: rgba(59, 130, 246, 0.7);
-      background-color: rgba(15, 23, 42, 0.85);
-      outline: none;
-    }
-    
-    .input-field::placeholder {
-      color: #94A3B8;
-    }
-    
-    .toggle-visibility {
-      position: absolute;
-      right: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #94A3B8;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 0;
-    }
-  `],
+  templateUrl: './input.component.html',
+  styleUrls: [],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

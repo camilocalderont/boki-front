@@ -1,0 +1,19 @@
+<button 
+  [type]="type" 
+  [disabled]="disabled || loading"
+  [ngClass]="[
+    'flex items-center justify-center font-medium rounded-md transition-all duration-150',
+    variant === 'primary' ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-md hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 active:shadow-md' : '',
+    variant === 'secondary' ? 'border border-blue-500/50 text-blue-500 hover:bg-blue-500/10 hover:border-blue-500/80' : '',
+    variant === 'tertiary' ? 'bg-transparent text-blue-500 hover:bg-blue-500/10' : '',
+    variant === 'social' ? 'border border-blue-500/20 text-white backdrop-blur-sm bg-slate-900/60 hover:bg-slate-900/80 hover:border-blue-500/40' : '',
+    size === 'small' ? 'py-1.5 px-3 text-xs' : '',
+    size === 'medium' ? 'py-2.5 px-4 text-sm' : '',
+    size === 'large' ? 'py-3 px-5 text-sm font-semibold' : '',
+    fullWidth ? 'w-full' : '',
+    (disabled || loading) ? 'opacity-70 cursor-not-allowed' : 'cursor-pointer'
+  ]"
+  (click)="onClick($event)">
+  <span *ngIf="loading" class="mr-2 w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></span>
+  <ng-content></ng-content>
+</button> 

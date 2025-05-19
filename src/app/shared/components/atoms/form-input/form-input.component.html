@@ -1,0 +1,19 @@
+<div class="relative w-full">
+  <input
+    [type]="type"
+    [id]="id"
+    [name]="name"
+    [placeholder]="placeholder"
+    [value]="value"
+    (input)="onInputChange($event)"
+    (blur)="onBlur()"
+    class="w-full py-3 px-3.5 text-sm border border-blue-500/30 rounded-md bg-slate-900/70 text-white transition-all duration-150 focus:border-blue-500/70 focus:bg-slate-900/85 focus:outline-none"
+  />
+  <button *ngIf="type === 'password' && value || type === 'text' && originalType === 'password'" 
+          type="button" 
+          class="absolute right-3 top-1/2 -translate-y-1/2 bg-transparent border-0 cursor-pointer text-slate-400 flex items-center justify-center p-0"
+          (click)="toggleVisibility()"
+          tabindex="-1">
+    <span>{{ type === 'password' ? '👁️' : '🔒' }}</span>
+  </button>
+</div> 
