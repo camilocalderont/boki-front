@@ -1,0 +1,67 @@
+<app-auth-layout title="Crear cuenta" subtitle="Únete a boki-ai hoy mismo">
+  <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-5">
+    <app-ui-input
+      id="name"
+      type="text"
+      placeholder="Nombre completo"
+      formControlName="name"
+    >
+    </app-ui-input>
+
+    <app-ui-input
+      id="email"
+      type="email"
+      placeholder="Correo electrónico"
+      formControlName="email"
+    >
+    </app-ui-input>
+
+    <app-ui-input
+      id="password"
+      type="password"
+      placeholder="Contraseña"
+      formControlName="password"
+    >
+    </app-ui-input>
+
+    <app-ui-input
+      id="confirmPassword"
+      type="password"
+      placeholder="Confirmar contraseña"
+      formControlName="confirmPassword"
+    >
+    </app-ui-input>
+
+    <div class="flex items-start gap-2">
+      <input
+        type="checkbox"
+        id="terms"
+        formControlName="terms"
+        class="mt-1 h-4 w-4 rounded border-gray-700 bg-gray-900/60 text-blue-500"
+      />
+      <label for="terms" class="text-gray-300 text-sm">
+        Acepto los términos y condiciones y la política de privacidad
+      </label>
+    </div>
+
+    <app-ui-button
+      type="submit"
+      variant="primary"
+      size="large"
+      [fullWidth]="true"
+      [loading]="loading"
+    >
+      {{ loading ? "Creando cuenta..." : "Crear cuenta" }}
+    </app-ui-button>
+  </form>
+
+  <div class="mt-6 text-center text-sm text-gray-400">
+    ¿Ya tienes cuenta?
+    <a
+      routerLink="/auth/login"
+      class="text-blue-400 hover:underline font-medium"
+    >
+      Inicia sesión
+    </a>
+  </div>
+</app-auth-layout>

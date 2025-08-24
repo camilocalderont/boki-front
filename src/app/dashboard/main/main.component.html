@@ -1,0 +1,187 @@
+<div class="space-y-6">
+  <!-- Header del Dashboard con botón de refresh -->
+  <div class="flex items-center justify-between">
+    <div>
+      <h2 class="text-3xl font-bold text-gray-900">Resumen General</h2>
+      <p class="text-gray-600 mt-1">Bienvenido de vuelta, aquí está el estado de tu BokiBot</p>
+    </div>
+    
+    <button (click)="refreshData()" 
+            class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors shadow-sm">
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+              d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+      </svg>
+      Actualizar
+    </button>
+  </div>
+
+  <!-- Cards de estadísticas -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div *ngFor="let stat of stats" 
+         class="bg-white rounded-xl p-6 shadow-sm border border-gray-200 hover:shadow-md transition-all duration-200">
+      
+      <div class="flex items-center justify-between">
+        <div class="flex-1">
+          <p class="text-sm font-medium text-gray-600 mb-1">{{ stat.title }}</p>
+          <p class="text-2xl font-bold text-gray-900">{{ stat.value }}</p>
+          
+          <div class="flex items-center mt-2">
+            <span class="text-sm font-medium"
+                  [class.text-green-600]="stat.changeType === 'positive'"
+                  [class.text-red-600]="stat.changeType === 'negative'"
+                  [class.text-gray-600]="stat.changeType === 'neutral'">
+              {{ stat.change }}
+            </span>
+            <span class="text-gray-500 text-sm ml-1">vs último mes</span>
+          </div>
+        </div>
+        
+        <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center">
+          <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- Chat icon -->
+            <path *ngIf="stat.icon === 'chat'" 
+                  stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+            
+            <!-- Calendar icon -->
+            <path *ngIf="stat.icon === 'calendar'" 
+                  stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+            
+            <!-- Building icon -->
+            <path *ngIf="stat.icon === 'building'" 
+                  stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1"/>
+            
+            <!-- Chart icon -->
+            <path *ngIf="stat.icon === 'chart'" 
+                  stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenido principal -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    
+    <!-- Actividad reciente -->
+    <div class="lg:col-span-2">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-lg font-semibold text-gray-900">Actividad reciente</h3>
+          <button class="text-blue-600 hover:text-blue-700 text-sm font-medium">Ver todo</button>
+        </div>
+        
+        <div class="space-y-4">
+          <div *ngFor="let activity of recentActivity" 
+               class="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
+            
+            <div class="w-8 h-8 rounded-full flex items-center justify-center"
+                 [class.bg-blue-100]="activity.type === 'appointment'"
+                 [class.bg-green-100]="activity.type === 'conversation'"
+                 [class.bg-purple-100]="activity.type === 'company'">
+              
+              <svg class="w-4 h-4"
+                   [class.text-blue-600]="activity.type === 'appointment'"
+                   [class.text-green-600]="activity.type === 'conversation'"
+                   [class.text-purple-600]="activity.type === 'company'"
+                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                
+                <path *ngIf="activity.type === 'appointment'"
+                      stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                
+                <path *ngIf="activity.type === 'conversation'"
+                      stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                
+                <path *ngIf="activity.type === 'company'"
+                      stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                      d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1"/>
+              </svg>
+            </div>
+            
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-medium text-gray-900">{{ activity.message }}</p>
+              <p class="text-xs text-gray-500 mt-1">{{ activity.user }} • {{ activity.time }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Panel lateral con acciones -->
+    <div class="space-y-6">
+      
+      <!-- Acciones rápidas -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Acciones rápidas</h3>
+        
+        <div class="space-y-3">
+          <button class="w-full flex items-center justify-between p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
+            <span class="flex items-center">
+              <svg class="w-5 h-5 text-blue-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+              </svg>
+              <span class="font-medium text-gray-900">Crear nuevo flujo</span>
+            </span>
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
+          
+          <button class="w-full flex items-center justify-between p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
+            <span class="flex items-center">
+              <svg class="w-5 h-5 text-green-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1"/>
+              </svg>
+              <span class="font-medium text-gray-900">Agregar empresa</span>
+            </span>
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
+          
+          <button class="w-full flex items-center justify-between p-3 text-left bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors">
+            <span class="flex items-center">
+              <svg class="w-5 h-5 text-purple-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+              </svg>
+              <span class="font-medium text-gray-900">Ver analytics</span>
+            </span>
+            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Estado del sistema -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Estado del sistema</h3>
+        
+        <div class="space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-600">API Status</span>
+            <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+              Activo
+            </span>
+          </div>
+          
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-600">Bot Response</span>
+            <span class="text-sm font-medium text-gray-900">~1.2s</span>
+          </div>
+          
+          <div class="flex items-center justify-between">
+            <span class="text-sm text-gray-600">Uptime</span>
+            <span class="text-sm font-medium text-gray-900">99.9%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
