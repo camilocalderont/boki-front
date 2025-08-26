@@ -1,11 +1,10 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UiButtonComponent } from '../../shared/components/ui-button/ui-button.component';
 
 @Component({
   selector: 'app-social-login',
   standalone: true,
-  imports: [CommonModule, UiButtonComponent],
+  imports: [CommonModule],
   templateUrl: './social-login.component.html',
   styleUrl: './social-login.component.scss'
 })

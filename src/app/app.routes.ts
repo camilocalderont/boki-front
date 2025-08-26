@@ -1,34 +1,35 @@
+// src/app/app.routes.ts
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
-  // Rutas de autenticación (sin guard por ahora)
   {
     path: 'auth',
     loadChildren: () => import('./auth/auth.routes').then(m => m.AUTH_ROUTES)
   },
   
-  // Rutas del dashboard (sin guard por ahora para probar)
+  // Rutas del dashboard 
   {
     path: 'dashboard',
     loadComponent: () => import('./dashboard/dashboard-layout/dashboard-layout.component').then(m => m.DashboardLayoutComponent),
+    canActivate: [authGuard], 
     children: [
       {
         path: '',
-        loadComponent: () => import('./dashboard/main/main.component').then(m => m.MainComponent)
+        loadComponent: () => import('./dashboard/main/main.component').then(m => m.MainComponent),
+        title: 'Dashboard Principal'
       }
     ]
   },
   
-  // Redirección por defecto - ESTO ES CLAVE
   {
     path: '',
-    redirectTo: '/auth/login',
+    redirectTo: '/dashboard', 
     pathMatch: 'full'
   },
   
-  // Wildcard para 404
   {
     path: '**',
-    redirectTo: '/auth/login'
+    redirectTo: '/dashboard'
   }
 ];

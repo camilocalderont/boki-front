@@ -1,80 +1,108 @@
 import { Injectable } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { delay } from 'rxjs/operators';
-
-export interface LoginRequest {
-  email: string;
-  password: string;
-  remember?: boolean;
-}
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-}
+import { BehaviorSubject, Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { UserService } from '../../services/user.service';
+import { 
+  LoginCredentials, 
+  BackendLoginCredentials, 
+  BackendLoginResponse
+} from '../../shared/interfaces/auth.interface';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private currentUser: User | null = null;
+  private readonly TOKEN_KEY = 'auth_token';
+  private readonly USER_KEY = 'user_data';
+  
+  private userSubject = new BehaviorSubject<BackendLoginResponse['data']['user'] | null>(null);
+  public user$ = this.userSubject.asObservable();
 
-  constructor() {
-    // Verificar si hay usuario en localStorage al inicializar
+  constructor(
+    private userService: UserService,
+    private router: Router
+  ) {
     this.loadUserFromStorage();
   }
 
   private loadUserFromStorage(): void {
-    const token = localStorage.getItem('user_token');
-    if (token) {
-      // Simular usuario para el MVP
-      this.currentUser = {
-        id: '1',
-        name: 'Usuario Demo',
-        email: 'demo@ejemplo.com'
-      };
+    const storedUser = sessionStorage.getItem(this.USER_KEY);
+    const storedToken = sessionStorage.getItem(this.TOKEN_KEY);
+    
+    if (storedUser && storedToken) {
+      try {
+        const user = JSON.parse(storedUser);
+        this.userSubject.next(user);
+        
+        if (environment.enableDebugMode) {
+          console.log('👤 Usuario cargado desde storage:', user.VcEmail);
+        }
+      } catch (e) {
+        console.error('❌ Error cargando usuario:', e);
+        this.clearAuthData();
+      }
     }
   }
 
-  isAuthenticated(): boolean {
-    return !!localStorage.getItem('user_token');
+  login(credentials: LoginCredentials): Observable<BackendLoginResponse> {
+    const backendCredentials: BackendLoginCredentials = {
+      VcEmail: credentials.email.trim().toLowerCase(),
+      VcPassword: credentials.password
+    };
+
+    if (environment.enableDebugMode) {
+      console.log('🔐 Iniciando login para:', backendCredentials.VcEmail);
+    }
+
+    return this.userService.login(backendCredentials).pipe(
+      tap((response: BackendLoginResponse) => {
+        this.handleSuccessfulLogin(response);
+      })
+    );
   }
 
-  getCurrentUser(): User | null {
-    return this.currentUser;
-  }
+  private handleSuccessfulLogin(response: BackendLoginResponse): void {
+    sessionStorage.setItem(this.TOKEN_KEY, response.data.token);
+    sessionStorage.setItem(this.USER_KEY, JSON.stringify(response.data.user));
+    this.userSubject.next(response.data.user);
 
-  login(credentials: LoginRequest): Observable<any> {
-    // Simulación para MVP - reemplaza con tu API real
-    return new Observable(observer => {
-      setTimeout(() => {
-        if (credentials.email && credentials.password) {
-          localStorage.setItem('user_token', 'demo_token_12345');
-          this.currentUser = {
-            id: '1',
-            name: 'Usuario Demo',
-            email: credentials.email
-          };
-          observer.next({ success: true });
-        } else {
-          observer.error({ message: 'Credenciales inválidas' });
-        }
-        observer.complete();
-      }, 1500);
-    });
-  }
-
-  loginWithGoogle(): Observable<any> {
-    return of({ success: true }).pipe(delay(1000));
-  }
-
-  loginWithMicrosoft(): Observable<any> {
-    return of({ success: true }).pipe(delay(1000));
+    if (environment.enableDebugMode) {
+      console.log('✅ Login exitoso:', {
+        email: response.data.user.VcEmail,
+        name: response.data.user.VcFirstName,
+        id: response.data.user.Id,
+        status: response.status
+      });
+    }
   }
 
   logout(): void {
-    localStorage.removeItem('user_token');
-    this.currentUser = null;
+    if (environment.enableDebugMode) {
+      console.log('🚪 Cerrando sesión...');
+    }
+    this.clearAuthData();
+    this.router.navigate(['/auth/login']);
+  }
+
+  private clearAuthData(): void {
+    sessionStorage.removeItem(this.TOKEN_KEY);
+    sessionStorage.removeItem(this.USER_KEY);
+    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.USER_KEY);
+    this.userSubject.next(null);
+  }
+
+  isAuthenticated(): boolean {
+    return !!this.userSubject.value && !!this.getToken();
+  }
+
+  getToken(): string | null {
+    return sessionStorage.getItem(this.TOKEN_KEY);
+  }
+
+  getCurrentUser(): BackendLoginResponse['data']['user'] | null {
+    return this.userSubject.value;
   }
 }
