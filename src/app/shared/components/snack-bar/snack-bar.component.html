@@ -1,0 +1,12 @@
+<div #snackbar [ngClass]="'fixed z-50 px-4 py-3 rounded text-white shadow-lg w-auto max-w-sm ' + positionClass" 
+    [style.backgroundColor]="backgroundColor">
+    <div class="flex items-start gap-4">
+        <span class="text-sm font-medium break-words flex-1">
+            {{ message }}
+        </span>
+
+        <!-- <button (click)="close()" class="text-sm underline hover:opacity-80 transition whitespace-nowrap">
+            {{ closeText }}
+        </button> -->
+    </div>
+</div>

@@ -11,4 +11,5 @@ import { CommonModule } from '@angular/common';
 export class AuthLayoutComponent {
   @Input() title: string = 'Bienvenido';
   @Input() subtitle: string = 'Ingresa tus credenciales';
+  @Input() containerClass: string = 'max-w-sm';
 }

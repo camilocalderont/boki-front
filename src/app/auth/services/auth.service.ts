@@ -6,7 +6,10 @@ import { UserService } from '../../services/user.service';
 import { 
   LoginCredentials, 
   BackendLoginCredentials, 
-  BackendLoginResponse
+  BackendLoginResponse,
+  RegisterCredentials,
+  BackendRegisterCredentials,
+  BackendRegisterResponse
 } from '../../shared/interfaces/auth.interface';
 import { environment } from '../../../environments/environment';
 
@@ -37,10 +40,10 @@ export class AuthService {
         this.userSubject.next(user);
         
         if (environment.enableDebugMode) {
-          console.log('👤 Usuario cargado desde storage:', user.VcEmail);
+          console.log('Usuario cargado desde storage:', user.VcEmail);
         }
       } catch (e) {
-        console.error('❌ Error cargando usuario:', e);
+        console.error('Error cargando usuario:', e);
         this.clearAuthData();
       }
     }
@@ -53,12 +56,40 @@ export class AuthService {
     };
 
     if (environment.enableDebugMode) {
-      console.log('🔐 Iniciando login para:', backendCredentials.VcEmail);
+      console.log('Iniciando login para:', backendCredentials.VcEmail);
     }
 
     return this.userService.login(backendCredentials).pipe(
       tap((response: BackendLoginResponse) => {
         this.handleSuccessfulLogin(response);
+      })
+    );
+  }
+
+  register(credentials: RegisterCredentials): Observable<BackendRegisterResponse> {
+    // Convertir datos del frontend al formato del backend
+    const backendCredentials: BackendRegisterCredentials = {
+      VcIdentificationNumber: credentials.identificationNumber.trim(),
+      VcPhone: credentials.phone.trim(),
+      vcNickName: credentials.nickName.trim(),
+      VcFirstName: credentials.firstName.trim(),
+      VcSecondName: credentials.secondName?.trim() || '',
+      VcFirstLastName: credentials.firstLastName.trim(),
+      VcSecondLastName: credentials.secondLastName?.trim() || '',
+      VcEmail: credentials.email.trim().toLowerCase(),
+      VcPassword: credentials.password
+    };
+
+    if (environment.enableDebugMode) {
+      console.log('Iniciando registro para:', backendCredentials.VcEmail);
+    }
+
+    return this.userService.register(backendCredentials).pipe(
+      tap((response: BackendRegisterResponse) => {
+        if (environment.enableDebugMode) {
+          console.log('Registro exitoso para:', response.data.VcEmail);
+        }
+      
       })
     );
   }
@@ -69,7 +100,7 @@ export class AuthService {
     this.userSubject.next(response.data.user);
 
     if (environment.enableDebugMode) {
-      console.log('✅ Login exitoso:', {
+      console.log('Login exitoso:', {
         email: response.data.user.VcEmail,
         name: response.data.user.VcFirstName,
         id: response.data.user.Id,
@@ -80,7 +111,7 @@ export class AuthService {
 
   logout(): void {
     if (environment.enableDebugMode) {
-      console.log('🚪 Cerrando sesión...');
+      console.log('Cerrando sesión...');
     }
     this.clearAuthData();
     this.router.navigate(['/auth/login']);
