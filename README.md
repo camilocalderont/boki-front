@@ -1,59 +1,124 @@
-# BokiFrom
+# 🚀 Boki Proxy - Guía de Instalación y Configuración
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.12.
+Este proyecto está compuesto por un **Backend** y un **Frontend**. Sigue esta guía paso a paso para configurar y ejecutar ambos componentes.
 
-## Development server
+## 📋 Requisitos Previos
 
-To start a local development server, run:
+- **Node.js**: Versión 22.12 o superior
+- **Docker**: Para la base de datos
+- **Angular CLI**: Para el frontend
+- **Cliente de Base de Datos**: (pgAdmin, DBeaver, etc.)
+
+## 🔧 Configuración del Backend
+
+### 1️⃣ Configurar la Base de Datos
+
+Navega al directorio de la base de datos y levanta los servicios con Docker:
+
+```bash
+cd boki-api/BD
+docker compose up -d
+```
+
+### 2️⃣ Crear la Base de Datos
+
+Conéctate a tu cliente de base de datos y crea una nueva base de datos llamada `boki`.
+
+### 3️⃣ Instalar Dependencias
+
+Regresa al directorio raíz del backend e instala las dependencias:
+
+```bash
+cd ..
+npm install
+```
+
+### 4️⃣ Ejecutar Migraciones
+
+Ejecuta las migraciones para crear las tablas en la base de datos:
+
+```bash
+npm run migration:run
+```
+
+### 5️⃣ Poblar la Base de Datos
+
+Ejecuta el seed para insertar datos iniciales:
+
+```bash
+npm run seed:personero
+```
+
+### 6️⃣ Iniciar el Servidor Backend
+
+Inicia el servidor de desarrollo:
+
+```bash
+npm run start:dev
+```
+
+✅ **¡Backend configurado!** El servidor debería estar ejecutándose.
+
+---
+
+## 🎨 Configuración del Frontend
+
+### 1️⃣ Instalar Dependencias
+
+Navega al directorio del frontend e instala las dependencias:
+
+```bash
+cd boki-front
+npm install
+```
+
+### 2️⃣ Iniciar el Servidor Frontend
+
+Ejecuta el servidor de desarrollo de Angular:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+> ⚠️ **Nota importante**: Asegúrate de tener **Node.js versión 22.12** instalada.
 
-## Code scaffolding
+✅ **¡Frontend configurado!** La aplicación debería estar disponible en `http://localhost:4200`
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+---
 
+## 🏃‍♂️ Inicio Rápido
+
+Una vez configurado todo, para iniciar el proyecto completo:
+
+1. **Backend**: `npm run start:dev` (en el directorio `boki-api`)
+2. **Frontend**: `ng serve` (en el directorio `boki-front`)
+
+## 📚 Comandos Útiles
+
+### Backend
 ```bash
-ng generate component component-name
+# Desarrollo
+npm run start:dev
+
+# Migraciones
+npm run migration:run
+
+# Seeds
+npm run seed:personero
 ```
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
+### Frontend
 ```bash
-ng generate --help
-```
+# Desarrollo
+ng serve
 
-## Building
-
-To build the project run:
-
-```bash
+# Build para producción
 ng build
-```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
+# Tests
 ng test
 ```
 
-## Running end-to-end tests
+---
 
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+¡Ya tienes todo listo para comenzar a desarrollar! 🎉
