@@ -1,0 +1,64 @@
+<div class="max-w-8xl mx-auto p-6 bg-white shadow-md rounded-2xl">
+  <h2 class="text-xl font-semibold text-gray-800 mb-6">
+    {{ isEditMode ? 'Actualizar Categoria' : 'Crear Categoria' }}
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+
+    <!-- Primera fila: Nombre y Empresas -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+            <input type="text" formControlName="VcName" placeholder="Nombre"
+            class="w-full rounded-md border p-2.5 shadow-sm focus:ring-2 focus:ring-brand-blue focus:border-brand-blue" />
+            <div *ngIf="form.get('VcName')?.invalid && form.get('VcName')?.touched"
+            class="text-red-400 text-xs mt-1 pl-1">
+            El nombre es obligatorio
+            </div>
+        </div>
+
+        <div>
+            <div class="relative">
+                <select formControlName="CompanyId"
+                    class="w-full rounded-md border p-2.5 shadow-sm focus:ring-2 focus:ring-brand-blue focus:border-brand-blue appearance-none">
+                <option value="" disabled>Seleccione una empresa</option>
+                <option *ngFor="let company of companies" [value]="company.Id">
+                    {{ company.VcName }}
+                </option>
+                </select>
+
+                <!-- Flecha personalizada -->
+                <span class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-gray-500">
+                ▼
+                </span>
+            </div>
+            <p *ngIf="form.get('CompanyId')?.invalid && form.get('CompanyId')?.touched" class="text-red-500 text-xs mt-1">
+                Debe seleccionar una empresa
+            </p>
+        </div>
+    </div>
+
+     <!-- Toggle: BIsService -->
+    <div class="flex items-center space-x-3">
+      <label class="relative inline-flex items-center cursor-pointer">
+        <input type="checkbox" formControlName="BIsService" class="sr-only peer" />
+        <div
+          class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-brand-blue-dark rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-blue">
+        </div>
+        <span class="ml-3 text-sm font-medium text-gray-800">Es Servicio</span>
+      </label>
+    </div>
+
+    <!-- Botones -->
+    <div class="flex justify-end space-x-4 pt-2">
+      <button type="button"
+        class="px-5 py-2.5 inline-flex items-center bg-brand-light text-black text-sm rounded-md hover:bg-brand-dark focus:ring-4 focus:ring-gray-200 transition-all duration-200 shadow-sm hover:shadow-md"
+        (click)="redirectLink('/dashboard/categories')">
+        Cancelar
+      </button>
+      <button type="submit" [disabled]="form.invalid"
+        class="px-5 py-2.5 inline-flex items-center bg-brand-blue text-white text-sm rounded-md hover:bg-brand-blue-dark focus:ring-4 focus:ring-blue-200 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed">
+        {{ isEditMode ? 'Actualizar' : 'Crear' }}
+      </button>
+    </div>
+  </form>
+</div>

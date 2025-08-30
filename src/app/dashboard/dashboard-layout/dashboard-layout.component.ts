@@ -18,7 +18,9 @@ export class DashboardLayoutComponent implements OnInit {
   navigationItems = [
     { label: 'Dashboard', icon: 'home', route: '/dashboard', active: true },
     { label: 'Flujos', icon: 'workflow', route: '/flows', active: false },
-    { label: 'Empresas', icon: 'building', route: '/companies', active: false },
+    { label: 'Empresas', icon: 'building', route: '/dashboard/companies', active: false },
+    { label: 'Categorias', icon: 'list', route: '/dashboard/categories', active: false },
+    { label: 'FAQS', icon: 'question', route: '/dashboard/faqs', active: false },
     { label: 'Citas', icon: 'calendar', route: '/appointments', active: false },
     { label: 'Analytics', icon: 'chart', route: '/analytics', active: false },
     {

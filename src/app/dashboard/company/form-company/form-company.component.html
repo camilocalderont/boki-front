@@ -1,0 +1,77 @@
+<div class="max-w-8xl mx-auto p-6 bg-white shadow-md rounded-2xl">
+  <h2 class="text-xl font-semibold text-gray-800 mb-6">
+    {{ isEditMode ? 'Actualizar Empresa' : 'Crear Empresa' }}
+  </h2>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+
+    <!-- Primera fila: Nombre y Descripción -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <input type="text" formControlName="VcName" placeholder="Nombre"
+          class="w-full rounded-md border p-2.5 shadow-sm focus:ring-2 focus:ring-brand-blue focus:border-brand-blue" />
+        <div *ngIf="form.get('VcName')?.invalid && form.get('VcName')?.touched"
+          class="text-red-400 text-xs mt-1 pl-1">
+          El nombre es obligatorio
+        </div>
+      </div>
+      <div>
+        <textarea formControlName="VcDescription" placeholder="Descripción"
+          class="w-full rounded-md border p-2.5 shadow-sm focus:ring-2 focus:ring-brand-blue focus:border-brand-blue"
+          rows="2"></textarea>
+      </div>
+    </div>
+
+    <!-- Segunda fila: Teléfono y Dirección -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <input type="text" formControlName="VcPhone" placeholder="Teléfono"
+          class="w-full rounded-md border p-2.5 shadow-sm focus:ring-2 focus:ring-brand-blue focus:border-brand-blue" />
+        <div *ngIf="form.get('VcPhone')?.invalid && form.get('VcPhone')?.touched"
+          class="text-red-400 text-xs mt-1 pl-1">
+          Ingresa un teléfono válido (7-15 dígitos)
+        </div>
+      </div>
+      <div>
+        <input type="text" formControlName="VcPrincipalAddress" placeholder="Dirección Principal"
+          class="w-full rounded-md border p-2.5 shadow-sm focus:ring-2 focus:ring-brand-blue focus:border-brand-blue" />
+      </div>
+    </div>
+
+    <!-- Tercera fila: Email y Representante -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div>
+        <input type="email" formControlName="VcPrincipalEmail" placeholder="Correo Principal"
+          class="w-full rounded-md border p-2.5 shadow-sm focus:ring-2 focus:ring-brand-blue focus:border-brand-blue" />
+        <div *ngIf="form.get('VcPrincipalEmail')?.invalid && form.get('VcPrincipalEmail')?.touched"
+          class="text-red-400 text-xs mt-1 pl-1">
+          Ingresa un correo válido
+        </div>
+      </div>
+      <div>
+        <input type="text" formControlName="VcLegalRepresentative" placeholder="Representante Legal"
+          class="w-full rounded-md border p-2.5 shadow-sm focus:ring-2 focus:ring-brand-blue focus:border-brand-blue" />
+      </div>
+    </div>
+
+    <!-- Prompt -->
+    <div>
+      <textarea formControlName="TxPrompt" placeholder="Prompt"
+        class="w-full rounded-md border p-2.5 shadow-sm focus:ring-2 focus:ring-brand-blue focus:border-brand-blue"
+        rows="10"></textarea>
+    </div>
+
+    <!-- Botones -->
+    <div class="flex justify-end space-x-4 pt-2">
+      <button type="button"
+        class="px-5 py-2.5 inline-flex items-center bg-brand-light text-black text-sm rounded-md hover:bg-brand-dark focus:ring-4 focus:ring-gray-200 transition-all duration-200 shadow-sm hover:shadow-md"
+        (click)="redirectLink('/dashboard/companies')">
+        Cancelar
+      </button>
+      <button type="submit" [disabled]="form.invalid"
+        class="px-5 py-2.5 inline-flex items-center bg-brand-blue text-white text-sm rounded-md hover:bg-brand-blue-dark focus:ring-4 focus:ring-blue-200 transition-all duration-200 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed">
+        {{ isEditMode ? 'Actualizar' : 'Crear' }}
+      </button>
+    </div>
+  </form>
+</div>

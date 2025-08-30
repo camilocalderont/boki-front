@@ -17,10 +17,55 @@ export const routes: Routes = [
         path: '',
         loadComponent: () => import('./dashboard/main/main.component').then(m => m.MainComponent),
         title: 'Dashboard Principal'
+      },
+      {
+        path: 'companies',
+        loadComponent: () => import('./dashboard/company/company.component').then(m => m.CompanyComponent),
+        title: 'Empresas',
+      },
+      {
+        path: 'companies/create',
+        loadComponent: () => import('./dashboard/company/form-company/form-company.component').then(m => m.FormCompanyComponent),
+        title: 'Crear Empresa'
+      },
+      {
+        path: 'companies/update/:id',
+        loadComponent: () => import('./dashboard/company/form-company/form-company.component').then(m => m.FormCompanyComponent),
+        title: 'Editar Empresa'
+      },
+      {
+        path: 'categories',
+        loadComponent: () => import('./dashboard/category/category.component').then(m => m.CategoryComponent),
+        title: 'Categorías',
+      },
+      {
+        path: 'categories/create',
+        loadComponent: () => import('./dashboard/category/form-category/form-category.component').then(m => m.FormCategoryComponent),
+        title: 'Crear Categoría'
+      },
+      {
+        path: 'categories/update/:id',
+        loadComponent: () => import('./dashboard/category/form-category/form-category.component').then(m => m.FormCategoryComponent),
+        title: 'Editar Categoría'
+      },
+      {
+        path: 'faqs',
+        loadComponent: () => import('./dashboard/faqs/faqs.component').then(m => m.FaqsComponent),
+        title: 'FAQS',
+      },
+      {
+        path: 'faqs/create',
+        loadComponent: () => import('./dashboard/faqs/form-faqs/form-faqs.component').then(m => m.FormFaqsComponent),
+        title: 'Crear FAQ'
+      },
+      {
+        path: 'faqs/update/:id',
+        loadComponent: () => import('./dashboard/faqs/form-faqs/form-faqs.component').then(m => m.FormFaqsComponent),
+        title: 'Editar FAQ'
       }
     ]
   },
-  
+
   {
     path: '',
     redirectTo: '/dashboard', 
