@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { ThemeConfigService } from './services/theme-config.service';
 
 
 @Component({
@@ -9,6 +10,27 @@ import { RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'boki-front';
+  themeConfig: any = null;
+
+  constructor(private themeConfigService: ThemeConfigService) {}
+
+  ngOnInit(): void {
+    this.loadThemeConfig();
+  }
+
+  private loadThemeConfig(): void {
+    this.themeConfigService.getThemeConfig().subscribe({
+      next: (response) => {
+        this.themeConfig = response.data;
+
+      },
+      error: (error) => {
+        console.error('❌ Error cargando configuración de tema:', error);
+      }
+    });
+  }
+
+
 }

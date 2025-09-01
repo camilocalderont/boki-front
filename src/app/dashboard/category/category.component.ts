@@ -6,6 +6,7 @@ import { DataGridComponent } from '../../shared/components/data-grid/data-grid.c
 import { Router } from '@angular/router';
 import { CategoryService } from '../../services/category.service';
 import { ApiSuccessResponse, CustomError } from '../../shared/interfaces/api.interface';
+import { ThemeConfigService } from '../../services/theme-config.service';
 
 @Component({
   selector: 'app-category.component',
@@ -16,6 +17,7 @@ import { ApiSuccessResponse, CustomError } from '../../shared/interfaces/api.int
 export class CategoryComponent {
 
   categories: GetCategoryResponse[] = [];
+  theme: any = null;
 
   columns: DataGridColumn[] = [
     { key: 'VcName', label: 'Nombre' },
@@ -24,17 +26,19 @@ export class CategoryComponent {
     { key: 'created_at', label: 'Fecha de Creación', format: FORMAT_DATA.DATE },
   ];
 
-  constructor(private router: Router, 
-              private categoryService: CategoryService) {}
+  constructor(private router: Router,
+    private categoryService: CategoryService,
+    private themeConfigService: ThemeConfigService
+  ) { }
 
   ngOnInit() {
-      this.loadCategories();
-    }
+    this.theme = this.themeConfigService.getCurrentTheme();
+    this.loadCategories();
+  }
 
   private loadCategories() {
     this.categoryService.getCategories().subscribe({
       next: (response: ApiSuccessResponse<GetCategoryResponse[]>) => {
-        console.log('Categories loaded successfully:', response);
         this.categories = response.data;
       },
       error: (error: CustomError) => {

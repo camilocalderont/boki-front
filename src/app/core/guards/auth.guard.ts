@@ -10,10 +10,8 @@ export const authGuard = () => {
   const isAuthenticated = authService.isAuthenticated();
 
   if (environment.enableDebugMode) {
-    console.log('AuthGuard - Usuario autenticado:', isAuthenticated);
     if (isAuthenticated) {
       const user = authService.getCurrentUser();
-      console.log('👤 Usuario actual:', user?.VcEmail);
     }
   }
 
@@ -21,7 +19,6 @@ export const authGuard = () => {
     return true;
   } else {
     if (environment.enableDebugMode) {
-      console.log('AuthGuard - Redirigiendo a login');
     }
     router.navigate(['/auth/login']);
     return false;

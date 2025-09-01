@@ -80,17 +80,10 @@ export class LoginComponent implements OnInit {
       password: this.loginForm.value.password
     };
 
-    if (environment.enableDebugMode) {
-      console.log('📝 Enviando login para:', credentials.email);
-    }
 
     this.authService.login(credentials).subscribe({
       next: (response) => {
         this.loading = false;
-
-        if (environment.enableDebugMode) {
-          console.log('🎉 Login exitoso, redirigiendo...');
-        }
 
         // Limpiar formulario
         this.loginForm.reset();
@@ -135,16 +128,10 @@ export class LoginComponent implements OnInit {
   }
 
   loginWithGoogle(): void {
-    if (environment.enableDebugMode) {
-      console.log('🔍 Google login clickeado (no implementado)');
-    }
     this.errorMessage = 'Login con Google estará disponible próximamente.';
   }
 
   loginWithMicrosoft(): void {
-    if (environment.enableDebugMode) {
-      console.log('🔍 Microsoft login clickeado (no implementado)');
-    }
     this.errorMessage = 'Login con Microsoft estará disponible próximamente.';
   }
 }

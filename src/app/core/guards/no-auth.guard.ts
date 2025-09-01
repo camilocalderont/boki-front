@@ -10,7 +10,7 @@ export const noAuthGuard = () => {
   const isAuthenticated = authService.isAuthenticated();
 
   if (environment.enableDebugMode) {
-    console.log('NoAuthGuard - Usuario autenticado:', isAuthenticated);
+
   }
 
   if (!isAuthenticated) {

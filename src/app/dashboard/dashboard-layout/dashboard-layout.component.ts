@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../auth/services/auth.service';
 import { UserDropdownComponent } from '../user-dropdown/user-dropdown.component';
-
+import { ThemeConfigService } from '../../services/theme-config.service';
 
 @Component({
   selector: 'app-dashboard-layout',
@@ -14,6 +14,7 @@ import { UserDropdownComponent } from '../user-dropdown/user-dropdown.component'
 })
 export class DashboardLayoutComponent implements OnInit {
   isCollapsed = false;
+  theme: any = null;
 
   navigationItems = [
     { label: 'Dashboard', icon: 'home', route: '/dashboard', active: true },
@@ -31,10 +32,21 @@ export class DashboardLayoutComponent implements OnInit {
     },
   ];
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private authService: AuthService, 
+    private router: Router,
+    private themeConfigService: ThemeConfigService
+  ) {}
 
   ngOnInit(): void {
-    // Ya no necesitamos cargar el usuario aquí porque lo hace el UserDropdownComponent
+    // Obtener la configuración ya cargada (sin nueva petición)
+    this.theme = this.themeConfigService.getCurrentTheme();
+    
+    if (this.theme) {
+      console.log('Dashboard Layout - Configuración obtenida:', this.theme);
+    } else {
+      console.log('Dashboard Layout - Configuración aún no disponible');
+    }
   }
 
   toggleSidebar(): void {

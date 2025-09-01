@@ -264,7 +264,6 @@ export class RegisterComponent implements OnInit {
     if (this.registerForm.invalid) {
       // Marcar todos los campos como touched para mostrar errores
       this.registerForm.markAllAsTouched();
-      console.log('Formulario inválido:', this.registerForm.errors);
       return;
     }
 
@@ -285,12 +284,9 @@ export class RegisterComponent implements OnInit {
       confirmPassword: formData.confirmPassword
     };
 
-    console.log('Datos de registro:', registerData);
-
     // Llamar al servicio de registro
     this.authService.register(registerData).subscribe({
       next: (response) => {
-        console.log('Registro exitoso:', response);
         this.loading = false;
 
         // Mostrar mensaje de éxito
@@ -337,11 +333,9 @@ export class RegisterComponent implements OnInit {
   // Métodos para login social 
   loginWithGoogle(): void {
     // TODO: Implementar
-    console.log('Login con Google');
   }
 
   loginWithMicrosoft(): void {
-    // TODO: Implementar  
-    console.log('Login con Microsoft');
+    // TODO: Implementar  ;
   }
 }

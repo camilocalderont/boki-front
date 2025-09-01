@@ -1,25 +1,25 @@
-<div class="min-h-screen bg-gray-50 flex">
+<div *ngIf="theme; else loading" class="min-h-screen {{theme?.theme?.colors?.background?.primary?.light}} flex">
 
   <!-- Sidebar -->
   <div
-    class="fixed inset-y-0 left-0 z-50 flex flex-col bg-white border-r border-gray-100 shadow-xl transition-all duration-300"
+    class="fixed inset-y-0 left-0 z-50 flex flex-col {{theme?.theme?.colors?.background?.secondary?.light}} border-r {{theme?.theme?.colors?.border?.primary?.light}} {{theme?.theme?.colors?.shadow?.primary?.light}} transition-all duration-300"
     [class.w-72]="!isCollapsed" [class.w-20]="isCollapsed">
 
     <!-- Header del sidebar -->
-    <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100">
+    <div class="flex items-center justify-between px-6 py-5 border-b {{theme?.theme?.colors?.border?.primary?.light}}">
       <div class="flex items-center" *ngIf="!isCollapsed">
         <div
-          class="w-10 h-10 bg-gradient-to-r from-brand-blue to-brand-blue-light rounded-xl flex items-center justify-center mr-4 shadow-lg">
-          <span class="text-white font-bold text-lg">B</span>
+          class="w-10 h-10 {{theme?.theme?.colors?.brand?.gradient?.light}} rounded-xl flex items-center justify-center mr-4 {{theme?.theme?.colors?.shadow?.navigation?.light}}">
+          <span class="{{theme?.theme?.colors?.text?.white?.light}} font-bold text-lg">B</span>
         </div>
         <div class="flex flex-col">
-          <span class="font-bold text-xl text-gray-900">BokiBot</span>
-          <span class="text-xs text-gray-500 font-medium">Dashboard</span>
+          <span class="font-bold text-xl {{theme?.theme?.colors?.text?.primary?.light}}">BokiBot</span>
+          <span class="text-xs {{theme?.theme?.colors?.text?.quaternary?.light}} font-medium">Dashboard</span>
         </div>
       </div>
 
-      <button (click)="toggleSidebar()" class="p-2.5 rounded-xl hover:bg-gray-100 transition-all duration-200 group">
-        <svg class="w-5 h-5 text-gray-600 group-hover:text-gray-800" fill="none" stroke="currentColor"
+      <button (click)="toggleSidebar()" class="p-2.5 rounded-xl {{theme?.theme?.colors?.background?.hoverSecondary?.light}} transition-all duration-200 group">
+        <svg class="w-5 h-5 {{theme?.theme?.colors?.text?.tertiary?.light}} {{theme?.theme?.colors?.text?.hoverSecondary?.light}}" fill="none" stroke="currentColor"
           viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
             [attr.d]="isCollapsed ? 'M4 6h16M4 12h16M4 18h16' : 'M6 18L18 6M6 6l12 12'">
@@ -38,11 +38,14 @@
 
         <!-- Active indicator -->
         <div *ngIf="item.active"
-          class="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 bg-white rounded-r-full"></div>
+          class="absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-6 {{theme?.theme?.colors?.text?.white?.light}} rounded-r-full"></div>
 
         <!-- Iconos -->
-        <div class="w-6 h-6 mr-4 flex-shrink-0 flex items-center justify-center" [class.text-white]="item.active"
-          [class.text-gray-600]="!item.active" [class.group-hover:text-brand-blue]="!item.active">
+        <div class="w-6 h-6 mr-4 flex-shrink-0 flex items-center justify-center"
+          [ngClass]="{
+            '{{theme?.theme?.colors?.text?.white?.light}}': item.active,
+            '{{theme?.theme?.colors?.text?.tertiary?.light}} {{theme?.theme?.colors?.brand?.textHover?.light}}': !item.active
+          }">
 
           <!-- Dashboard icon -->
           <svg *ngIf="item.icon === 'home'" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -96,15 +99,15 @@
     </nav>
 
     <!-- Crédito Solercia -->
-    <div class="border-t border-gray-100 px-4 py-3" *ngIf="!isCollapsed">
+    <div class="border-t {{theme?.theme?.colors?.border?.primary?.light}} px-4 py-3" *ngIf="!isCollapsed">
       <div class="flex items-center justify-center">
         <a href="https://solercia.com" target="_blank"
-          class="flex items-center px-3 py-2 rounded-lg hover:bg-gray-50 transition-all duration-200 group">
+          class="flex items-center px-3 py-2 rounded-lg {{theme?.theme?.colors?.background?.hover?.light}} transition-all duration-200 group">
           <div
-            class="w-6 h-6 bg-gradient-to-r from-brand-blue to-brand-blue-light rounded-lg flex items-center justify-center mr-2 shadow-sm">
-            <span class="text-white font-bold text-xs">S</span>
+            class="w-6 h-6 {{theme?.theme?.colors?.brand?.gradient?.light}} rounded-lg flex items-center justify-center mr-2 {{theme?.theme?.colors?.shadow?.small?.light}}">
+            <span class="{{theme?.theme?.colors?.text?.white?.light}} font-bold text-xs">S</span>
           </div>
-          <span class="text-xs text-gray-500 group-hover:text-brand-blue font-medium transition-colors duration-200">
+          <span class="text-xs {{theme?.theme?.colors?.text?.quaternary?.light}} {{theme?.theme?.colors?.brand?.textHover?.light}} font-medium transition-colors duration-200">
             @by solercia
           </span>
         </a>
@@ -112,11 +115,11 @@
     </div>
 
     <!-- Crédito Solercia (versión colapsada) -->
-    <div class="border-t border-gray-100 px-2 py-3 flex justify-center" *ngIf="isCollapsed">
+    <div class="border-t {{theme?.theme?.colors?.border?.primary?.light}} px-2 py-3 flex justify-center" *ngIf="isCollapsed">
       <a href="https://solercia.com" target="_blank"
-        class="w-10 h-10 bg-gradient-to-r from-brand-blue to-brand-blue-light rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-200 group"
+        class="w-10 h-10 {{theme?.theme?.colors?.brand?.gradient?.light}} rounded-lg flex items-center justify-center {{theme?.theme?.colors?.shadow?.small?.light}} {{theme?.theme?.colors?.shadow?.hover?.light}} transition-all duration-200 group"
         title="Desarrollado por Solercia">
-        <span class="text-white font-bold text-sm group-hover:scale-110 transition-transform duration-200">S</span>
+        <span class="{{theme?.theme?.colors?.text?.white?.light}} font-bold text-sm group-hover:scale-110 transition-transform duration-200">S</span>
       </a>
     </div>
   </div>
@@ -126,25 +129,25 @@
     [class.ml-20]="isCollapsed">
 
     <!-- Top header -->
-    <header class="bg-white/80 backdrop-blur-sm border-b border-gray-100 px-8 py-4 shadow-sm sticky top-0 z-40">
+    <header class="{{theme?.theme?.colors?.background?.blur?.light}} backdrop-blur-sm border-b {{theme?.theme?.colors?.border?.primary?.light}} px-8 py-4 {{theme?.theme?.colors?.shadow?.secondary?.light}} sticky top-0 z-40">
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-4">
-          <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
-          <div class="h-6 w-px bg-gray-200"></div>
+          <h1 class="text-2xl font-bold {{theme?.theme?.colors?.text?.primary?.light}}">Dashboard</h1>
+          <div class="h-6 w-px {{theme?.theme?.colors?.border?.divider?.light}}"></div>
           <nav class="hidden md:flex items-center space-x-1">
-            <span class="text-sm text-gray-500">BokiBot</span>
-            <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span class="text-sm {{theme?.theme?.colors?.text?.quaternary?.light}}">BokiBot</span>
+            <svg class="w-4 h-4 {{theme?.theme?.colors?.text?.divider?.light}}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
-            <span class="text-sm font-medium text-gray-900">Dashboard</span>
+            <span class="text-sm font-medium {{theme?.theme?.colors?.text?.primary?.light}}">Dashboard</span>
           </nav>
         </div>
 
         <!-- Header actions -->
         <div class="flex items-center space-x-3">
           <!-- Search button -->
-          <button class="p-3 rounded-xl hover:bg-gray-50 transition-all duration-200 group">
-            <svg class="w-5 h-5 text-gray-600 group-hover:text-gray-800" fill="none" stroke="currentColor"
+          <button class="p-3 rounded-xl {{theme?.theme?.colors?.background?.hover?.light}} transition-all duration-200 group">
+            <svg class="w-5 h-5 {{theme?.theme?.colors?.text?.tertiary?.light}} {{theme?.theme?.colors?.text?.hoverSecondary?.light}}" fill="none" stroke="currentColor"
               viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -152,14 +155,14 @@
           </button>
 
           <!-- Notifications -->
-          <button class="p-3 rounded-xl hover:bg-gray-50 transition-all duration-200 relative group">
-            <svg class="w-5 h-5 text-gray-600 group-hover:text-gray-800" fill="none" stroke="currentColor"
+          <button class="p-3 rounded-xl {{theme?.theme?.colors?.background?.hover?.light}} transition-all duration-200 relative group">
+            <svg class="w-5 h-5 {{theme?.theme?.colors?.text?.tertiary?.light}} {{theme?.theme?.colors?.text?.hoverSecondary?.light}}" fill="none" stroke="currentColor"
               viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M15 17h5l-3.5-3.5a5.5 5.5 0 100-11l3.5 3.5z" />
             </svg>
-            <span class="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full flex items-center justify-center">
-              <span class="w-2 h-2 bg-red-600 rounded-full"></span>
+            <span class="absolute -top-1 -right-1 w-3 h-3 {{theme?.theme?.colors?.notifications?.badge?.light}} rounded-full flex items-center justify-center">
+              <span class="w-2 h-2 {{theme?.theme?.colors?.notifications?.dot?.light}} rounded-full"></span>
             </span>
           </button>
 
@@ -171,8 +174,18 @@
     </header>
 
     <!-- Page content -->
-    <main class="flex-1 p-8 overflow-auto bg-gray-50">
+    <main class="flex-1 p-8 overflow-auto {{theme?.theme?.colors?.background?.primary?.light}}">
       <router-outlet></router-outlet>
     </main>
   </div>
 </div>
+
+<!-- Loading template -->
+<ng-template #loading>
+  <div class="min-h-screen bg-gray-50 flex items-center justify-center">
+    <div class="text-center">
+      <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+      <p class="text-gray-600">Cargando configuración de tema...</p>
+    </div>
+  </div>
+</ng-template>

@@ -3,19 +3,23 @@ import { CompanyService } from '../../services/company.service';
 import { DataGridComponent } from '../../shared/components/data-grid/data-grid.component';
 import { DataGridColumn } from '../../shared/interfaces/data-grid.interface';
 import { GetCompanyResponse } from '../../shared/interfaces/company.interface';
-import { ApiSuccessResponse, CustomError } from '../../shared/interfaces/api.interface';
+import {
+  ApiSuccessResponse,
+  CustomError,
+} from '../../shared/interfaces/api.interface';
 import { Router } from '@angular/router';
 import { FORMAT_DATA } from '../../shared/enums/format-data.enum';
+import { ThemeConfigService } from '../../services/theme-config.service';
 
 @Component({
   selector: 'app-company',
   imports: [DataGridComponent],
   templateUrl: './company.component.html',
-  styleUrls: ['./company.component.scss']
+  styleUrls: ['./company.component.scss'],
 })
 export class CompanyComponent {
-  
   companies: GetCompanyResponse[] = [];
+  theme: any = null;
 
   columns: DataGridColumn[] = [
     { key: 'VcName', label: 'Nombre' },
@@ -28,10 +32,14 @@ export class CompanyComponent {
     { key: 'TxPrompt', label: 'Prompt' },
   ];
 
-  constructor(private companyService: CompanyService,
-              private router: Router) {}
+  constructor(
+    private companyService: CompanyService,
+    private router: Router,
+    private themeConfigService: ThemeConfigService
+  ) {}
 
   ngOnInit() {
+    this.theme = this.themeConfigService.getCurrentTheme();
     this.loadCompanies();
   }
 
@@ -43,7 +51,7 @@ export class CompanyComponent {
       },
       error: (error: CustomError) => {
         console.error('Error loading companies:', error);
-      }
+      },
     });
   }
 

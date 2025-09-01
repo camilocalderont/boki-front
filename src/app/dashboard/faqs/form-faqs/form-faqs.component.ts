@@ -8,6 +8,7 @@ import { FaqsService } from '../../../services/faqs.service';
 import { CompanyService } from '../../../services/company.service';
 import { CategoryService } from '../../../services/category.service';
 import { ActivatedRoute, Router } from '@angular/router';
+import { ThemeConfigService } from '../../../services/theme-config.service';
 
 @Component({
   selector: 'form-faqs',
@@ -20,6 +21,7 @@ export class FormFaqsComponent {
   form!: FormGroup;
   isEditMode = false;
   faqsId: string | null = null;
+  theme: any = null;
 
   companies: GetCompanyResponse[] = [];
   categories: GetCategoryResponse[] = [];
@@ -30,9 +32,11 @@ export class FormFaqsComponent {
     private categoryService: CategoryService,
     private router: Router,
     private route: ActivatedRoute,
+    private themeConfigService: ThemeConfigService
   ) {}
 
   ngOnInit(): void {
+    this.theme = this.themeConfigService.getCurrentTheme();
     this.faqsId = this.route.snapshot.paramMap.get('id');
     this.isEditMode = !!this.faqsId;
     

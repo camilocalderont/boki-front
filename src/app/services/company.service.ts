@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { catchError, Observable, tap, throwError } from 'rxjs';
+import { catchError, Observable, throwError } from 'rxjs';
 import { ApiSuccessResponse, CustomError } from '../shared/interfaces/api.interface';
 import { GetCompanyResponse, GetUserResponse, PostCompanyRequest } from '../shared/interfaces/company.interface';
 

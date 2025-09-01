@@ -6,6 +6,7 @@ import { CategoryService } from '../../../services/category.service';
 import { PostCategoryRequest } from '../../../shared/interfaces/category.interface';
 import { CompanyService } from '../../../services/company.service';
 import { GetCompanyResponse } from '../../../shared/interfaces/company.interface';
+import { ThemeConfigService } from '../../../services/theme-config.service';
 
 @Component({
   selector: 'form-category',
@@ -19,6 +20,7 @@ export class FormCategoryComponent {
   form!: FormGroup;
   isEditMode = false;
   categoryId: string | null = null;
+  theme: any = null;
 
   companies: GetCompanyResponse[] = [];
 
@@ -27,10 +29,12 @@ export class FormCategoryComponent {
     private router: Router,
     private route: ActivatedRoute,
     private categoryService: CategoryService,
-    private companyService: CompanyService
+    private companyService: CompanyService,
+    private themeConfigService: ThemeConfigService
   ) {}
 
   ngOnInit(): void {
+    this.theme = this.themeConfigService.getCurrentTheme();
     this.categoryId = this.route.snapshot.paramMap.get('id');
     this.isEditMode = !!this.categoryId;
 
@@ -76,7 +80,6 @@ export class FormCategoryComponent {
     const payload: PostCategoryRequest = this.form.value;
 
     if (this.isEditMode) {
-      console.log('Actualizar categoría:', payload);
       this.categoryService.putCategoryById(Number(this.categoryId), payload).subscribe({
         next: (response) => {
           console.log('Categoría actualizada:', response);

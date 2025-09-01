@@ -1,0 +1,252 @@
+{
+  "theme": {
+    "name": "BokiBot Default Theme",
+    "colors": {
+      "background": {
+        "primary": {
+          "light": "bg-gray-50",
+          "dark": "dark:bg-gray-900"
+        },
+        "secondary": {
+          "light": "bg-white",
+          "dark": "dark:bg-gray-800"
+        },
+        "blur": {
+          "light": "bg-white/80",
+          "dark": "dark:bg-gray-800/80"
+        }
+      },
+      "text": {
+        "primary": {
+          "light": "text-gray-900",
+          "dark": "dark:text-white"
+        },
+        "secondary": {
+          "light": "text-gray-700",
+          "dark": "dark:text-gray-300"
+        },
+        "tertiary": {
+          "light": "text-gray-600",
+          "dark": "dark:text-gray-400"
+        },
+        "quaternary": {
+          "light": "text-gray-500",
+          "dark": "dark:text-gray-400"
+        },
+        "white": {
+          "light": "text-white",
+          "dark": "text-white"
+        },
+        "muted": {
+          "light": "text-gray-400",
+          "dark": "dark:text-gray-500"
+        }
+      },
+      "border": {
+        "primary": {
+          "light": "border-gray-100",
+          "dark": "dark:border-gray-700"
+        },
+        "secondary": {
+          "light": "border-gray-200",
+          "dark": "dark:border-gray-600"
+        },
+        "input": {
+          "light": "border",
+          "dark": "dark:border-gray-600"
+        }
+      },
+      "brand": {
+        "primary": {
+          "light": "bg-brand-blue",
+          "dark": "dark:bg-blue-600"
+        },
+        "primaryHover": {
+          "light": "hover:bg-brand-blue-dark",
+          "dark": "dark:hover:bg-blue-700"
+        },
+        "text": {
+          "light": "text-brand-blue",
+          "dark": "dark:text-blue-400"
+        },
+        "textHover": {
+          "light": "hover:text-brand-blue",
+          "dark": "dark:hover:text-blue-400"
+        },
+        "gradient": {
+          "light": "bg-gradient-to-r from-brand-blue to-brand-blue-light",
+          "dark": "dark:bg-gradient-to-r dark:from-blue-600 dark:to-blue-500"
+        }
+      },
+      "buttons": {
+        "primary": {
+          "background": {
+            "light": "bg-brand-blue",
+            "dark": "dark:bg-blue-600"
+          },
+          "backgroundHover": {
+            "light": "hover:bg-brand-blue-dark",
+            "dark": "dark:hover:bg-blue-700"
+          },
+          "text": {
+            "light": "text-white",
+            "dark": "text-white"
+          }
+        },
+        "secondary": {
+          "background": {
+            "light": "bg-brand-light",
+            "dark": "dark:bg-gray-600"
+          },
+          "backgroundHover": {
+            "light": "hover:bg-brand-dark",
+            "dark": "dark:hover:bg-gray-700"
+          },
+          "text": {
+            "light": "text-black",
+            "dark": "dark:text-white"
+          }
+        },
+        "ghost": {
+          "backgroundHover": {
+            "light": "hover:bg-gray-50",
+            "dark": "dark:hover:bg-gray-700"
+          },
+          "text": {
+            "light": "text-gray-700",
+            "dark": "dark:text-gray-300"
+          },
+          "textHover": {
+            "light": "hover:text-gray-900",
+            "dark": "dark:hover:text-white"
+          }
+        }
+      },
+      "forms": {
+        "input": {
+          "background": {
+            "light": "bg-white",
+            "dark": "dark:bg-gray-800"
+          },
+          "border": {
+            "light": "border",
+            "dark": "dark:border-gray-600"
+          },
+          "borderFocus": {
+            "light": "focus:border-brand-blue",
+            "dark": "dark:focus:border-blue-500"
+          },
+          "text": {
+            "light": "text-gray-900",
+            "dark": "dark:text-white"
+          },
+          "placeholder": {
+            "light": "placeholder-gray-500",
+            "dark": "dark:placeholder-gray-400"
+          }
+        },
+        "toggle": {
+          "background": {
+            "light": "bg-gray-200",
+            "dark": "dark:bg-gray-700"
+          },
+          "backgroundActive": {
+            "light": "peer-checked:bg-brand-blue",
+            "dark": "dark:peer-checked:bg-blue-600"
+          },
+          "thumb": {
+            "light": "after:bg-white",
+            "dark": "dark:after:bg-gray-300"
+          }
+        },
+        "label": {
+          "light": "text-gray-800",
+          "dark": "dark:text-gray-200"
+        }
+      },
+      "focus": {
+        "ring": {
+          "primary": {
+            "light": "focus:ring-2 focus:ring-brand-blue",
+            "dark": "dark:focus:ring-2 dark:focus:ring-blue-500"
+          },
+          "secondary": {
+            "light": "focus:ring-4 focus:ring-gray-200",
+            "dark": "dark:focus:ring-4 dark:focus:ring-gray-600"
+          },
+          "blue": {
+            "light": "focus:ring-4 focus:ring-blue-200",
+            "dark": "dark:focus:ring-4 dark:focus:ring-blue-800"
+          }
+        }
+      },
+      "status": {
+        "error": {
+          "text": {
+            "light": "text-red-500",
+            "dark": "dark:text-red-400"
+          },
+          "textLight": {
+            "light": "text-red-400",
+            "dark": "dark:text-red-300"
+          },
+          "background": {
+            "light": "bg-red-500",
+            "dark": "dark:bg-red-600"
+          }
+        },
+        "success": {
+          "text": {
+            "light": "text-green-500",
+            "dark": "dark:text-green-400"
+          },
+          "background": {
+            "light": "bg-green-500",
+            "dark": "dark:bg-green-600"
+          }
+        },
+        "warning": {
+          "text": {
+            "light": "text-yellow-500",
+            "dark": "dark:text-yellow-400"
+          },
+          "background": {
+            "light": "bg-yellow-500",
+            "dark": "dark:bg-yellow-600"
+          }
+        }
+      },
+      "shadow": {
+        "sm": {
+          "light": "shadow-sm",
+          "dark": "dark:shadow-lg"
+        },
+        "md": {
+          "light": "shadow-md",
+          "dark": "dark:shadow-xl"
+        },
+        "lg": {
+          "light": "shadow-lg",
+          "dark": "dark:shadow-2xl"
+        },
+        "xl": {
+          "light": "shadow-xl",
+          "dark": "dark:shadow-2xl"
+        },
+        "hover": {
+          "light": "hover:shadow-md",
+          "dark": "dark:hover:shadow-xl"
+        }
+      }
+    }
+  },
+  "branding": {
+    "logo": "/assets/logos/bokibot_logo.png",
+    "appName": "BokiBot",
+    "tagline": "Dashboard",
+    "footer": {
+      "text": "@by solercia",
+      "link": "https://solercia.com"
+    }
+  }
+}

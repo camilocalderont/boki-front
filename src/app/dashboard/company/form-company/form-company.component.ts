@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PostCompanyRequest } from '../../../shared/interfaces/company.interface';
 import { CompanyService } from '../../../services/company.service';
 import { AuthService } from '../../../auth/services/auth.service';
+import { ThemeConfigService } from '../../../services/theme-config.service';
 
 @Component({
   selector: 'form-company',
@@ -17,6 +18,7 @@ export class FormCompanyComponent {
   form!: FormGroup;
   isEditMode = false;
   companyId: string | null = null;
+  theme: any = null;
 
   userIdLogged: number | undefined = undefined;
 
@@ -25,10 +27,12 @@ export class FormCompanyComponent {
     private router: Router,
     private route: ActivatedRoute,
     private companyService: CompanyService,
-    private userData: AuthService
+    private userData: AuthService,
+    private themeConfigService: ThemeConfigService
   ) {}
 
   ngOnInit(): void {
+    this.theme = this.themeConfigService.getCurrentTheme();
     this.companyId = this.route.snapshot.paramMap.get('id');
     this.isEditMode = !!this.companyId;
 
