@@ -1,0 +1,124 @@
+<div class="space-y-16">
+
+  <!-- Hero Section -->
+  <section
+    class="relative bg-gradient-to-r from-orange-500 via-red-500 to-red-600 text-white py-20 px-6 rounded-3xl overflow-hidden">
+    <div class="absolute inset-0 bg-black/20"></div>
+    <div class="relative max-w-4xl mx-auto text-center">
+      <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+        Plataforma Nacional de <br>
+        <span class="text-yellow-300">Músicos Colombianos</span>
+      </h1>
+      <p class="text-xl md:text-2xl mb-8 text-orange-100 leading-relaxed">
+        Conectando el talento artístico de Colombia en una sola plataforma
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button
+          class="bg-white text-orange-600 px-8 py-4 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+          Explorar Artistas
+        </button>
+        <button
+          class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-orange-600 transition-all duration-200">
+          Registrarse
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección: Estoy Buscando -->
+  <section id="EstoyBuscando">
+    <app-content-cards [items]="estoyBuscandoData" [sectionTitle]="'Estoy Buscando'"
+      [sectionDescription]="'Encuentra el talento que necesitas para tu proyecto'" [category]="'artistas'"
+      [viewMoreUrl]="'#EstoyBuscando'" [showSectionButton]="true">
+    </app-content-cards>
+  </section>
+
+  <!-- Sección: Portafolio -->
+  <section id="Portafolio" class="bg-gray-50 -mx-6 px-6 py-16 rounded-3xl">
+    <app-content-cards [items]="portafolioData" [sectionTitle]="'Portafolio de Artistas'"
+      [sectionDescription]="'Descubre los perfiles de músicos y artistas colombianos'" [category]="'músicos'"
+      [viewMoreUrl]="'#Portafolio'" [showSectionButton]="true">
+    </app-content-cards>
+  </section>
+
+  <!-- Sección: Proyectos -->
+  <section id="Proyectos">
+    <app-content-cards [items]="proyectosData" [sectionTitle]="'Proyectos Culturales'"
+      [sectionDescription]="'Iniciativas y proyectos que transforman comunidades'" [category]="'proyectos'"
+      [viewMoreUrl]="'#Proyectos'" [showSectionButton]="true">
+    </app-content-cards>
+  </section>
+
+  <!-- Sección: Calendario -->
+  <section id="Calendario" class="bg-gradient-to-br from-blue-50 to-indigo-50 -mx-6 px-6 py-16 rounded-3xl">
+    <app-content-cards [items]="calendarioData" [sectionTitle]="'Eventos y Calendario'"
+      [sectionDescription]="'No te pierdas los próximos eventos culturales'" [category]="'eventos'"
+      [viewMoreUrl]="'#Calendario'" [showSectionButton]="true">
+    </app-content-cards>
+  </section>
+
+  <!-- Sección: Noticias -->
+  <section id="Noticias">
+    <app-content-cards [items]="noticiasData" [sectionTitle]="'Noticias Culturales'"
+      [sectionDescription]="'Mantente informado sobre el panorama cultural colombiano'" [category]="'noticias'"
+      [viewMoreUrl]="'#Noticias'" [showSectionButton]="true">
+    </app-content-cards>
+  </section>
+
+  <!-- Sección: Mapa Cultural -->
+  <section id="Mapa" class="bg-green-50 -mx-6 px-6 py-16 rounded-3xl">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-900 mb-4">Mapa Cultural de Colombia</h2>
+      <p class="text-lg text-gray-600 max-w-2xl mx-auto">
+        Explora la geografía cultural de Colombia: teatros, festivales, conservatorios y centros culturales
+      </p>
+    </div>
+
+    <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+      <div class="h-[600px] w-full">
+        <app-interactive-map [markers]="mapaMarkers" [minHeight]="'600px'" [initialZoom]="6">
+        </app-interactive-map>
+      </div>
+
+      <!-- Información adicional del mapa -->
+      <div class="p-6 bg-gradient-to-r from-green-50 to-blue-50">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+          <div>
+            <div class="text-2xl font-bold text-green-600 mb-2">{{ mapaMarkers.length }}</div>
+            <div class="text-gray-600 text-sm">Lugares culturales</div>
+          </div>
+          <div>
+            <div class="text-2xl font-bold text-blue-600 mb-2">32</div>
+            <div class="text-gray-600 text-sm">Departamentos cubiertos</div>
+          </div>
+          <div>
+            <div class="text-2xl font-bold text-purple-600 mb-2">100+</div>
+            <div class="text-gray-600 text-sm">Eventos anuales</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="text-center py-16">
+    <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white py-16 px-8 rounded-3xl">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">
+        ¿Eres artista o músico?
+      </h2>
+      <p class="text-xl mb-8 text-purple-100">
+        Únete a la comunidad artística más grande de Colombia
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button
+          class="bg-white text-purple-600 px-8 py-4 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+          Crear Perfil
+        </button>
+        <button
+          class="border-2 border-white text-white px-8 py-4 rounded-xl font-semibold hover:bg-white hover:text-purple-600 transition-all duration-200">
+          Saber Más
+        </button>
+      </div>
+    </div>
+  </section>
+</div>

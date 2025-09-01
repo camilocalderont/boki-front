@@ -1,0 +1,145 @@
+/* Estilos adicionales para el componente PNMC Layout */
+
+/* Animaciones suaves para el menú móvil */
+.mobile-menu-enter {
+  transform: translateY(-10px);
+  opacity: 0;
+}
+
+.mobile-menu-enter-active {
+  transform: translateY(0);
+  opacity: 1;
+  transition: all 0.3s ease-out;
+}
+
+/* Efecto hover para los enlaces/botones del menú */
+nav .menu-button .absolute {
+  /* Los spans con clase absolute ya manejan el efecto hover */
+}
+
+/* Sombra suave para el header */
+header {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}
+
+/* Efecto de glassmorphism para el header */
+header {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Estilos para botones del menú - que se vean como enlaces modernos */
+.menu-button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+  text-decoration: none;
+  color: inherit;
+  display: inline-block;
+  position: relative;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+/* Eliminar estilos de botón en todos los navegadores */
+.menu-button::-moz-focus-inner {
+  border: 0;
+  padding: 0;
+}
+
+.menu-button:focus {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Asegurar que los botones del menú se vean exactamente como enlaces */
+.menu-button:hover {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+.menu-button:active {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  transform: none;
+}
+
+.menu-button:visited {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+/* Estilos específicos para navegación horizontal */
+nav.hidden.md\\:flex .menu-button {
+  background: transparent !important;
+  border: 0 !important;
+  padding: 0 !important;
+}
+
+/* Estilos específicos para navegación móvil */
+nav.flex.flex-col .menu-button {
+  background: transparent !important;
+  border: 0 !important;
+  width: 100%;
+  text-align: left;
+}
+
+/* Animación para el botón de hamburguesa */
+button svg {
+  transition: transform 0.3s ease;
+}
+
+button:hover svg {
+  transform: scale(1.1);
+}
+
+/* Gradiente personalizado para elementos PNMC */
+.pnmc-gradient {
+  background: linear-gradient(135deg, #f97316 0%, #dc2626 100%);
+}
+
+/* Animación de entrada para las tarjetas */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.card-enter {
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .mobile-menu {
+    animation: slideDown 0.3s ease-out;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

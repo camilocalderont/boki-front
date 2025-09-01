@@ -1,0 +1,164 @@
+<div class="min-h-screen bg-gray-50">
+
+  <!-- Header horizontal sin sidebar -->
+  <header class="bg-white/95 backdrop-blur-sm border-b border-gray-200 px-6 py-4 shadow-sm sticky top-0 z-[9999]">
+    <div class="max-w-7xl mx-auto flex items-center justify-between">
+
+      <!-- Logo -->
+      <div class="flex items-center">
+        <div
+          class="w-12 h-12 bg-gradient-to-r from-orange-500 to-red-600 rounded-xl flex items-center justify-center mr-3 shadow-lg">
+          <span class="text-white font-bold text-xl">P</span>
+        </div>
+        <div class="flex flex-col">
+          <span class="font-bold text-xl text-gray-900">PNMC</span>
+          <span class="text-xs text-gray-500 font-medium">Ministerio de Cultura</span>
+        </div>
+      </div>
+
+      <!-- Menú horizontal -->
+      <nav class="hidden md:flex items-center space-x-8">
+        <button (click)="scrollToSection('EstoyBuscando')"
+          class="menu-button text-gray-700 hover:text-orange-600 font-semibold transition-colors duration-200 relative group">
+          Estoy Buscando
+          <span
+            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-600 transition-all duration-200 group-hover:w-full"></span>
+        </button>
+        <button (click)="scrollToSection('Portafolio')"
+          class="menu-button text-gray-700 hover:text-orange-600 font-semibold transition-colors duration-200 relative group">
+          Portafolio
+          <span
+            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-600 transition-all duration-200 group-hover:w-full"></span>
+        </button>
+        <button (click)="scrollToSection('Proyectos')"
+          class="menu-button text-gray-700 hover:text-orange-600 font-semibold transition-colors duration-200 relative group">
+          Proyectos
+          <span
+            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-600 transition-all duration-200 group-hover:w-full"></span>
+        </button>
+        <button (click)="scrollToSection('Mapa')"
+          class="menu-button text-gray-700 hover:text-orange-600 font-semibold transition-colors duration-200 relative group">
+          Mapa
+          <span
+            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-600 transition-all duration-200 group-hover:w-full"></span>
+        </button>
+        <button (click)="scrollToSection('Calendario')"
+          class="menu-button text-gray-700 hover:text-orange-600 font-semibold transition-colors duration-200 relative group">
+          Calendario
+          <span
+            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-600 transition-all duration-200 group-hover:w-full"></span>
+        </button>
+        <button (click)="scrollToSection('Noticias')"
+          class="menu-button text-gray-700 hover:text-orange-600 font-semibold transition-colors duration-200 relative group">
+          Noticias
+          <span
+            class="absolute -bottom-1 left-0 w-0 h-0.5 bg-orange-600 transition-all duration-200 group-hover:w-full"></span>
+        </button>
+      </nav>
+
+      <!-- Menú móvil hamburger -->
+      <button (click)="toggleMobileMenu()"
+        class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            [attr.d]="mobileMenuOpen ? 'M6 18L18 6M6 6l12 12' : 'M4 6h16M4 12h16M4 18h16'">
+          </path>
+        </svg>
+      </button>
+
+      <!-- Botón de ingresar -->
+      <div class="hidden md:block">
+        <button
+          class="bg-gradient-to-r from-orange-500 to-red-600 text-white px-6 py-2.5 rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200">
+          Ingresar
+        </button>
+      </div>
+    </div>
+
+    <!-- Menú móvil desplegable -->
+    <div class="md:hidden mt-4 border-t border-gray-200 pt-4" *ngIf="mobileMenuOpen">
+      <nav class="flex flex-col space-y-3">
+        <button (click)="scrollToSection('EstoyBuscando'); toggleMobileMenu()"
+          class="menu-button text-gray-700 hover:text-orange-600 font-semibold py-2 transition-colors duration-200 text-left">
+          Estoy Buscando
+        </button>
+        <button (click)="scrollToSection('Portafolio'); toggleMobileMenu()"
+          class="menu-button text-gray-700 hover:text-orange-600 font-semibold py-2 transition-colors duration-200 text-left">
+          Portafolio
+        </button>
+        <button (click)="scrollToSection('Proyectos'); toggleMobileMenu()"
+          class="menu-button text-gray-700 hover:text-orange-600 font-semibold py-2 transition-colors duration-200 text-left">
+          Proyectos
+        </button>
+        <button (click)="scrollToSection('Mapa'); toggleMobileMenu()"
+          class="menu-button text-gray-700 hover:text-orange-600 font-semibold py-2 transition-colors duration-200 text-left">
+          Mapa
+        </button>
+        <button (click)="scrollToSection('Calendario'); toggleMobileMenu()"
+          class="menu-button text-gray-700 hover:text-orange-600 font-semibold py-2 transition-colors duration-200 text-left">
+          Calendario
+        </button>
+        <button (click)="scrollToSection('Noticias'); toggleMobileMenu()"
+          class="menu-button text-gray-700 hover:text-orange-600 font-semibold py-2 transition-colors duration-200 text-left">
+          Noticias
+        </button>
+        <button
+          class="bg-gradient-to-r from-orange-500 to-red-600 text-white px-6 py-2.5 rounded-xl font-semibold mt-4 w-full">
+          Ingresar
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="max-w-7xl mx-auto px-6 py-8">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-12 mt-16">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <div class="flex items-center mb-4">
+            <div
+              class="w-10 h-10 bg-gradient-to-r from-orange-500 to-red-600 rounded-xl flex items-center justify-center mr-3">
+              <span class="text-white font-bold text-lg">P</span>
+            </div>
+            <div>
+              <span class="font-bold text-lg">PNMC</span>
+              <p class="text-sm text-gray-400">Ministerio de Cultura</p>
+            </div>
+          </div>
+          <p class="text-gray-400 text-sm leading-relaxed">
+            Plataforma Nacional de Músicos Colombianos - Conectando el talento artístico de Colombia.
+          </p>
+        </div>
+        <div>
+          <h3 class="font-semibold mb-4">Enlaces rápidos</h3>
+          <div class="space-y-2">
+            <a href="#EstoyBuscando" class="block text-gray-400 hover:text-white transition-colors duration-200">Estoy
+              Buscando</a>
+            <a href="#Portafolio"
+              class="block text-gray-400 hover:text-white transition-colors duration-200">Portafolio</a>
+            <a href="#Proyectos"
+              class="block text-gray-400 hover:text-white transition-colors duration-200">Proyectos</a>
+            <a href="#Calendario"
+              class="block text-gray-400 hover:text-white transition-colors duration-200">Calendario</a>
+          </div>
+        </div>
+        <div>
+          <h3 class="font-semibold mb-4">Contacto</h3>
+          <div class="space-y-2 text-gray-400 text-sm">
+            <p>Ministerio de Cultura</p>
+            <p>Bogotá, Colombia</p>
+            <p>info@mincultura.gov.co</p>
+          </div>
+        </div>
+      </div>
+      <div class="border-t border-gray-800 mt-8 pt-8 text-center text-gray-400 text-sm">
+        <p>&copy; 2024 PNMC - Ministerio de Cultura. Todos los derechos reservados.</p>
+      </div>
+    </div>
+  </footer>
+</div>

@@ -6,12 +6,12 @@ export const routes: Routes = [
     path: 'auth',
     loadChildren: () => import('./auth/auth.routes').then(m => m.AUTH_ROUTES)
   },
-  
-  // Rutas del dashboard 
+
+  // Rutas del dashboard
   {
     path: 'dashboard',
     loadComponent: () => import('./dashboard/dashboard-layout/dashboard-layout.component').then(m => m.DashboardLayoutComponent),
-    canActivate: [authGuard], 
+    canActivate: [authGuard],
     children: [
       {
         path: '',
@@ -66,12 +66,18 @@ export const routes: Routes = [
     ]
   },
 
+  // Rutas del dashboard PNMC
+  {
+    path: 'pnmc',
+    loadChildren: () => import('./dashboard-pnmc/pnmc.routes').then(m => m.pnmcRoutes)
+  },
+
   {
     path: '',
-    redirectTo: '/dashboard', 
+    redirectTo: '/pnmc',
     pathMatch: 'full'
   },
-  
+
   {
     path: '**',
     redirectTo: '/dashboard'
