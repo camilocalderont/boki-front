@@ -9,17 +9,20 @@ import {
 } from '../../shared/interfaces/api.interface';
 import { Router } from '@angular/router';
 import { FORMAT_DATA } from '../../shared/enums/format-data.enum';
-import { ThemeConfigService } from '../../services/theme-config.service';
+import { BaseComponent } from '../../shared/components/base/base.component';
+import { ThemeComponentsModule } from '../../shared/components/theme-components';
 
 @Component({
   selector: 'app-company',
-  imports: [DataGridComponent],
+  imports: [
+    DataGridComponent,
+    ThemeComponentsModule
+  ],
   templateUrl: './company.component.html',
   styleUrls: ['./company.component.scss'],
 })
-export class CompanyComponent {
+export class CompanyComponent extends BaseComponent {
   companies: GetCompanyResponse[] = [];
-  theme: any = null;
 
   columns: DataGridColumn[] = [
     { key: 'VcName', label: 'Nombre' },
@@ -34,12 +37,12 @@ export class CompanyComponent {
 
   constructor(
     private companyService: CompanyService,
-    private router: Router,
-    private themeConfigService: ThemeConfigService
-  ) {}
+    private router: Router
+  ) {
+    super();
+  }
 
-  ngOnInit() {
-    this.theme = this.themeConfigService.getCurrentTheme();
+  protected onComponentInit(): void {
     this.loadCompanies();
   }
 
