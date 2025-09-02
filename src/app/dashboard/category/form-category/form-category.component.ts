@@ -6,22 +6,25 @@ import { CategoryService } from '../../../services/category.service';
 import { PostCategoryRequest } from '../../../shared/interfaces/category.interface';
 import { CompanyService } from '../../../services/company.service';
 import { GetCompanyResponse } from '../../../shared/interfaces/company.interface';
-import { ThemeConfigService } from '../../../services/theme-config.service';
+import { BaseComponent } from '../../../shared/components/base/base.component';
+import { ThemeComponentsModule } from '../../../shared/components/theme-components';
 
 @Component({
   selector: 'form-category',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule, 
+    ReactiveFormsModule,
+    ThemeComponentsModule
+  ],
   templateUrl: './form-category.component.html',
   styleUrls: ['./form-category.component.scss']
 })
-export class FormCategoryComponent {
+export class FormCategoryComponent extends BaseComponent {
 
   form!: FormGroup;
   isEditMode = false;
   categoryId: string | null = null;
-  theme: any = null;
-
   companies: GetCompanyResponse[] = [];
 
   constructor(
@@ -29,12 +32,13 @@ export class FormCategoryComponent {
     private router: Router,
     private route: ActivatedRoute,
     private categoryService: CategoryService,
-    private companyService: CompanyService,
-    private themeConfigService: ThemeConfigService
-  ) {}
+    private companyService: CompanyService
+  ) {
+    super(); // 👈 Llamar al constructor padre
+  }
 
-  ngOnInit(): void {
-    this.theme = this.themeConfigService.getCurrentTheme();
+  protected onComponentInit(): void {
+    // Este método se ejecuta después de que el tema esté disponible
     this.categoryId = this.route.snapshot.paramMap.get('id');
     this.isEditMode = !!this.categoryId;
 
@@ -90,7 +94,6 @@ export class FormCategoryComponent {
         }
       });
     } else {
-      console.log('Crear categoría:', payload);
       this.categoryService.postCategory(payload).subscribe({
         next: (response) => {
           console.log('Categoría creada:', response);

@@ -1,20 +1,26 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, RouterOutlet } from '@angular/router';
 import { AuthService } from '../../auth/services/auth.service';
 import { UserDropdownComponent } from '../user-dropdown/user-dropdown.component';
-import { ThemeConfigService } from '../../services/theme-config.service';
+import { BaseComponent } from '../../shared/components/base/base.component';
+import { ThemeComponentsModule } from '../../shared/components/theme-components';
 
 @Component({
   selector: 'app-dashboard-layout',
   standalone: true,
-  imports: [CommonModule, RouterOutlet, RouterModule, UserDropdownComponent],
+  imports: [
+    CommonModule, 
+    RouterOutlet, 
+    RouterModule, 
+    UserDropdownComponent,
+    ThemeComponentsModule
+  ],
   templateUrl: './dashboard-layout.component.html',
   styleUrl: './dashboard-layout.component.scss',
 })
-export class DashboardLayoutComponent implements OnInit {
+export class DashboardLayoutComponent extends BaseComponent {
   isCollapsed = false;
-  theme: any = null;
 
   navigationItems = [
     { label: 'Dashboard', icon: 'home', route: '/dashboard', active: true },
@@ -34,19 +40,13 @@ export class DashboardLayoutComponent implements OnInit {
 
   constructor(
     private authService: AuthService, 
-    private router: Router,
-    private themeConfigService: ThemeConfigService
-  ) {}
+    private router: Router
+  ) {
+    super(); // 👈 Importante: llamar al constructor padre
+  }
 
-  ngOnInit(): void {
-    // Obtener la configuración ya cargada (sin nueva petición)
-    this.theme = this.themeConfigService.getCurrentTheme();
-    
-    if (this.theme) {
-      console.log('Dashboard Layout - Configuración obtenida:', this.theme);
-    } else {
-      console.log('Dashboard Layout - Configuración aún no disponible');
-    }
+  protected onComponentInit(): void {
+    console.log('Dashboard Layout inicializado con tema:', this.theme);
   }
 
   toggleSidebar(): void {

@@ -5,21 +5,25 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { PostCompanyRequest } from '../../../shared/interfaces/company.interface';
 import { CompanyService } from '../../../services/company.service';
 import { AuthService } from '../../../auth/services/auth.service';
-import { ThemeConfigService } from '../../../services/theme-config.service';
+import { BaseComponent } from '../../../shared/components/base/base.component';
+import { ThemeComponentsModule } from '../../../shared/components/theme-components';
 
 @Component({
   selector: 'form-company',
-  imports: [CommonModule, ReactiveFormsModule],
+  standalone: true,
+  imports: [
+    CommonModule, 
+    ReactiveFormsModule,
+    ThemeComponentsModule
+  ],
   templateUrl: './form-company.component.html',
-  styleUrl: './form-company.component.scss'
+  styleUrls: ['./form-company.component.scss']
 })
-export class FormCompanyComponent {
+export class FormCompanyComponent extends BaseComponent {
 
   form!: FormGroup;
   isEditMode = false;
   companyId: string | null = null;
-  theme: any = null;
-
   userIdLogged: number | undefined = undefined;
 
   constructor(
@@ -27,12 +31,13 @@ export class FormCompanyComponent {
     private router: Router,
     private route: ActivatedRoute,
     private companyService: CompanyService,
-    private userData: AuthService,
-    private themeConfigService: ThemeConfigService
-  ) {}
+    private userData: AuthService
+  ) {
+    super(); // 👈 Llamar al constructor padre
+  }
 
-  ngOnInit(): void {
-    this.theme = this.themeConfigService.getCurrentTheme();
+  protected onComponentInit(): void {
+    // Este método se ejecuta después de que el tema esté disponible
     this.companyId = this.route.snapshot.paramMap.get('id');
     this.isEditMode = !!this.companyId;
 

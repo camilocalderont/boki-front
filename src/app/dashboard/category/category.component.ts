@@ -6,33 +6,37 @@ import { DataGridComponent } from '../../shared/components/data-grid/data-grid.c
 import { Router } from '@angular/router';
 import { CategoryService } from '../../services/category.service';
 import { ApiSuccessResponse, CustomError } from '../../shared/interfaces/api.interface';
-import { ThemeConfigService } from '../../services/theme-config.service';
+import { BaseComponent } from '../../shared/components/base/base.component';
+import { ThemeComponentsModule } from '../../shared/components/theme-components';
 
 @Component({
-  selector: 'app-category.component',
-  imports: [DataGridComponent],
+  selector: 'app-category',
+  imports: [
+    DataGridComponent,
+    ThemeComponentsModule
+  ],
   templateUrl: './category.component.html',
   styleUrl: './category.component.scss'
 })
-export class CategoryComponent {
+export class CategoryComponent extends BaseComponent {
 
   categories: GetCategoryResponse[] = [];
-  theme: any = null;
 
   columns: DataGridColumn[] = [
     { key: 'VcName', label: 'Nombre' },
     { key: 'CompanyId', label: 'Empresa' },
-    // { key: 'BIsService', label: 'Esta en Servicio' },
     { key: 'created_at', label: 'Fecha de Creación', format: FORMAT_DATA.DATE },
   ];
 
-  constructor(private router: Router,
-    private categoryService: CategoryService,
-    private themeConfigService: ThemeConfigService
-  ) { }
+  constructor(
+    private router: Router,
+    private categoryService: CategoryService
+  ) {
+    super(); 
+  }
 
-  ngOnInit() {
-    this.theme = this.themeConfigService.getCurrentTheme();
+  protected onComponentInit(): void {
+    // Este método se ejecuta después de que el tema esté disponible
     this.loadCategories();
   }
 

@@ -1,64 +1,51 @@
-<div class="max-w-8xl mx-auto p-6 {{theme?.theme?.colors?.background?.secondary?.light}} {{theme?.theme?.colors?.shadow?.md?.light}} rounded-2xl">
-  <h2 class="text-xl font-semibold {{theme?.theme?.colors?.text?.primary?.light}} mb-6">
+<form-container-theme>
+  <h2-theme class="mb-6">
     {{ isEditMode ? 'Actualizar Categoria' : 'Crear Categoria' }}
-  </h2>
+  </h2-theme>
 
   <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
 
     <!-- Primera fila: Nombre y Empresas -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div>
-            <input type="text" formControlName="VcName" placeholder="Nombre"
-            class="w-full rounded-md {{theme?.theme?.colors?.forms?.input?.border?.light}} {{theme?.theme?.colors?.forms?.input?.background?.light}} {{theme?.theme?.colors?.forms?.input?.text?.light}} {{theme?.theme?.colors?.forms?.input?.placeholder?.light}} p-2.5 {{theme?.theme?.colors?.shadow?.sm?.light}} {{theme?.theme?.colors?.focus?.ring?.primary?.light}} {{theme?.theme?.colors?.forms?.input?.borderFocus?.light}}" />
-            <div *ngIf="form.get('VcName')?.invalid && form.get('VcName')?.touched"
-            class="{{theme?.theme?.colors?.status?.error?.textLight?.light}} text-xs mt-1 pl-1">
-            El nombre es obligatorio
-            </div>
-        </div>
+      <form-input-theme 
+        formControlName="VcName" 
+        placeholder="Nombre"
+        [showError]="!!(form.get('VcName')?.invalid && form.get('VcName')?.touched)"
+        errorMessage="El nombre es obligatorio">
+      </form-input-theme>
 
-        <div>
-            <div class="relative">
-                <select formControlName="CompanyId"
-                    class="w-full rounded-md {{theme?.theme?.colors?.forms?.input?.border?.light}} {{theme?.theme?.colors?.forms?.input?.background?.light}} {{theme?.theme?.colors?.forms?.input?.text?.light}} p-2.5 {{theme?.theme?.colors?.shadow?.sm?.light}} {{theme?.theme?.colors?.focus?.ring?.primary?.light}} {{theme?.theme?.colors?.forms?.input?.borderFocus?.light}} appearance-none">
-                <option value="" disabled>Seleccione una empresa</option>
-                <option *ngFor="let company of companies" [value]="company.Id">
-                    {{ company.VcName }}
-                </option>
-                </select>
-
-                <!-- Flecha personalizada -->
-                <span class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none {{theme?.theme?.colors?.text?.quaternary?.light}}">
-                ▼
-                </span>
-            </div>
-            <p *ngIf="form.get('CompanyId')?.invalid && form.get('CompanyId')?.touched" class="{{theme?.theme?.colors?.status?.error?.text?.light}} text-xs mt-1">
-                Debe seleccionar una empresa
-            </p>
-        </div>
+      <form-select-theme 
+        formControlName="CompanyId"
+        placeholder="Seleccione una empresa"
+        [showError]="!!(form.get('CompanyId')?.invalid && form.get('CompanyId')?.touched)"
+        errorMessage="Debe seleccionar una empresa">
+        <option *ngFor="let company of companies" [value]="company.Id">
+          {{ company.VcName }}
+        </option>
+      </form-select-theme>
     </div>
 
-     <!-- Toggle: BIsService -->
-    <div class="flex items-center space-x-3">
-      <label class="relative inline-flex items-center cursor-pointer">
-        <input type="checkbox" formControlName="BIsService" class="sr-only peer" />
-        <div
-          class="w-11 h-6 {{theme?.theme?.colors?.forms?.toggle?.background?.light}} {{theme?.theme?.colors?.focus?.ring?.secondary?.light}} rounded-full peer {{theme?.theme?.colors?.forms?.toggle?.backgroundActive?.light}} peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] {{theme?.theme?.colors?.forms?.toggle?.thumb?.light}} after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all">
-        </div>
-        <span class="ml-3 text-sm font-medium {{theme?.theme?.colors?.forms?.label?.light}}">Es Servicio</span>
-      </label>
-    </div>
+    <!-- Toggle: BIsService -->
+    <form-toggle-theme 
+      formControlName="BIsService" 
+      label="Es Servicio">
+    </form-toggle-theme>
 
     <!-- Botones -->
     <div class="flex justify-end space-x-4 pt-2">
-      <button type="button"
-        class="px-5 py-2.5 inline-flex items-center {{theme?.theme?.colors?.buttons?.secondary?.background?.light}} {{theme?.theme?.colors?.buttons?.secondary?.text?.light}} text-sm rounded-md {{theme?.theme?.colors?.buttons?.secondary?.backgroundHover?.light}} {{theme?.theme?.colors?.focus?.ring?.secondary?.light}} transition-all duration-200 {{theme?.theme?.colors?.shadow?.sm?.light}} {{theme?.theme?.colors?.shadow?.hover?.light}}"
+      <button-theme 
+        type="button" 
+        variant="secondary"
         (click)="redirectLink('/dashboard/categories')">
         Cancelar
-      </button>
-      <button type="submit" [disabled]="form.invalid"
-        class="px-5 py-2.5 inline-flex items-center {{theme?.theme?.colors?.buttons?.primary?.background?.light}} {{theme?.theme?.colors?.buttons?.primary?.text?.light}} text-sm rounded-md {{theme?.theme?.colors?.buttons?.primary?.backgroundHover?.light}} {{theme?.theme?.colors?.focus?.ring?.blue?.light}} transition-all duration-200 {{theme?.theme?.colors?.shadow?.sm?.light}} {{theme?.theme?.colors?.shadow?.hover?.light}} disabled:opacity-50 disabled:cursor-not-allowed">
+      </button-theme>
+      
+      <button-theme 
+        type="submit" 
+        [disabled]="form.invalid"
+        variant="primary">
         {{ isEditMode ? 'Actualizar' : 'Crear' }}
-      </button>
+      </button-theme>
     </div>
   </form>
-</div>
+</form-container-theme>

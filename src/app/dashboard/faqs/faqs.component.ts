@@ -9,17 +9,21 @@ import {
 import { GetFaqsResponse } from '../../shared/interfaces/faqs.interface';
 import { FaqsService } from '../../services/faqs.service';
 import { DataGridComponent } from '../../shared/components/data-grid/data-grid.component';
-import { ThemeConfigService } from '../../services/theme-config.service';
+import { BaseComponent } from '../../shared/components/base/base.component';
+import { ThemeComponentsModule } from '../../shared/components/theme-components';
 
 @Component({
-  selector: 'app-faqs.component',
-  imports: [DataGridComponent],
+  selector: 'app-faqs',
+  standalone: true,
+  imports: [
+    DataGridComponent,
+    ThemeComponentsModule
+  ],
   templateUrl: './faqs.component.html',
-  styleUrl: './faqs.component.scss',
+  styleUrls: ['./faqs.component.scss'],
 })
-export class FaqsComponent {
+export class FaqsComponent extends BaseComponent {
   faqs: GetFaqsResponse[] = [];
-  theme: any = null;
 
   columns: DataGridColumn[] = [
     { key: 'VcQuestion', label: 'Pregunta' },
@@ -32,12 +36,13 @@ export class FaqsComponent {
 
   constructor(
     private router: Router,
-    private faqsService: FaqsService,
-    private themeConfigService: ThemeConfigService
-  ) {}
+    private faqsService: FaqsService
+  ) {
+    super(); // 👈 Llamar al constructor padre
+  }
 
-  ngOnInit() {
-    this.theme = this.themeConfigService.getCurrentTheme();
+  protected onComponentInit(): void {
+    // Este método se ejecuta después de que el tema esté disponible
     this.loadFaqs();
   }
 

@@ -8,20 +8,25 @@ import { FaqsService } from '../../../services/faqs.service';
 import { CompanyService } from '../../../services/company.service';
 import { CategoryService } from '../../../services/category.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ThemeConfigService } from '../../../services/theme-config.service';
+import { BaseComponent } from '../../../shared/components/base/base.component';
+import { ThemeComponentsModule } from '../../../shared/components/theme-components';
 
 @Component({
   selector: 'form-faqs',
-  imports: [CommonModule, ReactiveFormsModule],
+  standalone: true,
+  imports: [
+    CommonModule, 
+    ReactiveFormsModule,
+    ThemeComponentsModule
+  ],
   templateUrl: './form-faqs.component.html',
   styleUrls: ['./form-faqs.component.scss']
 })
-export class FormFaqsComponent {
+export class FormFaqsComponent extends BaseComponent {
 
   form!: FormGroup;
   isEditMode = false;
   faqsId: string | null = null;
-  theme: any = null;
 
   companies: GetCompanyResponse[] = [];
   categories: GetCategoryResponse[] = [];
@@ -31,12 +36,13 @@ export class FormFaqsComponent {
     private companyService: CompanyService,
     private categoryService: CategoryService,
     private router: Router,
-    private route: ActivatedRoute,
-    private themeConfigService: ThemeConfigService
-  ) {}
+    private route: ActivatedRoute
+  ) {
+    super(); 
+  }
 
-  ngOnInit(): void {
-    this.theme = this.themeConfigService.getCurrentTheme();
+  protected onComponentInit(): void {
+    // Este método se ejecuta después de que el tema esté disponible
     this.faqsId = this.route.snapshot.paramMap.get('id');
     this.isEditMode = !!this.faqsId;
     
