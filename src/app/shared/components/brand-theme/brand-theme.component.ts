@@ -1,57 +1,73 @@
-import { Component, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectorRef, OnInit } from '@angular/core';
 import { BaseComponent } from '../base/base.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'brand-theme',
   template: `
     <div class="flex items-center">
-      <div [class]="logoClasses">
-        <span [class]="logoTextClasses">B</span>
+      <div class="{{logoClassesString}}">
+        <span class="{{logoTextClassesString}}">B</span>
       </div>
       <div class="flex flex-col">
-        <span [class]="titleClasses">BokiBot</span>
-        <span [class]="subtitleClasses">Dashboard</span>
+        <span class="{{titleClassesString}}">BokiBot</span>
+        <span class="{{subtitleClassesString}}">Dashboard</span>
       </div>
     </div>
   `,
-  standalone: true
+  standalone: true,
+  imports: [CommonModule]
 })
-export class BrandThemeComponent extends BaseComponent {
+export class BrandThemeComponent extends BaseComponent implements OnInit {
+
+  // Variables para las clases - se construyen UNA sola vez
+  public logoClassesString: string = '';
+  public logoTextClassesString: string = '';
+  public titleClassesString: string = '';
+  public subtitleClassesString: string = '';
 
   constructor(private cdr: ChangeDetectorRef) {
     super();
   }
 
-  get logoClasses(): string {
-    return [
+  override ngOnInit(): void {
+    super.ngOnInit();
+    this.buildClasses();
+  }
+
+  private buildClasses(): void {
+    // Logo classes
+    this.logoClassesString = [
       'w-10 h-10 rounded-xl flex items-center justify-center mr-4',
-      this.theme?.theme?.colors?.brand?.gradient?.light || '',
-      this.theme?.theme?.colors?.shadow?.navigation?.light || ''
-    ].filter(cls => cls).join(' ');
-  }
+      this.theme?.theme?.colors?.brand?.gradient?.light || 'bg-gradient-to-r from-brand-blue to-brand-blue-light'
+    ].filter(cls => cls && cls.trim()).join(' ');
 
-  get logoTextClasses(): string {
-    return [
+    // Logo text classes  
+    this.logoTextClassesString = [
       'font-bold text-lg',
-      this.theme?.theme?.colors?.text?.white?.light || ''
-    ].filter(cls => cls).join(' ');
-  }
+      this.theme?.theme?.colors?.text?.white?.light || 'text-white'
+    ].filter(cls => cls && cls.trim()).join(' ');
 
-  get titleClasses(): string {
-    return [
-      'font-bold text-xl',
-      this.theme?.theme?.colors?.text?.primary?.light || ''
-    ].filter(cls => cls).join(' ');
-  }
+    // Title classes
+    this.titleClassesString = [
+      'font-bold text-xl', 
+      this.theme?.theme?.colors?.text?.primary?.light || 'text-gray-900'
+    ].filter(cls => cls && cls.trim()).join(' ');
 
-  get subtitleClasses(): string {
-    return [
+    // Subtitle classes
+    this.subtitleClassesString = [
       'text-xs font-medium',
-      this.theme?.theme?.colors?.text?.quaternary?.light || ''
-    ].filter(cls => cls).join(' ');
+      this.theme?.theme?.colors?.text?.quaternary?.light || 'text-gray-600'
+    ].filter(cls => cls && cls.trim()).join(' ');
+
+    this.cdr.detectChanges();
+  }
+
+  public refreshTheme(): void {
+    this.buildClasses();
   }
 
   protected onComponentInit(): void {
-    this.cdr.detectChanges();
+    this.buildClasses();
   }
 }

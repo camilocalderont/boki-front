@@ -42,7 +42,7 @@ export class DashboardLayoutComponent extends BaseComponent {
     private authService: AuthService, 
     private router: Router
   ) {
-    super(); // 👈 Importante: llamar al constructor padre
+    super(); 
   }
 
   protected onComponentInit(): void {
