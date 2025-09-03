@@ -27,23 +27,43 @@ export class ButtonThemeComponent extends BaseComponent {
     let variantClasses = '';
     if (this.variant === 'primary') {
       variantClasses = [
-        this.theme?.theme?.colors?.buttons?.primary?.background?.light || '',
-        this.theme?.theme?.colors?.buttons?.primary?.text?.light || '',
-        this.theme?.theme?.colors?.buttons?.primary?.backgroundHover?.light || '',
-        this.theme?.theme?.colors?.focus?.ring?.blue?.light || ''
+        // Primary button background - light y dark
+        this.theme?.theme?.colors?.buttons?.primary?.background?.light || 'bg-brand-blue',
+        this.theme?.theme?.colors?.buttons?.primary?.background?.dark || '',
+        // Primary button text - light y dark
+        this.theme?.theme?.colors?.buttons?.primary?.text?.light || 'text-white',
+        this.theme?.theme?.colors?.buttons?.primary?.text?.dark || '',
+        // Primary button hover - light y dark
+        this.theme?.theme?.colors?.buttons?.primary?.backgroundHover?.light || 'hover:bg-brand-blue-dark',
+        this.theme?.theme?.colors?.buttons?.primary?.backgroundHover?.dark || '',
+        // Focus ring blue - light y dark
+        this.theme?.theme?.colors?.focus?.ring?.blue?.light || 'focus:ring-4 focus:ring-blue-200',
+        this.theme?.theme?.colors?.focus?.ring?.blue?.dark || ''
       ].filter(cls => cls).join(' ');
     } else {
       variantClasses = [
-        this.theme?.theme?.colors?.buttons?.secondary?.background?.light || '',
-        this.theme?.theme?.colors?.buttons?.secondary?.text?.light || '',
-        this.theme?.theme?.colors?.buttons?.secondary?.backgroundHover?.light || '',
-        this.theme?.theme?.colors?.focus?.ring?.secondary?.light || ''
+        // Secondary button background - light y dark
+        this.theme?.theme?.colors?.buttons?.secondary?.background?.light || 'bg-gray-200',
+        this.theme?.theme?.colors?.buttons?.secondary?.background?.dark || '',
+        // Secondary button text - light y dark
+        this.theme?.theme?.colors?.buttons?.secondary?.text?.light || 'text-black',
+        this.theme?.theme?.colors?.buttons?.secondary?.text?.dark || '',
+        // Secondary button hover - light y dark
+        this.theme?.theme?.colors?.buttons?.secondary?.backgroundHover?.light || 'hover:bg-gray-300',
+        this.theme?.theme?.colors?.buttons?.secondary?.backgroundHover?.dark || '',
+        // Focus ring secondary - light y dark
+        this.theme?.theme?.colors?.focus?.ring?.secondary?.light || 'focus:ring-4 focus:ring-gray-200',
+        this.theme?.theme?.colors?.focus?.ring?.secondary?.dark || ''
       ].filter(cls => cls).join(' ');
     }
 
     const shadowClasses = [
-      this.theme?.theme?.colors?.shadow?.sm?.light || '',
-      this.theme?.theme?.colors?.shadow?.hover?.light || ''
+      // Shadow sm - light y dark
+      this.theme?.theme?.colors?.shadow?.sm?.light || 'shadow-sm',
+      this.theme?.theme?.colors?.shadow?.sm?.dark || '',
+      // Shadow hover - light y dark
+      this.theme?.theme?.colors?.shadow?.hover?.light || 'hover:shadow-md',
+      this.theme?.theme?.colors?.shadow?.hover?.dark || ''
     ].filter(cls => cls).join(' ');
 
     const disabledClasses = this.disabled ? 'disabled:opacity-50 disabled:cursor-not-allowed' : '';

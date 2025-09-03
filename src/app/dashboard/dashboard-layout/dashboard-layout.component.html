@@ -1,10 +1,10 @@
-<div class="min-h-screen bg-gray-50 flex">
+<main-container-theme>
 
   <!-- Sidebar -->
   <sidebar-theme [isCollapsed]="isCollapsed">
 
     <!-- Header del sidebar -->
-    <div class="flex items-center justify-between px-6 py-5 border-b">
+    <div class="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-gray-700">
       <brand-theme *ngIf="!isCollapsed"></brand-theme>
       <toggle-button-theme [isCollapsed]="isCollapsed" (toggle)="toggleSidebar()"></toggle-button-theme>
     </div>
@@ -80,13 +80,13 @@
       <div class="flex items-center justify-between">
         <div class="flex items-center space-x-4">
           <h1-theme>Dashboard</h1-theme>
-          <div class="h-6 w-px"></div>
+          <div class="h-6 w-px bg-gray-200 dark:bg-gray-700"></div>
           <nav class="hidden md:flex items-center space-x-1">
-            <span class="text-sm">BokiBot</span>
+            <span class="text-sm text-gray-700 dark:text-gray-300">BokiBot</span>
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
-            <span class="text-sm font-medium">Dashboard</span>
+            <span class="text-sm font-medium text-gray-900 dark:text-white">Dashboard</span>
           </nav>
         </div>
 
@@ -120,4 +120,4 @@
       <router-outlet></router-outlet>
     </main>
   </div>
-</div>
+</main-container-theme>

@@ -2,12 +2,12 @@
   <!-- Header del Dashboard con botón de refresh -->
   <div class="flex items-center justify-between">
     <div>
-      <h2 class="text-2xl font-bold text-gray-800 mb-2">Resumen General</h2>
-      <p class="text-gray-500 text-base">Bienvenido de vuelta, aquí está el estado de tu BokiBot</p>
+      <h2 class="text-2xl font-bold text-gray-800 dark:text-white mb-2">Resumen General</h2>
+      <p class="text-gray-500 dark:text-gray-400 text-base">Bienvenido de vuelta, aquí está el estado de tu BokiBot</p>
     </div>
     
     <button (click)="refreshData()" 
-            class="inline-flex items-center px-5 py-2.5 bg-brand-blue text-white text-sm font-semibold rounded-xl hover:bg-brand-blue-dark focus:ring-4 focus:ring-blue-200 transition-all duration-200 shadow-sm hover:shadow-md">
+            class="inline-flex items-center px-5 py-2.5 bg-brand-blue dark:bg-blue-600 text-white text-sm font-semibold rounded-xl hover:bg-brand-blue-dark dark:hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 dark:focus:ring-blue-800 transition-all duration-200 shadow-sm dark:shadow-lg hover:shadow-md dark:hover:shadow-xl">
       <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
               d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
@@ -19,14 +19,14 @@
   <!-- Cards de estadísticas -->
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
     <div *ngFor="let stat of stats" 
-         class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-xl hover:border-gray-200 transition-all duration-300 group cursor-pointer">
+         class="bg-white dark:bg-gray-800 rounded-2xl p-6 shadow-sm dark:shadow-lg border border-gray-100 dark:border-gray-400 hover:shadow-xl dark:hover:shadow-xl hover:border-gray-200 dark:hover:border-gray-300 transition-all duration-300 group cursor-pointer">
       
       <div class="flex items-start justify-between">
         <div class="flex-1">
           <div class="flex items-center justify-between mb-3">
-            <p class="text-sm font-medium text-gray-500 uppercase tracking-wide">{{ stat.title }}</p>
-            <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center group-hover:bg-blue-100 transition-colors duration-200">
-              <svg class="w-5 h-5 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <p class="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide">{{ stat.title }}</p>
+            <div class="w-10 h-10 bg-blue-50 dark:bg-blue-900/30 rounded-xl flex items-center justify-center group-hover:bg-blue-100 dark:group-hover:bg-blue-900/50 transition-colors duration-200">
+              <svg class="w-5 h-5 text-brand-blue dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <!-- Chat icon -->
                 <path *ngIf="stat.icon === 'chat'" 
                       stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
@@ -50,16 +50,22 @@
             </div>
           </div>
           
-          <p class="text-3xl font-bold text-gray-900 mb-2">{{ stat.value }}</p>
+          <p class="text-3xl font-bold text-gray-900 dark:text-white mb-2">{{ stat.value }}</p>
           
           <div class="flex items-center">
             <span class="inline-flex items-center text-sm font-semibold px-2 py-1 rounded-lg"
                   [class.text-green-700]="stat.changeType === 'positive'"
                   [class.bg-green-50]="stat.changeType === 'positive'"
+                  [class.dark:text-green-400]="stat.changeType === 'positive'"
+                  [class.dark:bg-green-900/30]="stat.changeType === 'positive'"
                   [class.text-red-700]="stat.changeType === 'negative'"
                   [class.bg-red-50]="stat.changeType === 'negative'"
+                  [class.dark:text-red-400]="stat.changeType === 'negative'"
+                  [class.dark:bg-red-900/30]="stat.changeType === 'negative'"
                   [class.text-gray-700]="stat.changeType === 'neutral'"
-                  [class.bg-gray-50]="stat.changeType === 'neutral'">
+                  [class.bg-gray-50]="stat.changeType === 'neutral'"
+                  [class.dark:text-gray-300]="stat.changeType === 'neutral'"
+                  [class.dark:bg-gray-700]="stat.changeType === 'neutral'">
               <svg *ngIf="stat.changeType === 'positive'" class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M5.293 9.707a1 1 0 010-1.414l4-4a1 1 0 011.414 0l4 4a1 1 0 01-1.414 1.414L11 7.414V15a1 1 0 11-2 0V7.414L6.707 9.707a1 1 0 01-1.414 0z" clip-rule="evenodd"/>
               </svg>
@@ -68,7 +74,7 @@
               </svg>
               {{ stat.change }}
             </span>
-            <span class="text-gray-500 text-sm ml-2">vs último mes</span>
+            <span class="text-gray-500 dark:text-gray-400 text-sm ml-2">vs último mes</span>
           </div>
         </div>
       </div>
@@ -80,11 +86,11 @@
     
     <!-- Actividad reciente -->
     <div class="lg:col-span-2">
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-6 py-5 border-b border-gray-100">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm dark:shadow-lg border border-gray-100 dark:border-gray-400 overflow-hidden">
+        <div class="px-6 py-5 border-b border-gray-100 dark:border-gray-400">
           <div class="flex items-center justify-between">
-            <h3 class="text-xl font-semibold text-gray-900">Actividad Reciente</h3>
-            <button class="text-brand-blue hover:text-brand-blue-dark text-sm font-semibold hover:bg-blue-50 px-3 py-1.5 rounded-lg transition-all duration-200">
+            <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Actividad Reciente</h3>
+            <button class="text-brand-blue dark:text-blue-400 hover:text-brand-blue-dark dark:hover:text-blue-300 text-sm font-semibold hover:bg-blue-50 dark:hover:bg-blue-900/30 px-3 py-1.5 rounded-lg transition-all duration-200">
               Ver todo
             </button>
           </div>
@@ -93,20 +99,29 @@
         <div class="p-6">
           <div class="space-y-4">
             <div *ngFor="let activity of recentActivity" 
-                 class="flex items-start space-x-4 p-4 rounded-xl hover:bg-gray-50 transition-all duration-200 group">
+                 class="flex items-start space-x-4 p-4 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-all duration-200 group">
               
               <div class="w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0"
                    [class.bg-blue-50]="activity.type === 'appointment'"
+                   [class.dark:bg-blue-900/30]="activity.type === 'appointment'"
                    [class.bg-green-50]="activity.type === 'conversation'"
+                   [class.dark:bg-green-900/30]="activity.type === 'conversation'"
                    [class.bg-purple-50]="activity.type === 'company'"
+                   [class.dark:bg-purple-900/30]="activity.type === 'company'"
                    [class.group-hover:bg-blue-100]="activity.type === 'appointment'"
+                   [class.dark:group-hover:bg-blue-900/50]="activity.type === 'appointment'"
                    [class.group-hover:bg-green-100]="activity.type === 'conversation'"
-                   [class.group-hover:bg-purple-100]="activity.type === 'company'">
+                   [class.dark:group-hover:bg-green-900/50]="activity.type === 'conversation'"
+                   [class.group-hover:bg-purple-100]="activity.type === 'company'"
+                   [class.dark:group-hover:bg-purple-900/50]="activity.type === 'company'">
                 
                 <svg class="w-5 h-5"
                      [class.text-blue-600]="activity.type === 'appointment'"
+                     [class.dark:text-blue-400]="activity.type === 'appointment'"
                      [class.text-green-600]="activity.type === 'conversation'"
+                     [class.dark:text-green-400]="activity.type === 'conversation'"
                      [class.text-purple-600]="activity.type === 'company'"
+                     [class.dark:text-purple-400]="activity.type === 'company'"
                      fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   
                   <path *ngIf="activity.type === 'appointment'"
@@ -124,8 +139,8 @@
               </div>
               
               <div class="flex-1 min-w-0">
-                <p class="text-sm font-semibold text-gray-900 mb-1">{{ activity.message }}</p>
-                <p class="text-xs text-gray-500 flex items-center">
+                <p class="text-sm font-semibold text-gray-900 dark:text-white mb-1">{{ activity.message }}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 flex items-center">
                   <span class="font-medium">{{ activity.user }}</span>
                   <span class="mx-2">•</span>
                   <span>{{ activity.time }}</span>
@@ -133,8 +148,8 @@
               </div>
               
               <div class="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                <button class="p-2 hover:bg-gray-100 rounded-lg">
-                  <svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <button class="p-2 hover:bg-gray-100 dark:hover:bg-gray-600 rounded-lg">
+                  <svg class="w-4 h-4 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                   </svg>
                 </button>
@@ -149,51 +164,51 @@
     <div class="space-y-8">
       
       <!-- Acciones rápidas -->
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-6 py-5 border-b border-gray-100">
-          <h3 class="text-xl font-semibold text-gray-900">Acciones Rápidas</h3>
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm dark:shadow-lg border border-gray-100 dark:border-gray-400 overflow-hidden">
+        <div class="px-6 py-5 border-b border-gray-100 dark:border-gray-400">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Acciones Rápidas</h3>
         </div>
         
         <div class="p-6">
           <div class="space-y-3">
-            <button class="w-full group flex items-center justify-between p-4 text-left bg-gray-50 hover:bg-blue-50 rounded-xl transition-all duration-200 border border-transparent hover:border-blue-100">
+            <button class="w-full group flex items-center justify-between p-4 text-left bg-gray-50 dark:bg-gray-700 hover:bg-blue-50 dark:hover:bg-blue-900/30 rounded-xl transition-all duration-200 border border-transparent hover:border-blue-100 dark:hover:border-blue-600">
               <span class="flex items-center">
-                <div class="w-10 h-10 bg-blue-100 group-hover:bg-blue-200 rounded-xl flex items-center justify-center mr-3 transition-colors duration-200">
-                  <svg class="w-5 h-5 text-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-10 h-10 bg-blue-100 dark:bg-blue-900/50 group-hover:bg-blue-200 dark:group-hover:bg-blue-900/70 rounded-xl flex items-center justify-center mr-3 transition-colors duration-200">
+                  <svg class="w-5 h-5 text-brand-blue dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
                   </svg>
                 </div>
-                <span class="font-semibold text-gray-900 group-hover:text-brand-blue">Crear nuevo flujo</span>
+                <span class="font-semibold text-gray-900 dark:text-white group-hover:text-brand-blue dark:group-hover:text-blue-400">Crear nuevo flujo</span>
               </span>
-              <svg class="w-5 h-5 text-gray-400 group-hover:text-brand-blue transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-brand-blue dark:group-hover:text-blue-400 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
               </svg>
             </button>
             
-            <button class="w-full group flex items-center justify-between p-4 text-left bg-gray-50 hover:bg-green-50 rounded-xl transition-all duration-200 border border-transparent hover:border-green-100">
+            <button class="w-full group flex items-center justify-between p-4 text-left bg-gray-50 dark:bg-gray-700 hover:bg-green-50 dark:hover:bg-green-900/30 rounded-xl transition-all duration-200 border border-transparent hover:border-green-100 dark:hover:border-green-600">
               <span class="flex items-center">
-                <div class="w-10 h-10 bg-green-100 group-hover:bg-green-200 rounded-xl flex items-center justify-center mr-3 transition-colors duration-200">
-                  <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-10 h-10 bg-green-100 dark:bg-green-900/50 group-hover:bg-green-200 dark:group-hover:bg-green-900/70 rounded-xl flex items-center justify-center mr-3 transition-colors duration-200">
+                  <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1"/>
                   </svg>
                 </div>
-                <span class="font-semibold text-gray-900 group-hover:text-green-700">Agregar empresa</span>
+                <span class="font-semibold text-gray-900 dark:text-white group-hover:text-green-700 dark:group-hover:text-green-400">Agregar empresa</span>
               </span>
-              <svg class="w-5 h-5 text-gray-400 group-hover:text-green-600 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-green-600 dark:group-hover:text-green-400 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
               </svg>
             </button>
             
-            <button class="w-full group flex items-center justify-between p-4 text-left bg-gray-50 hover:bg-purple-50 rounded-xl transition-all duration-200 border border-transparent hover:border-purple-100">
+            <button class="w-full group flex items-center justify-between p-4 text-left bg-gray-50 dark:bg-gray-700 hover:bg-purple-50 dark:hover:bg-purple-900/30 rounded-xl transition-all duration-200 border border-transparent hover:border-purple-100 dark:hover:border-purple-600">
               <span class="flex items-center">
-                <div class="w-10 h-10 bg-purple-100 group-hover:bg-purple-200 rounded-xl flex items-center justify-center mr-3 transition-colors duration-200">
-                  <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-10 h-10 bg-purple-100 dark:bg-purple-900/50 group-hover:bg-purple-200 dark:group-hover:bg-purple-900/70 rounded-xl flex items-center justify-center mr-3 transition-colors duration-200">
+                  <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                   </svg>
                 </div>
-                <span class="font-semibold text-gray-900 group-hover:text-purple-700">Ver analytics</span>
+                <span class="font-semibold text-gray-900 dark:text-white group-hover:text-purple-700 dark:group-hover:text-purple-400">Ver analytics</span>
               </span>
-              <svg class="w-5 h-5 text-gray-400 group-hover:text-purple-600 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg class="w-5 h-5 text-gray-400 dark:text-gray-500 group-hover:text-purple-600 dark:group-hover:text-purple-400 transition-colors duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
               </svg>
             </button>
@@ -202,29 +217,29 @@
       </div>
 
       <!-- Estado del sistema -->
-      <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-        <div class="px-6 py-5 border-b border-gray-100">
-          <h3 class="text-xl font-semibold text-gray-900">Estado del Sistema</h3>
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm dark:shadow-lg border border-gray-100 dark:border-gray-400 overflow-hidden">
+        <div class="px-6 py-5 border-b border-gray-100 dark:border-gray-400">
+          <h3 class="text-xl font-semibold text-gray-900 dark:text-white">Estado del Sistema</h3>
         </div>
         
         <div class="p-6">
           <div class="space-y-4">
             <div class="flex items-center justify-between py-2">
-              <span class="text-sm font-medium text-gray-600">API Status</span>
-              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 text-green-800">
-                <div class="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+              <span class="text-sm font-medium text-gray-600 dark:text-gray-400">API Status</span>
+              <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-400">
+                <div class="w-2 h-2 bg-green-500 dark:bg-green-400 rounded-full mr-2"></div>
                 Activo
               </span>
             </div>
             
             <div class="flex items-center justify-between py-2">
-              <span class="text-sm font-medium text-gray-600">Bot Response</span>
-              <span class="text-sm font-bold text-gray-900 bg-gray-50 px-3 py-1 rounded-lg">~1.2s</span>
+              <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Bot Response</span>
+              <span class="text-sm font-bold text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 px-3 py-1 rounded-lg">~1.2s</span>
             </div>
             
             <div class="flex items-center justify-between py-2">
-              <span class="text-sm font-medium text-gray-600">Uptime</span>
-              <span class="text-sm font-bold text-gray-900 bg-gray-50 px-3 py-1 rounded-lg">99.9%</span>
+              <span class="text-sm font-medium text-gray-600 dark:text-gray-400">Uptime</span>
+              <span class="text-sm font-bold text-gray-900 dark:text-white bg-gray-50 dark:bg-gray-700 px-3 py-1 rounded-lg">99.9%</span>
             </div>
           </div>
         </div>

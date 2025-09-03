@@ -20,7 +20,9 @@ export class H2ThemeComponent extends BaseComponent {
   get cssClasses(): string {
     const themeClasses = [
       'text-2xl font-bold mb-2',
-      this.theme?.theme?.colors?.text?.primary?.light || ''
+      // Text primary - incluye light y dark
+      this.theme?.theme?.colors?.text?.primary?.light || 'text-gray-900',
+      this.theme?.theme?.colors?.text?.primary?.dark || ''
     ].filter(cls => cls).join(' ');
 
     return `${themeClasses} ${this.class}`.trim();

@@ -20,9 +20,15 @@ export class SidebarThemeComponent extends BaseComponent {
   get sidebarClasses(): string {
     return [
       'fixed inset-y-0 left-0 z-50 flex flex-col transition-all duration-300 border-r',
+      // Background - incluye tanto light como dark
       this.theme?.theme?.colors?.background?.secondary?.light || '',
+      this.theme?.theme?.colors?.background?.primary?.dark || '',
+      // Border - incluye tanto light como dark  
       this.theme?.theme?.colors?.border?.primary?.light || '',
-      this.theme?.theme?.colors?.shadow?.primary?.light || ''
+      this.theme?.theme?.colors?.border?.primary?.dark || '',
+      // Shadow - usando shadow.sm que sí existe en el JSON
+      this.theme?.theme?.colors?.shadow?.sm?.light || '',
+      this.theme?.theme?.colors?.shadow?.sm?.dark || ''
     ].filter(cls => cls).join(' ');
   }
 

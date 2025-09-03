@@ -16,3 +16,4 @@ export { FormTextareaThemeComponent } from '../form-textarea-theme/form-textarea
 export { FormSelectThemeComponent } from '../form-select-theme/form-select-theme.component';
 export { FormToggleThemeComponent } from '../form-toggle-theme/form-toggle-theme.component';
 export { ThemeComponentsModule } from './theme-components.module';
+export { MainContainerThemeComponent } from '../main-container-theme/main-container-theme.component';

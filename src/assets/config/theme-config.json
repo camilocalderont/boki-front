@@ -10,10 +10,6 @@
         "secondary": {
           "light": "bg-white",
           "dark": "dark:bg-gray-800"
-        },
-        "blur": {
-          "light": "bg-white/80",
-          "dark": "dark:bg-gray-800/80"
         }
       },
       "text": {
@@ -45,7 +41,7 @@
       "border": {
         "primary": {
           "light": "border-gray-100",
-          "dark": "dark:border-gray-700"
+          "dark": "dark:border-gray-400"
         },
         "secondary": {
           "light": "border-gray-200",

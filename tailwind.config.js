@@ -3,6 +3,7 @@ module.exports = {
   content: [
     "./src/**/*.{html,ts}",
   ],
+  darkMode: 'class', // Habilita el modo oscuro basado en la clase 'dark'
   theme: {
     extend: {
       colors: {
@@ -18,4 +19,4 @@ module.exports = {
   corePlugins: {
     preflight: false,
   }
-} 
+}

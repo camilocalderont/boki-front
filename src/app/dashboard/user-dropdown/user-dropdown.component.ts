@@ -26,8 +26,8 @@ export class UserDropdownComponent implements OnInit, OnDestroy {
     // Obtener usuario del sessionStorage
     this.loadUserFromSession();
     
-    // Obtener estado del dark mode del localStorage
-    this.isDarkMode = localStorage.getItem('darkMode') === 'true';
+    // Inicializar el dark mode
+    this.initializeDarkMode();
     
     // Listener para clics fuera del dropdown
     document.addEventListener('click', this.onDocumentClick.bind(this));
@@ -58,6 +58,27 @@ export class UserDropdownComponent implements OnInit, OnDestroy {
     }
   }
 
+  private initializeDarkMode(): void {
+    // Obtener estado del dark mode del localStorage
+    this.isDarkMode = localStorage.getItem('darkMode') === 'true';
+    
+    // Aplicar el tema al cargar el componente
+    this.applyTheme();
+  }
+
+  private applyTheme(): void {
+    // Aplicar/quitar clase dark al html y body
+    const htmlElement = document.documentElement;
+    
+    if (this.isDarkMode) {
+      htmlElement.classList.add('dark');
+      document.body.classList.add('dark');
+    } else {
+      htmlElement.classList.remove('dark');
+      document.body.classList.remove('dark');
+    }
+  }
+
   getInitials(): string {
     const name = this.currentUser?.name || this.currentUser?.VcFirstName || 'Usuario';
     return name.charAt(0).toUpperCase();
@@ -83,14 +104,10 @@ export class UserDropdownComponent implements OnInit, OnDestroy {
     // Guardar preferencia en localStorage
     localStorage.setItem('darkMode', this.isDarkMode.toString());
     
-    // Aplicar/quitar clase dark al body
-    if (this.isDarkMode) {
-      document.body.classList.add('dark');
-    } else {
-      document.body.classList.remove('dark');
-    }
+    // Aplicar el tema usando el método privado
+    this.applyTheme();
     
-    // Aquí podrías emitir un evento para notificar el cambio a otros componentes
+    // Log para debugging
     console.log('Dark mode:', this.isDarkMode ? 'Activado' : 'Desactivado');
   }
 

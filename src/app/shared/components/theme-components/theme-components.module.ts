@@ -18,6 +18,7 @@ import { FormInputThemeComponent } from '../form-input-theme/form-input-theme.co
 import { FormTextareaThemeComponent } from '../form-textarea-theme/form-textarea-theme.component';
 import { FormSelectThemeComponent } from '../form-select-theme/form-select-theme.component';
 import { FormToggleThemeComponent } from '../form-toggle-theme/form-toggle-theme.component';
+import { MainContainerThemeComponent } from '../main-container-theme/main-container-theme.component';
 
 
 
@@ -40,7 +41,8 @@ import { FormToggleThemeComponent } from '../form-toggle-theme/form-toggle-theme
     FormTextareaThemeComponent,
     FormSelectThemeComponent,
     FormToggleThemeComponent,
-    ButtonThemeComponent
+    ButtonThemeComponent,
+    MainContainerThemeComponent
   ],
   exports: [
     SectionThemeComponent,
@@ -58,7 +60,8 @@ import { FormToggleThemeComponent } from '../form-toggle-theme/form-toggle-theme
     FormInputThemeComponent,
     FormTextareaThemeComponent,
     FormSelectThemeComponent,
-    FormToggleThemeComponent
+    FormToggleThemeComponent,
+    MainContainerThemeComponent
   ]
 })
 export class ThemeComponentsModule { }

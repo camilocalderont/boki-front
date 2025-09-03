@@ -36,28 +36,32 @@ export class BrandThemeComponent extends BaseComponent implements OnInit {
   }
 
   private buildClasses(): void {
-    // Logo classes
+    // Logo classes 
     this.logoClassesString = [
       'w-10 h-10 rounded-xl flex items-center justify-center mr-4',
-      this.theme?.theme?.colors?.brand?.gradient?.light || 'bg-gradient-to-r from-brand-blue to-brand-blue-light'
+      this.theme?.theme?.colors?.brand?.gradient?.light || 'bg-gradient-to-r from-brand-blue to-brand-blue-light',
+      this.theme?.theme?.colors?.brand?.gradient?.dark || ''
     ].filter(cls => cls && cls.trim()).join(' ');
 
-    // Logo text classes  
+    // Logo text classes - incluye light y dark
     this.logoTextClassesString = [
       'font-bold text-lg',
-      this.theme?.theme?.colors?.text?.white?.light || 'text-white'
+      this.theme?.theme?.colors?.text?.white?.light || 'text-white',
+      this.theme?.theme?.colors?.text?.white?.dark || ''
     ].filter(cls => cls && cls.trim()).join(' ');
 
-    // Title classes
+    // Title classes - incluye light y dark
     this.titleClassesString = [
       'font-bold text-xl', 
-      this.theme?.theme?.colors?.text?.primary?.light || 'text-gray-900'
+      this.theme?.theme?.colors?.text?.primary?.light || 'text-gray-900',
+      this.theme?.theme?.colors?.text?.primary?.dark || ''
     ].filter(cls => cls && cls.trim()).join(' ');
 
-    // Subtitle classes
+    // Subtitle classes - incluye light y dark
     this.subtitleClassesString = [
       'text-xs font-medium',
-      this.theme?.theme?.colors?.text?.quaternary?.light || 'text-gray-600'
+      this.theme?.theme?.colors?.text?.quaternary?.light || 'text-gray-600',
+      this.theme?.theme?.colors?.text?.quaternary?.dark || ''
     ].filter(cls => cls && cls.trim()).join(' ');
 
     this.cdr.detectChanges();
