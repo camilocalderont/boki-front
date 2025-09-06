@@ -7,6 +7,7 @@ import { CompanyService } from '../../../services/company.service';
 import { AuthService } from '../../../auth/services/auth.service';
 import { BaseComponent } from '../../../shared/components/base/base.component';
 import { ThemeComponentsModule } from '../../../shared/components/theme-components';
+import { SnackBarService } from '../../../shared/components/snack-bar/service/snack-bar.service';
 
 @Component({
   selector: 'form-company',
@@ -31,7 +32,8 @@ export class FormCompanyComponent extends BaseComponent {
     private router: Router,
     private route: ActivatedRoute,
     private companyService: CompanyService,
-    private userData: AuthService
+    private userData: AuthService,
+    private snackBarService: SnackBarService
   ) {
     super(); // 👈 Llamar al constructor padre
   }
@@ -66,10 +68,16 @@ export class FormCompanyComponent extends BaseComponent {
   loadCompany(id: string): void {
     this.companyService.getCompanyById(Number(id)).subscribe({
       next: (response) => {
-        const company = response.data;
-        this.form.patchValue(company);
+        if (response.data !== null) {
+          const company = response.data;
+          this.form.patchValue(company);
+        } else {
+          this.snackBarService.open('Empresa no encontrada', {"type": "error", "position": "bot-right"});
+          this.router.navigate(['/dashboard/companies']);
+        }
       },
       error: (error) => {
+        this.snackBarService.open('Error al cargar la empresa:', {"type": "error", "position": "bot-right"});
         console.error('Error al cargar la empresa:', error);
       }
     });
@@ -82,24 +90,32 @@ export class FormCompanyComponent extends BaseComponent {
     const payload: PostCompanyRequest = this.form.value;
 
     if (this.isEditMode) {
-      console.log('Actualizar empresa:', payload);
       this.companyService.putCompanyById(Number(this.companyId), payload).subscribe({
         next: (response) => {
-          console.log('Empresa actualizada:', response);
-          this.router.navigate(['/dashboard/companies']);
+          if (response.status === "success") {
+            this.snackBarService.open('Empresa actualizada', {"type": "success", "position": "bot-right"});
+            this.router.navigate(['/dashboard/companies']);
+          } else {
+            this.snackBarService.open('Error al actualizar empresa', {"type": "error", "position": "bot-right"});
+          }
         },
         error: (error) => {
+          this.snackBarService.open('Error al actualizar empresa', {"type": "error", "position": "bot-right"});
           console.error('Error al actualizar empresa:', error);
         }
       });
     } else {
-      console.log('Crear empresa:', payload);
       this.companyService.postCompany(payload).subscribe({
         next: (response) => {
-          console.log('Empresa creada:', response);
-          this.router.navigate(['/dashboard/companies']);
+          if (response.status === "success") {
+            this.snackBarService.open('Empresa creada', {"type": "success", "position": "bot-right"});
+            this.router.navigate(['/dashboard/companies']);
+          } else {
+            this.snackBarService.open('Error al crear empresa', {"type": "error", "position": "bot-right"});
+          }
         },
         error: (error) => {
+          this.snackBarService.open('Error al crear empresa', {"type": "error", "position": "bot-right"});
           console.error('Error al crear empresa:', error);
         }
       });

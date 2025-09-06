@@ -8,6 +8,7 @@ import { CompanyService } from '../../../services/company.service';
 import { GetCompanyResponse } from '../../../shared/interfaces/company.interface';
 import { BaseComponent } from '../../../shared/components/base/base.component';
 import { ThemeComponentsModule } from '../../../shared/components/theme-components';
+import { SnackBarService } from '../../../shared/components/snack-bar/service/snack-bar.service';
 
 @Component({
   selector: 'form-category',
@@ -32,9 +33,15 @@ export class FormCategoryComponent extends BaseComponent {
     private router: Router,
     private route: ActivatedRoute,
     private categoryService: CategoryService,
-    private companyService: CompanyService
+    private companyService: CompanyService,
+    private snackBarService: SnackBarService
   ) {
     super(); // 👈 Llamar al constructor padre
+  }
+
+  override ngOnInit(): void {
+    this.loadCompanies();
+    super.ngOnInit(); // 👈 Llamar al método ngOnInit del padre
   }
 
   protected onComponentInit(): void {
@@ -44,15 +51,13 @@ export class FormCategoryComponent extends BaseComponent {
 
     this.form = this.fb.group({
       VcName: ['', [Validators.required, Validators.maxLength(300)]],
-      CompanyId: [0, Validators.required],
+      CompanyId: ['', Validators.required],
       BIsService: [true, Validators.required],
     });
 
     if (this.isEditMode) {
       this.loadCategory(this.categoryId!);
     }
-
-    this.loadCompanies();
   }
 
   loadCompanies(): void {
@@ -61,6 +66,7 @@ export class FormCategoryComponent extends BaseComponent {
         this.companies = response.data;
       },
       error: (error) => {
+        this.snackBarService.open('Error al cargar las empresas:', {"type": "error"});
         console.error('Error al cargar las empresas:', error);
       }
     });
@@ -69,10 +75,16 @@ export class FormCategoryComponent extends BaseComponent {
   loadCategory(id: string): void {
     this.categoryService.getCategoryById(Number(id)).subscribe({
       next: (response) => {
-        const category = response.data;
-        this.form.patchValue(category);
+        if (response.data !== null) {
+          const category = response.data;
+          this.form.patchValue(category);
+        } else {
+          this.snackBarService.open('Categoría no encontrada', {"type": "error", "position": "bot-right"});
+          this.router.navigate(['/dashboard/categories']);
+        }
       },
       error: (error) => {
+        this.snackBarService.open('Error al cargar la categoría:', {"type": "error", "position": "bot-right"});
         console.error('Error al cargar la categoría:', error);
       }
     });
@@ -86,20 +98,26 @@ export class FormCategoryComponent extends BaseComponent {
     if (this.isEditMode) {
       this.categoryService.putCategoryById(Number(this.categoryId), payload).subscribe({
         next: (response) => {
-          console.log('Categoría actualizada:', response);
-          this.router.navigate(['/dashboard/categories']);
+          if (response.status === "success") {
+            this.snackBarService.open('Categoría actualizada', {"type": "success", "position": "bot-right"});
+            this.router.navigate(['/dashboard/categories']);
+          }
         },
         error: (error) => {
+          this.snackBarService.open('Error al actualizar categoría:', {"type": "error", "position": "bot-right"});
           console.error('Error al actualizar categoría:', error);
         }
       });
     } else {
       this.categoryService.postCategory(payload).subscribe({
         next: (response) => {
-          console.log('Categoría creada:', response);
-          this.router.navigate(['/dashboard/categories']);
+          if (response.status === "success") {
+            this.snackBarService.open('Categoría creada', {"type": "success", "position": "bot-right"});
+            this.router.navigate(['/dashboard/categories']);
+          }
         },
         error: (error) => {
+          this.snackBarService.open('Error al crear categoría:', {"type": "error", "position": "bot-right"});
           console.error('Error al crear categoría:', error);
         }
       });

@@ -38,14 +38,21 @@ export class FormToggleThemeComponent extends BaseComponent implements ControlVa
 
   get toggleClasses(): string {
     return [
-      'w-11 h-6 rounded-full peer transition-all',
+      'relative w-11 h-6 bg-gray-200 rounded-full peer transition-all',
+      'dark:bg-gray-700',
+      'peer-checked:bg-brand-blue transition-colors',
       'peer-checked:after:translate-x-full peer-checked:after:border-white',
       'after:content-[\'\'] after:absolute after:top-[2px] after:left-[2px]',
       'after:border after:rounded-full after:h-5 after:w-5 after:transition-all',
       this.theme?.theme?.colors?.forms?.toggle?.background?.light || '',
       this.theme?.theme?.colors?.focus?.ring?.secondary?.light || '',
       this.theme?.theme?.colors?.forms?.toggle?.backgroundActive?.light || '',
-      this.theme?.theme?.colors?.forms?.toggle?.thumb?.light || ''
+      this.theme?.theme?.colors?.forms?.toggle?.thumb?.light || '',
+      // Thumb (circle)
+      "after:content-[''] after:absolute after:top-[2px] after:left-[2px]",
+      'after:bg-white after:border-gray-300 after:border after:rounded-full',
+      'after:h-5 after:w-5 after:transition-all',
+      'peer-checked:after:translate-x-full peer-checked:after:border-white'
     ].filter(cls => cls).join(' ');
   }
 

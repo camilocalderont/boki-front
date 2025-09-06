@@ -179,7 +179,7 @@
       "status": {
         "error": {
           "text": {
-            "light": "text-red-500",
+            "light": "text-red-400",
             "dark": "dark:text-red-400"
           },
           "textLight": {
