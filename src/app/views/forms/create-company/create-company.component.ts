@@ -43,7 +43,7 @@ export class CreateCompanyComponent extends BaseComponent {
     super(); 
   }
 
-  abrirModalPrueba(): void {
+  abrirModal(): void {
   this.dialogService.open({
     type: 'custom',
     component: TestModalComponent
