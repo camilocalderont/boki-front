@@ -8,6 +8,9 @@ import { AuthService } from '../../../auth/services/auth.service';
 import { BaseComponent } from '../../../shared/components/base/base.component';
 import { ThemeComponentsModule } from '../../../shared/components/theme-components';
 import { SnackBarService } from '../../../shared/components/snack-bar/service/snack-bar.service';
+import { CustomDialogComponent } from '../../../shared/dialogs/custom-dialog/custom-dialog.component';
+import { DialogService } from '../../../shared/dialogs/services/dialog.service';
+import { TestModalComponent } from '../../../shared/test/modal-test/test-modal.component';
 
 @Component({
   selector: 'create-company',
@@ -15,7 +18,8 @@ import { SnackBarService } from '../../../shared/components/snack-bar/service/sn
   imports: [
     CommonModule, 
     ReactiveFormsModule,
-    ThemeComponentsModule
+    ThemeComponentsModule,
+    CustomDialogComponent
   ],
   templateUrl: './create-company.component.html',
   styleUrls: ['./create-company.component.scss']
@@ -33,10 +37,23 @@ export class CreateCompanyComponent extends BaseComponent {
     private route: ActivatedRoute,
     private companyService: CompanyService,
     private userData: AuthService,
-    private snackBarService: SnackBarService
+    private snackBarService: SnackBarService,
+    private dialogService: DialogService
   ) {
-    super(); // 👈 Llamar al constructor padre
+    super(); 
   }
+
+  abrirModalPrueba(): void {
+  this.dialogService.open({
+    type: 'custom',
+    component: TestModalComponent
+  }).subscribe(result => {
+    console.log('Modal cerrado con resultado:', result);
+    if (result) {
+      this.snackBarService.open('Modal aceptado', {"type": "success", "position": "bot-right"});
+    }
+  });
+}
 
   protected onComponentInit(): void {
     // Este método se ejecuta después de que el tema esté disponible

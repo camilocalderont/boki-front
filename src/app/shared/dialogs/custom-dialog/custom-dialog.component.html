@@ -1,0 +1,7 @@
+<div *ngIf="visible" 
+     [class]="backdropClasses"
+     class="fixed inset-0 bg-black flex items-center justify-center z-50 transition-all duration-300">
+    <modal-theme [contentClasses]="contentClasses">
+        <ng-container #dynamicTarget></ng-container>
+    </modal-theme>
+</div>

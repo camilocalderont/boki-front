@@ -53,6 +53,11 @@
       <button-theme type="submit" [disabled]="form.invalid" variant="primary">
         {{ isEditMode ? 'Actualizar' : 'Crear' }}
       </button-theme>
+      <button-theme type="button" variant="primary" (click)="abrirModalPrueba()">
+        Probar Modal
+      </button-theme>
+
     </div>
   </form>
 </form-container-theme>
+<custom-dialog></custom-dialog>
