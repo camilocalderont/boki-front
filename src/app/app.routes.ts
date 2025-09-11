@@ -20,47 +20,47 @@ export const routes: Routes = [
       },
       {
         path: 'companies',
-        loadComponent: () => import('./dashboard/company/company.component').then(m => m.CompanyComponent),
+        loadComponent: () => import('./views/company/company.component').then(m => m.CompanyComponent),
         title: 'Empresas',
       },
       {
         path: 'companies/create',
-        loadComponent: () => import('./dashboard/company/form-company/form-company.component').then(m => m.FormCompanyComponent),
+        loadComponent: () => import('./views/forms/create-company/create-company.component').then(m => m.CreateCompanyComponent),
         title: 'Crear Empresa'
       },
       {
         path: 'companies/update/:id',
-        loadComponent: () => import('./dashboard/company/form-company/form-company.component').then(m => m.FormCompanyComponent),
+        loadComponent: () => import('./views/forms/create-company/create-company.component').then(m => m.CreateCompanyComponent),
         title: 'Editar Empresa'
       },
       {
         path: 'categories',
-        loadComponent: () => import('./dashboard/category/category.component').then(m => m.CategoryComponent),
+        loadComponent: () => import('./views/category/category.component').then(m => m.CategoryComponent),
         title: 'Categorías',
       },
       {
         path: 'categories/create',
-        loadComponent: () => import('./dashboard/category/form-category/form-category.component').then(m => m.FormCategoryComponent),
+        loadComponent: () => import('./views/forms/create-category/create-category.component').then(m => m.CreateCategoryComponent),
         title: 'Crear Categoría'
       },
       {
         path: 'categories/update/:id',
-        loadComponent: () => import('./dashboard/category/form-category/form-category.component').then(m => m.FormCategoryComponent),
+        loadComponent: () => import('./views/forms/create-category/create-category.component').then(m => m.CreateCategoryComponent),
         title: 'Editar Categoría'
       },
       {
         path: 'faqs',
-        loadComponent: () => import('./dashboard/faqs/faqs.component').then(m => m.FaqsComponent),
+        loadComponent: () => import('./views/faqs/faqs.component').then(m => m.FaqsComponent),
         title: 'FAQS',
       },
       {
         path: 'faqs/create',
-        loadComponent: () => import('./dashboard/faqs/form-faqs/form-faqs.component').then(m => m.FormFaqsComponent),
+        loadComponent: () => import('./views/forms/create-faqs/create-faqs.component').then(m => m.CreateFaqsComponent),
         title: 'Crear FAQ'
       },
       {
         path: 'faqs/update/:id',
-        loadComponent: () => import('./dashboard/faqs/form-faqs/form-faqs.component').then(m => m.FormFaqsComponent),
+        loadComponent: () => import('./views/forms/create-faqs/create-faqs.component').then(m => m.CreateFaqsComponent),
         title: 'Editar FAQ'
       }
     ]

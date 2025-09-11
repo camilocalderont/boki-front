@@ -49,7 +49,6 @@ export class CompanyComponent extends BaseComponent {
   private loadCompanies() {
     this.companyService.getCompanies().subscribe({
       next: (response: ApiSuccessResponse<GetCompanyResponse[]>) => {
-        console.log('Companies loaded successfully:', response);
         this.companies = response.data;
       },
       error: (error: CustomError) => {

@@ -11,17 +11,17 @@ import { ThemeComponentsModule } from '../../../shared/components/theme-componen
 import { SnackBarService } from '../../../shared/components/snack-bar/service/snack-bar.service';
 
 @Component({
-  selector: 'form-category',
+  selector: 'create-category',
   standalone: true,
   imports: [
     CommonModule, 
     ReactiveFormsModule,
     ThemeComponentsModule
   ],
-  templateUrl: './form-category.component.html',
-  styleUrls: ['./form-category.component.scss']
+  templateUrl: './create-category.component.html',
+  styleUrls: ['./create-category.component.scss']
 })
-export class FormCategoryComponent extends BaseComponent {
+export class CreateCategoryComponent extends BaseComponent {
 
   form!: FormGroup;
   isEditMode = false;

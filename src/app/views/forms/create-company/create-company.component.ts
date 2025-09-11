@@ -10,17 +10,17 @@ import { ThemeComponentsModule } from '../../../shared/components/theme-componen
 import { SnackBarService } from '../../../shared/components/snack-bar/service/snack-bar.service';
 
 @Component({
-  selector: 'form-company',
+  selector: 'create-company',
   standalone: true,
   imports: [
     CommonModule, 
     ReactiveFormsModule,
     ThemeComponentsModule
   ],
-  templateUrl: './form-company.component.html',
-  styleUrls: ['./form-company.component.scss']
+  templateUrl: './create-company.component.html',
+  styleUrls: ['./create-company.component.scss']
 })
-export class FormCompanyComponent extends BaseComponent {
+export class CreateCompanyComponent extends BaseComponent {
 
   form!: FormGroup;
   isEditMode = false;

@@ -4,6 +4,7 @@ import { environment } from '../../environments/environment';
 import { catchError, Observable, throwError } from 'rxjs';
 import { ApiSuccessResponse, CustomError } from '../shared/interfaces/api.interface';
 import { GetCompanyResponse, GetUserResponse, PostCompanyRequest } from '../shared/interfaces/company.interface';
+import { GetCompanyPrompt, PostCompanyPrompt } from '../shared/interfaces/companny-prompt.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -75,6 +76,54 @@ export class CompanyService {
     }
 
     return this.http.get<ApiSuccessResponse<GetUserResponse[]>>(url).pipe(
+      catchError((error: HttpErrorResponse) => this.handleError(error))
+    );
+  }
+
+  getCompanyPrompts(): Observable<ApiSuccessResponse<GetCompanyPrompt[]>> {
+    const url = `${this.baseUrl}/companyPrompts`;
+
+    if (environment.enableDebugMode) {
+      console.log('🔧 CompanyService - getCompanyPrompts:', url);
+    }
+
+    return this.http.get<ApiSuccessResponse<GetCompanyPrompt[]>>(url).pipe(
+      catchError((error: HttpErrorResponse) => this.handleError(error))
+    );
+  }
+
+  getCompanyPromptById(id: number): Observable<ApiSuccessResponse<GetCompanyPrompt>> {
+    const url = `${this.baseUrl}/companyPrompts/${id}`;
+
+    if (environment.enableDebugMode) {
+      console.log('🔧 CompanyService - getCompanyPromptById:', url);
+    }
+
+    return this.http.get<ApiSuccessResponse<GetCompanyPrompt>>(url).pipe(
+      catchError((error: HttpErrorResponse) => this.handleError(error))
+    );
+  }
+
+  postCompanyPrompt(data: PostCompanyPrompt): Observable<ApiSuccessResponse<GetCompanyPrompt>> {
+    const url = `${this.baseUrl}/companyPrompts`;
+
+    if (environment.enableDebugMode) {
+      console.log('🔧 CompanyService - postCompanyPrompt:', url, data);
+    }
+
+    return this.http.post<ApiSuccessResponse<GetCompanyPrompt>>(url, data).pipe(
+      catchError((error: HttpErrorResponse) => this.handleError(error))
+    );
+  }
+
+  putCompanyPromptById(id: number, data: PostCompanyPrompt): Observable<ApiSuccessResponse<GetCompanyPrompt>> {
+    const url = `${this.baseUrl}/companyPrompts/${id}`;
+
+    if (environment.enableDebugMode) {
+      console.log('🔧 CompanyService - putCompanyPromptById:', url);
+    }
+
+    return this.http.put<ApiSuccessResponse<GetCompanyPrompt>>(url, data).pipe(
       catchError((error: HttpErrorResponse) => this.handleError(error))
     );
   }

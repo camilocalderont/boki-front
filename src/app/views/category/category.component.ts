@@ -24,7 +24,7 @@ export class CategoryComponent extends BaseComponent {
 
   columns: DataGridColumn[] = [
     { key: 'VcName', label: 'Nombre' },
-    { key: 'CompanyId', label: 'Empresa' },
+    { key: 'Company.VcName', label: 'Empresa' },
     { key: 'created_at', label: 'Fecha de Creación', format: FORMAT_DATA.DATE },
   ];
 

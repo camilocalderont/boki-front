@@ -37,7 +37,7 @@ export class DataGridComponent {
       const lower = this.searchTerm.toLowerCase();
       this.filteredData = this.data.filter(row =>
         this.columns.some(col =>
-          String(row[col.key] || '').toLowerCase().includes(lower)
+          String(this.getNestedProperty(row, col.key) || '').toLowerCase().includes(lower)
         )
       );
     }
@@ -71,5 +71,19 @@ export class DataGridComponent {
 
   onUpdate(id: number) {
     this.update.emit(id);
+  }
+
+  /**
+   * Obtiene el valor de una propiedad anidada usando notación de punto
+   * @param obj - El objeto del cual obtener la propiedad
+   * @param path - La ruta de la propiedad (ej: 'Company.VcName')
+   * @returns El valor de la propiedad o undefined si no existe
+   */
+  getNestedProperty(obj: any, path: string): any {
+    if (!obj || !path) return undefined;
+    
+    return path.split('.').reduce((current, key) => {
+      return current && current[key] !== undefined ? current[key] : undefined;
+    }, obj);
   }
 }

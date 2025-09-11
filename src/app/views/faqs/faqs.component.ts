@@ -28,8 +28,8 @@ export class FaqsComponent extends BaseComponent {
   columns: DataGridColumn[] = [
     { key: 'VcQuestion', label: 'Pregunta' },
     { key: 'VcAnswer', label: 'Respuesta' },
-    { key: 'CompanyId', label: 'Empresa' },
-    { key: 'CategoryServiceId', label: 'Categoría' },
+    { key: 'Company.VcName', label: 'Empresa' },
+    { key: 'CategoryService.VcName', label: 'Categoría' },
     // { key: 'BIsService', label: 'Esta en Servicio' },
     { key: 'created_at', label: 'Fecha de Creación', format: FORMAT_DATA.DATE },
   ];
@@ -49,7 +49,6 @@ export class FaqsComponent extends BaseComponent {
   private loadFaqs() {
     this.faqsService.getFaqs().subscribe({
       next: (response: ApiSuccessResponse<GetFaqsResponse[]>) => {
-        console.log('FAQS loaded successfully:', response);
         this.faqs = response.data;
       },
       error: (error: CustomError) => {

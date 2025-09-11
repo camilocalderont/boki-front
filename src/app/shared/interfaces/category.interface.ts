@@ -1,3 +1,5 @@
+import { GetCompanyResponse } from "./company.interface";
+
 export interface GetCategoryResponse {
     Id: number;
     CompanyId: number;
@@ -5,6 +7,7 @@ export interface GetCategoryResponse {
     BIsService: boolean;
     created_at: Date;
     updated_at: Date;
+    Company: GetCompanyResponse;
 }
 
 export interface PostCategoryRequest {

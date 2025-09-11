@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { GetFaqsResponse, PostFaqsRequest } from '../../../shared/interfaces/faqs.interface';
+import { PostFaqsRequest } from '../../../shared/interfaces/faqs.interface';
 import { CommonModule } from '@angular/common';
 import { GetCompanyResponse } from '../../../shared/interfaces/company.interface';
 import { GetCategoryResponse } from '../../../shared/interfaces/category.interface';
@@ -13,17 +13,17 @@ import { ThemeComponentsModule } from '../../../shared/components/theme-componen
 import { SnackBarService } from '../../../shared/components/snack-bar/service/snack-bar.service';
 
 @Component({
-  selector: 'form-faqs',
+  selector: 'create-faqs',
   standalone: true,
   imports: [
     CommonModule, 
     ReactiveFormsModule,
     ThemeComponentsModule
   ],
-  templateUrl: './form-faqs.component.html',
-  styleUrls: ['./form-faqs.component.scss']
+  templateUrl: './create-faqs.component.html',
+  styleUrls: ['./create-faqs.component.scss']
 })
-export class FormFaqsComponent extends BaseComponent {
+export class CreateFaqsComponent extends BaseComponent {
 
   form!: FormGroup;
   isEditMode = false;

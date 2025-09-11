@@ -1,3 +1,6 @@
+import { GetCategoryResponse } from "./category.interface";
+import { GetCompanyResponse } from "./company.interface";
+
 export interface GetFaqsResponse {
     Id: number;
     VcQuestion: string;
@@ -6,6 +9,8 @@ export interface GetFaqsResponse {
     CategoryServiceId: number;
     created_at: Date;
     updated_at: Date;
+    Company: GetCompanyResponse;
+    CategoryService: GetCategoryResponse;
 }
 
 export interface PostFaqsRequest {
