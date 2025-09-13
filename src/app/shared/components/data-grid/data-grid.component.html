@@ -1,4 +1,4 @@
-<div class="bg-white rounded-2xl shadow-sm border border-gray-200">
+<div [class]="containerClasses">
   
   <!-- Campo de búsqueda -->
   <div class="p-4 border-b flex justify-end items-center">
@@ -6,14 +6,14 @@
            [(ngModel)]="searchTerm"
            (ngModelChange)="applyFilter()"
            placeholder="Buscar..."
-           class="w-full sm:w-1/4 px-3 py-2 border rounded-lg text-sm focus:ring focus:ring-blue-200" />
+           [class]="searchInputClasses" />
   </div>
   
   <!-- Tabla -->
   <div class="overflow-x-auto">
-    <table class="min-w-full text-sm text-left text-gray-600">
+    <table [class]="tbodyClasses">
       <!-- Header -->
-      <thead class="bg-gray-50 text-gray-700 uppercase text-xs">
+      <thead [class]="theadClasses">
         <tr>
           <th *ngFor="let col of columns"
               [style.width]="col.width"
@@ -27,7 +27,7 @@
       <!-- Body -->
       <tbody>
         <tr *ngFor="let row of paginatedData; let i = index"
-            class="border-t hover:bg-gray-50 transition">
+            [class]="rowClasses">
           <td *ngFor="let col of columns" class="px-4 py-3">
                 {{ col.format ? (getNestedProperty(row, col.key) | date: col.format) : getNestedProperty(row, col.key) | truncateText:200 }}
           </td>
@@ -46,11 +46,11 @@
   </div>
 
   <!-- Paginación -->
-  <div class="flex flex-col sm:flex-row items-center justify-between gap-4 px-4 py-3 border-t text-sm text-gray-700">
+  <div [class]="paginationTextClasses">
     
     <!-- Selector de tamaño -->
     <div class="flex items-center gap-2">
-      <label for="pageSize" class="text-gray-600">Mostrar</label>
+      <label for="pageSize" [class]="paginationLabelClasses">Mostrar</label>
       <select id="pageSize"
               [(ngModel)]="pageSize"
               (ngModelChange)="changePageSize($event)"
@@ -59,7 +59,7 @@
           {{ size }}
         </option>
       </select>
-      <span>filas</span>
+      <span [class]="paginationLabelClasses">filas</span>
     </div>
 
     <!-- Navegación -->

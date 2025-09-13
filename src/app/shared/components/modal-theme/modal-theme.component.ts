@@ -16,7 +16,7 @@ export class ModalThemeComponent extends BaseComponent {
   constructor(private cdr: ChangeDetectorRef) {
     super();
   }
-
+  
   get modalClasses(): string {
     return [
       // Clases base del modal
