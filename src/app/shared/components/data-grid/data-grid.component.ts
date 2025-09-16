@@ -1,23 +1,32 @@
-import { Component, EventEmitter, Input, Output, ChangeDetectorRef } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DataGridColumn } from '../../interfaces/data-grid.interface';
 import { TruncateTextPipe } from '../../pipes/truncate-text-pipe';
+import { H2ThemeComponent } from '../theme-components';
 import { BaseComponent } from '../base/base.component';
 
 @Component({
   selector: 'data-grid',
-  imports: [CommonModule, FormsModule, TruncateTextPipe],
+  imports: [CommonModule, FormsModule, TruncateTextPipe, H2ThemeComponent],
   templateUrl: './data-grid.component.html',
   styleUrls: ['./data-grid.component.scss']
 })
 export class DataGridComponent extends BaseComponent {
 
+  @Input() title?: string;
   @Input() columns: DataGridColumn[] = [];
   @Input() data: any[] = [];
   @Input() pageSizeOptions: number[] = [5, 10, 20, 50];
   @Input() pageSize = 5;
+  @Input() showAddAction = false;
+  @Input() addActionLabel = 'Agregar';
+  @Input() updateActionLabel = 'Actualizar';
+  @Input() showDeleteAction = false;
+  @Input() deleteActionLabel = 'Eliminar';
   @Output() update = new EventEmitter<number>();
+  @Output() addAction = new EventEmitter<number>();
+  @Output() delete = new EventEmitter<number>();
 
   filteredData: any[] = [];
   paginatedData: any[] = [];
@@ -158,6 +167,20 @@ export class DataGridComponent extends BaseComponent {
     this.update.emit(id);
   }
 
+  onAddAction(id: number) {
+    this.addAction.emit(id);
+  }
+
+  onDelete(id: number) {
+    this.delete.emit(id);
+  }
+
+  /**
+   * Obtiene el valor de una propiedad anidada usando notación de punto
+   * @param obj - El objeto del cual obtener la propiedad
+   * @param path - La ruta de la propiedad (ej: 'Company.VcName')
+   * @returns El valor de la propiedad o undefined si no existe
+   */
   getNestedProperty(obj: any, path: string): any {
     if (!obj || !path) return undefined;
     

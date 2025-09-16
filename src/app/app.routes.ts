@@ -49,6 +49,11 @@ export const routes: Routes = [
         title: 'Editar Categoría'
       },
       {
+        path: 'plans/:companyId',
+        loadComponent: () => import('./views/plans/plans.component').then(m => m.PlansComponent),
+        title: 'Planes de Empresa'
+      },
+      {
         path: 'faqs',
         loadComponent: () => import('./views/faqs/faqs.component').then(m => m.FaqsComponent),
         title: 'FAQS',

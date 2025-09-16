@@ -13,18 +13,10 @@ export class CompanyService {
 
   private readonly baseUrl = `${environment.apiUrl}/api/${environment.apiVersion}`;
   
-  constructor(private http: HttpClient) {
-    if (environment.enableDebugMode) {
-      console.log('🔧 CompanyService inicializado:', this.baseUrl);
-    }
-  }
+  constructor(private http: HttpClient) { }
 
   getCompanies(): Observable<ApiSuccessResponse<GetCompanyResponse[]>> {
     const url = `${this.baseUrl}/companies`;
-
-    if (environment.enableDebugMode) {
-      console.log('🔧 CompanyService - getCompanies:', url);
-    }
 
     return this.http.get<ApiSuccessResponse<GetCompanyResponse[]>>(url).pipe(
       catchError((error: HttpErrorResponse) => this.handleError(error))
@@ -34,10 +26,6 @@ export class CompanyService {
   getCompanyById(id: number): Observable<ApiSuccessResponse<GetCompanyResponse>> {
     const url = `${this.baseUrl}/companies/${id}`;
 
-    if (environment.enableDebugMode) {
-      console.log('🔧 CompanyService - getCompanyById:', url);
-    }
-
     return this.http.get<ApiSuccessResponse<GetCompanyResponse>>(url).pipe(
       catchError((error: HttpErrorResponse) => this.handleError(error))
     );
@@ -46,10 +34,6 @@ export class CompanyService {
   postCompany(data: PostCompanyRequest): Observable<ApiSuccessResponse<GetCompanyResponse>> {
     const url = `${this.baseUrl}/companies`;
 
-    if (environment.enableDebugMode) {
-      console.log('🔧 CompanyService - postCompany:', url, data);
-    }
-
     return this.http.post<ApiSuccessResponse<GetCompanyResponse>>(url, data).pipe(
       catchError((error: HttpErrorResponse) => this.handleError(error))
     );
@@ -57,10 +41,6 @@ export class CompanyService {
 
   putCompanyById(id: number, data: PostCompanyRequest): Observable<ApiSuccessResponse<GetCompanyResponse>> {
     const url = `${this.baseUrl}/companies/${id}`;
-
-    if (environment.enableDebugMode) {
-      console.log('🔧 CompanyService - putCompanyById:', url);
-    }
 
     return this.http.put<ApiSuccessResponse<GetCompanyResponse>>(url, data).pipe(
       catchError((error: HttpErrorResponse) => this.handleError(error))
@@ -71,21 +51,13 @@ export class CompanyService {
   getUsers(): Observable<ApiSuccessResponse<GetUserResponse[]>> {
     const url = `${this.baseUrl}/users`;
 
-    if (environment.enableDebugMode) {
-      console.log('🔧 CompanyService - getUsers:', url);
-    }
-
     return this.http.get<ApiSuccessResponse<GetUserResponse[]>>(url).pipe(
       catchError((error: HttpErrorResponse) => this.handleError(error))
     );
   }
 
   getCompanyPrompts(): Observable<ApiSuccessResponse<GetCompanyPrompt[]>> {
-    const url = `${this.baseUrl}/companyPrompts`;
-
-    if (environment.enableDebugMode) {
-      console.log('🔧 CompanyService - getCompanyPrompts:', url);
-    }
+    const url = `${this.baseUrl}/company-prompts`;
 
     return this.http.get<ApiSuccessResponse<GetCompanyPrompt[]>>(url).pipe(
       catchError((error: HttpErrorResponse) => this.handleError(error))
@@ -93,23 +65,23 @@ export class CompanyService {
   }
 
   getCompanyPromptById(id: number): Observable<ApiSuccessResponse<GetCompanyPrompt>> {
-    const url = `${this.baseUrl}/companyPrompts/${id}`;
-
-    if (environment.enableDebugMode) {
-      console.log('🔧 CompanyService - getCompanyPromptById:', url);
-    }
+    const url = `${this.baseUrl}/company-prompts/${id}`;
 
     return this.http.get<ApiSuccessResponse<GetCompanyPrompt>>(url).pipe(
       catchError((error: HttpErrorResponse) => this.handleError(error))
     );
   }
 
-  postCompanyPrompt(data: PostCompanyPrompt): Observable<ApiSuccessResponse<GetCompanyPrompt>> {
-    const url = `${this.baseUrl}/companyPrompts`;
+  getCompanyPromptsByCompanyId(companyId: number): Observable<ApiSuccessResponse<GetCompanyPrompt[]>> {
+    const url = `${this.baseUrl}/company-prompts/company/${companyId}`;
 
-    if (environment.enableDebugMode) {
-      console.log('🔧 CompanyService - postCompanyPrompt:', url, data);
-    }
+    return this.http.get<ApiSuccessResponse<GetCompanyPrompt[]>>(url).pipe(
+      catchError((error: HttpErrorResponse) => this.handleError(error))
+    );
+  }
+
+  postCompanyPrompt(data: PostCompanyPrompt): Observable<ApiSuccessResponse<GetCompanyPrompt>> {
+    const url = `${this.baseUrl}/company-prompts`;
 
     return this.http.post<ApiSuccessResponse<GetCompanyPrompt>>(url, data).pipe(
       catchError((error: HttpErrorResponse) => this.handleError(error))
@@ -117,13 +89,17 @@ export class CompanyService {
   }
 
   putCompanyPromptById(id: number, data: PostCompanyPrompt): Observable<ApiSuccessResponse<GetCompanyPrompt>> {
-    const url = `${this.baseUrl}/companyPrompts/${id}`;
-
-    if (environment.enableDebugMode) {
-      console.log('🔧 CompanyService - putCompanyPromptById:', url);
-    }
+    const url = `${this.baseUrl}/company-prompts/${id}`;
 
     return this.http.put<ApiSuccessResponse<GetCompanyPrompt>>(url, data).pipe(
+      catchError((error: HttpErrorResponse) => this.handleError(error))
+    );
+  }
+
+  deleteCompanyPromptById(id: number): Observable<ApiSuccessResponse<null>> {
+    const url = `${this.baseUrl}/company-prompts/${id}`;
+
+    return this.http.delete<ApiSuccessResponse<null>>(url).pipe(
       catchError((error: HttpErrorResponse) => this.handleError(error))
     );
   }
@@ -132,19 +108,11 @@ export class CompanyService {
       let errorMessage = 'Error desconocido';
       let errorCode = 'UNKNOWN_ERROR';
 
-      if (environment.enableDebugMode) {
-          console.error('❌ Error de API:', error);
-      }
-
       // Error estructurado del backend (tu formato actual)
       if (error.error?.errors?.length > 0) {
-          const backendError = error.error.errors[0];
-          errorMessage = backendError.message;
-          errorCode = backendError.code;
-
-          if (environment.enableDebugMode) {
-              console.error('💥 Error del backend:', backendError);
-          }
+        const backendError = error.error.errors[0];
+        errorMessage = backendError.message;
+        errorCode = backendError.code;
       }
       // Errores HTTP específicos para registro
       else if (error.status === 400) {

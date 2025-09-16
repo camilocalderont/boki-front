@@ -1,10 +1,11 @@
 <div class="space-y-8 p-1">
-  <!-- Header de FAQS -->
+  <!-- Header de FAQS
   <div class="flex items-center justify-between">
     <div>
       <h2-theme>FAQS</h2-theme>
     </div>
   </div>
+  -->
 
   <div>
     <button-theme (click)="createFaqs()">
@@ -18,6 +19,6 @@
 
   <section-theme class="p-2 rounded-2xl">
     <data-grid [columns]="columns" [data]="faqs" [pageSize]="5" [pageSizeOptions]="[5,10,20,50]"
-      (update)="updateFaqs($event)"></data-grid>
+      [title]="'FAQS'" (update)="updateFaqs($event)"></data-grid>
   </section-theme>
 </div>

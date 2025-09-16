@@ -1,0 +1,100 @@
+<div class="plans-container">
+  <div class="plans-header">
+    <h1 class="plans-title">Selecciona tu Plan</h1>
+    <p class="plans-subtitle">Elige el plan que mejor se adapte a las necesidades de tu empresa</p>
+  </div>
+
+  <div class="loading-container" *ngIf="isLoading">
+    <div class="loading-spinner"></div>
+    <p>Cargando planes...</p>
+  </div>
+
+  <div class="plans-grid" *ngIf="!isLoading">
+    <div
+      class="plan-card"
+      *ngFor="let plan of plans"
+      [class.selected]="selectedPlanId === plan.Id"
+      (click)="confirmPlanSelection(plan)"
+    >
+      <div class="plan-header">
+        <div class="plan-badge" *ngIf="selectedPlanId === plan.Id">
+          <i class="fas fa-check"></i>
+          Plan Actual
+        </div>
+      </div>
+
+      <div class="plan-pricing">
+        <div class="monthly-price">
+          {{ formatPrice(plan.IValueMonthly) }}
+          <span class="price-period">/mes</span>
+        </div>
+        <div class="yearly-price">
+          {{ formatPrice(plan.IValueYearly) }}/año
+        </div>
+      </div>
+
+      <div class="plan-conversations">
+        <div class="conversations-count">
+          {{ plan.IMaxConversation | number }}
+        </div>
+        <div class="conversations-label">
+          Conversaciones máximas
+        </div>
+      </div>
+
+      <div class="plan-features">
+        <h4>Características incluidas:</h4>
+        <ul class="features-list">
+          <li *ngFor="let feature of parsePlanProperties(plan.TxProperties).features">
+            <i class="fas fa-check-circle"></i>
+            <span [ngSwitch]="feature">
+              <span *ngSwitchCase="'basic_chat'">Chat Básico</span>
+              <span *ngSwitchCase="'chat_plus'">Chat Plus</span>
+              <span *ngSwitchCase="'chat_premium'">Chat Premium</span>
+              <span *ngSwitchCase="'email_support'">Soporte por Email</span>
+              <span *ngSwitchCase="'full_support'">Soporte Completo</span>
+              <span *ngSwitchDefault>{{ feature }}</span>
+            </span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="plan-limits">
+        <h4>Límites del plan:</h4>
+        <section class="limits-grid">
+          <div class="limit-item">
+            <i class="fas fa-users"></i>
+            <span>{{ parsePlanProperties(plan.TxProperties).limits.users }} usuarios</span>
+          </div>
+          <div class="limit-item">
+            <i class="fas fa-hdd"></i>
+            <span>{{ parsePlanProperties(plan.TxProperties).limits.storage }} de almacenamiento</span>
+          </div>
+        </section>
+      </div>
+
+      <div class="plan-status" *ngIf="selectedPlanId === plan.Id">
+        <div class="status-indicator">
+          <i class="fas fa-check-circle"></i>
+          <span>Plan Activo</span>
+        </div>
+      </div>
+
+      <div class="plan-action-hint" *ngIf="selectedPlanId !== plan.Id">
+        <div class="action-hint">
+          <i class="fas fa-mouse-pointer"></i>
+          <span>Haz clic para seleccionar este plan</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section class="plans-footer">
+    <button-theme variant="secondary" (click)="goBack()">
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+      </svg>
+      Volver
+    </button-theme>
+  </section>
+</div>

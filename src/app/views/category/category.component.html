@@ -1,10 +1,12 @@
 <div class="space-y-8 p-1">
   <!-- Header de Categories -->
-  <div class="flex items-center justify-between">
-    <div>
-      <h2-theme>Categorías</h2-theme>
+   <!--
+    <div class="flex items-center justify-between">
+      <div>
+        <h2-theme>Categorías</h2-theme>
+      </div>
     </div>
-  </div>
+  -->
 
   <div>
     <button-theme (click)="createCategory()">
@@ -17,6 +19,7 @@
   </div>
 
   <section-theme class="p-2 rounded-2xl">
-    <data-grid [columns]="columns" [data]="categories" [pageSize]="5" [pageSizeOptions]="[5,10,20,50]" (update)="updateCategory($event)"></data-grid>
+    <data-grid [columns]="columns" [data]="categories" [pageSize]="5" [pageSizeOptions]="[5,10,20,50]" 
+      [title]="'Categorías'" (update)="updateCategory($event)"></data-grid>
   </section-theme>
 </div>

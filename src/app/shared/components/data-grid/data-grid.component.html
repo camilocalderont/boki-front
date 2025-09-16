@@ -1,63 +1,101 @@
-<div [class]="containerClasses">
+<div class="containerClasses">
   
-  <!-- Campo de búsqueda -->
-  <div class="p-4 border-b flex justify-end items-center">
-    <input type="text"
-           [(ngModel)]="searchTerm"
-           (ngModelChange)="applyFilter()"
-           placeholder="Buscar..."
-           [class]="searchInputClasses" />
+  <div class="grid grid-cols-1 md:grid-cols-2">
+    <!-- Título -->
+    @if (title) {
+      <div class="p-4 border-b flex justify-between items-center">
+        <h2-theme>{{ title }}</h2-theme>
+      </div>
+    }
+    
+    <!-- Campo de búsqueda -->
+    <div class="p-4 border-b flex justify-end items-center">
+      <input type="text"
+            [(ngModel)]="searchTerm"
+            (ngModelChange)="applyFilter()"
+            placeholder="Buscar..."
+            class="searchInputClasses" />
+    </div>
   </div>
   
   <!-- Tabla -->
   <div class="overflow-x-auto">
-    <table [class]="tbodyClasses">
+    <table class="tbodyClasses">
       <!-- Header -->
-      <thead [class]="theadClasses">
+      <thead class="theadClasses">
         <tr>
-          <th *ngFor="let col of columns"
-              [style.width]="col.width"
-              class="px-4 py-3 font-semibold tracking-wide">
-            {{ col.label }}
-          </th>
+          @for (col of columns; track $index) {
+            <th [style.width]="col.width"
+                class="px-4 py-3 font-semibold tracking-wide">
+              {{ col.label }}
+            </th>
+          }
           <th class="px-4 py-3 text-right">Acciones</th>
         </tr>
       </thead>
 
       <!-- Body -->
       <tbody>
-        <tr *ngFor="let row of paginatedData; let i = index"
-            [class]="rowClasses">
-          <td *ngFor="let col of columns" class="px-4 py-3">
-                {{ col.format ? (getNestedProperty(row, col.key) | date: col.format) : getNestedProperty(row, col.key) | truncateText:200 }}
-          </td>
-          <td class="px-4 py-3 text-right">
-            <button (click)="onUpdate(row.Id)" 
-                    class="inline-flex items-center px-2.5 py-2.5 bg-brand-blue text-white text-sm font-semibold rounded-xl hover:bg-brand-blue-dark focus:ring-4 focus:ring-blue-200 transition-all duration-200 shadow-sm hover:shadow-md">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                      d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-              </svg>
-            </button>
-          </td>
-        </tr>
+        @for (row of paginatedData; track $index) {
+          <tr class="rowClasses">
+            @for (col of columns; track $index) {
+              <td class="px-4 py-3">
+                    {{ col.format ? (getNestedProperty(row, col.key) | date: col.format) : getNestedProperty(row, col.key) | truncateText:200 }}
+              </td>
+            }
+             <td class="px-4 py-3 text-right">
+               <div class="flex gap-2 justify-end">
+                 @if (showAddAction) {
+                   <button (click)="onAddAction(row.Id)"
+                           class="inline-flex items-center px-2.5 py-2.5 bg-brand-blue text-white text-sm font-semibold rounded-xl hover:bg-brand-blue-dark focus:ring-4 focus:ring-blue-200 transition-all duration-200 shadow-sm hover:shadow-md"
+                           [title]="addActionLabel">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 512 512">
+                          <path fill="#ffffff" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M285.1 50.7C279.9 39.3 268.5 32 256 32s-23.9 7.3-29.1 18.7L59.5 416 48 416c-17.7 0-32 14.3-32 32s14.3 32 32 32l88 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-6.1 0 22-48 208.3 0 22 48-6.1 0c-17.7 0-32 14.3-32 32s14.3 32 32 32l88 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-11.5 0-167.4-365.3zM330.8 304L181.2 304 256 140.8 330.8 304z"/>
+                      </svg>
+                   </button>
+                 }
+                 <button (click)="onUpdate(row.Id)"
+                         class="inline-flex items-center px-2.5 py-2.5 bg-brand-blue text-white text-sm font-semibold rounded-xl hover:bg-brand-blue-dark focus:ring-4 focus:ring-blue-200 transition-all duration-200 shadow-sm hover:shadow-md"
+                         [title]="updateActionLabel">
+                   <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                           d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                   </svg>
+                 </button>
+                 @if (showDeleteAction) {
+                   <button (click)="onDelete(row.Id)"
+                           class="inline-flex items-center px-2.5 py-2.5 bg-red-600 text-white text-sm font-semibold rounded-xl hover:bg-red-700 focus:ring-4 focus:ring-red-200 transition-all duration-200 shadow-sm hover:shadow-md"
+                           [title]="deleteActionLabel">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                      </svg>
+                   </button>
+                 }
+               </div>
+             </td>
+          </tr>
+        }
       </tbody>
     </table>
   </div>
 
   <!-- Paginación -->
-  <div [class]="paginationTextClasses">
+  <div class="paginationTextClasses">
     
     <!-- Selector de tamaño -->
     <div class="flex items-center gap-2">
-      <label for="pageSize" [class]="paginationLabelClasses">Mostrar</label>
+      <label for="pageSize" class="paginationLabelClasses">Mostrar</label>
       <select id="pageSize"
               [(ngModel)]="pageSize"
               (ngModelChange)="changePageSize($event)"
               class="px-2 py-1 border rounded-lg text-sm focus:ring focus:ring-blue-200">
-        <option *ngFor="let size of pageSizeOptions" [ngValue]="size">
-          {{ size }}
-        </option>
+        @for (size of pageSizeOptions; track $index) {
+          <option [ngValue]="size">
+            {{ size }}
+          </option>
+        }
       </select>
       <span [class]="paginationLabelClasses">filas</span>
     </div>
@@ -70,13 +108,15 @@
         Prev
       </button>
 
-      <ng-container *ngFor="let p of pages">
-        <button (click)="changePage(p)"
-                class="inline-flex items-center px-3 py-1 bg-brand-blue text-dark rounded-xl hover:bg-brand-blue-dark focus:ring-4 focus:ring-blue-200 transition-all duration-200 shadow-sm hover:shadow-md"
-                [ngClass]="p === currentPage ? 'bg-blue-600 text-white border-blue-600' : 'bg-white hover:bg-gray-100'">
-          {{ p }}
-        </button>
-      </ng-container>
+      @for (p of pages; track $index) {
+        <ng-container>
+          <button (click)="changePage(p)"
+                  class="inline-flex items-center px-3 py-1 bg-brand-blue text-dark rounded-xl hover:bg-brand-blue-dark focus:ring-4 focus:ring-blue-200 transition-all duration-200 shadow-sm hover:shadow-md"
+                  [ngClass]="p === currentPage ? 'bg-blue-600 text-white border-blue-600' : 'bg-white hover:bg-gray-100'">
+            {{ p }}
+          </button>
+        </ng-container>
+      }
 
       <button (click)="changePage(currentPage + 1)"
               [disabled]="currentPage === totalPages"

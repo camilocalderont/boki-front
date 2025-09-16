@@ -1,24 +1,64 @@
 <div class="space-y-8 p-1">
-  <!-- Header de Companies -->
-  <div class="flex items-center justify-between">
-    <div>
-      <h2-theme>Empresas</h2-theme>
-      <!-- <p class="{{theme?.theme?.colors?.text?.quaternary?.light}} text-base">Bienvenido, Aquí están las Empresas</p> -->
-    </div>
-  </div>
+  <!-- Header -->
+  <!-- <h2-theme *ngIf="!showPrompts">Empresas</h2-theme> -->
+   
+  <!-- Botones de acción -->
+   @if (!showPrompts) {
+    <section>
+      <button-theme (click)="createCompany()">
+        <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1" />
+        </svg>
+        Crear Empresa
+      </button-theme>
+    </section>
+   }
 
-  <div>
-    <button-theme (click)="createCompany()">
-      <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
-        <path stroke-linecap="round" stroke-linejoin="round"
-          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1" />
-      </svg>
-      Crear Empresa
-    </button-theme>
-  </div>
+   @if (showPrompts) {
+     <section>
+       <button-theme (click)="abrirModal(selectedCompanyId!)">
+         <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+           <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+         </svg>
+         Agregar Prompt
+       </button-theme>
+     </section>
+   }
 
-  <section-theme class="p-2 rounded-2xl">
-    <data-grid [columns]="columns" [data]="companies" [pageSize]="5" [pageSizeOptions]="[5,10,20,50]"
-      (update)="updateCompany($event)"></data-grid>
-  </section-theme>
+  <!-- Data Grid de Empresas -->
+   @if (!showPrompts) {
+     <section-theme class="p-2 rounded-2xl">
+       <data-grid [columns]="companyColumns" [data]="companies" [pageSize]="5" [pageSizeOptions]="[5,10,20,50]"
+         [showAddAction]="true" [addActionLabel]="'Ver Prompts'"
+         [title]="'Empresas'"
+         (update)="updateCompany($event)" (addAction)="verPrompts($event, getCompanyName($event))"></data-grid>
+     </section-theme>
+   }
+
+   <!-- Data Grid de Prompts -->
+    @if (showPrompts) {
+      <section-theme class="p-2 rounded-2xl">
+        <data-grid [columns]="promptColumns" [data]="companyPrompts" [pageSize]="5" [pageSizeOptions]="[5,10,20,50]"
+          [showAddAction]="false"
+          [showDeleteAction]="true"
+          [deleteActionLabel]="'Eliminar'"
+          [title]="'Prompts de: ' + selectedCompanyName"
+          (update)="abrirModalEdicion($event)"
+          (delete)="eliminarPrompt($event)"></data-grid>
+      </section-theme>
+    }
+
+   @if (showPrompts) {
+     <section class="flex items-center space-x-4">
+       <button-theme variant="secondary" (click)="volverACompanies()">
+         <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+           <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+         </svg>
+         Volver
+       </button-theme>
+     </section>
+   }
+
+  <custom-dialog></custom-dialog>
 </div>

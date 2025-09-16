@@ -8,9 +8,6 @@ import { AuthService } from '../../../auth/services/auth.service';
 import { BaseComponent } from '../../../shared/components/base/base.component';
 import { ThemeComponentsModule } from '../../../shared/components/theme-components';
 import { SnackBarService } from '../../../shared/components/snack-bar/service/snack-bar.service';
-import { CustomDialogComponent } from '../../../shared/dialogs/custom-dialog/custom-dialog.component';
-import { DialogService } from '../../../shared/dialogs/services/dialog.service';
-import { TestModalComponent } from '../../../shared/test/modal-test/test-modal.component';
 
 @Component({
   selector: 'create-company',
@@ -18,8 +15,7 @@ import { TestModalComponent } from '../../../shared/test/modal-test/test-modal.c
   imports: [
     CommonModule, 
     ReactiveFormsModule,
-    ThemeComponentsModule,
-    CustomDialogComponent
+    ThemeComponentsModule
   ],
   templateUrl: './create-company.component.html',
   styleUrls: ['./create-company.component.scss']
@@ -31,29 +27,29 @@ export class CreateCompanyComponent extends BaseComponent {
   companyId: string | null = null;
   userIdLogged: number | undefined = undefined;
 
+  /*
+  companyPrompts: GetCompanyPrompt[] = [];
+  columns: DataGridColumn[] = [
+    { key: 'Company.VcName', label: 'Empresa' },
+    { key: 'VcDescription', label: 'Descripción' },
+    { key: 'VcInternalCode', label: 'Código Interno' },
+    { key: 'TxIntentionPrompt', label: 'Intención' },
+    { key: 'TxMainPrompt', label: 'Prompt' },
+    { key: 'User.VcFirstName', label: 'Usuario' },
+    { key: 'created_at', label: 'Fecha de Creación', format: FORMAT_DATA.DATE },
+  ];
+  */
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
     private companyService: CompanyService,
     private userData: AuthService,
-    private snackBarService: SnackBarService,
-    private dialogService: DialogService
+    private snackBarService: SnackBarService
   ) {
-    super(); 
+    super();
   }
-
-  abrirModal(): void {
-  this.dialogService.open({
-    type: 'custom',
-    component: TestModalComponent
-  }).subscribe(result => {
-    console.log('Modal cerrado con resultado:', result);
-    if (result) {
-      this.snackBarService.open('Modal aceptado', {"type": "success", "position": "bot-right"});
-    }
-  });
-}
 
   protected onComponentInit(): void {
     // Este método se ejecuta después de que el tema esté disponible
@@ -64,10 +60,21 @@ export class CreateCompanyComponent extends BaseComponent {
 
     if (this.isEditMode) {
       this.loadCompany(this.companyId!);
+      //this.loadCompanyPrompts();
     }
 
     this.userIdLogged = this.userData.getCurrentUser()?.Id;
   }
+
+  /*
+  loadCompanyPrompts(): void {
+    this.companyService.getCompanyPromptsByCompanyId(Number(this.companyId)).subscribe({
+      next: (response) => {
+        this.companyPrompts = response.data;
+      }
+    });
+  }
+  */
 
   initializeForm(): void {
     this.form = this.fb.group({
@@ -78,7 +85,6 @@ export class CreateCompanyComponent extends BaseComponent {
       VcPrincipalEmail: ['', [Validators.required, Validators.email]],
       VcLegalRepresentative: ['', Validators.required],
       UserId: [''],
-      TxPrompt: ['', Validators.maxLength(10000)],
     });
   }
 
@@ -139,7 +145,33 @@ export class CreateCompanyComponent extends BaseComponent {
     }
   }
 
+  /*
+  updateCompanyPrompt(id: number): void {
+    
+  }
+
+  abrirModal(): void {
+    this.dialogService.open({
+      type: 'custom',
+      component: CreateCompanyPromptComponent
+    }).subscribe(result => {
+      console.log('Modal cerrado con resultado:', result);
+      if (result) {
+        this.snackBarService.open('Modal aceptado', {"type": "success", "position": "bot-right"});
+      }
+    });
+  }
+  */
+
   redirectLink(link: string) {
     this.router.navigate([link]);
+  }
+
+  redirectToPlans(): void {
+    if (this.companyId) {
+      this.router.navigate(['/dashboard/plans', this.companyId]);
+    } else {
+      this.snackBarService.open('ID de empresa no válido', {"type": "error", "position": "bot-right"});
+    }
   }
 }

@@ -1,0 +1,76 @@
+<form-container-theme>
+  <h2-theme class="mb-6">
+    {{ isEditMode ? 'Actualizar Prompt' : 'Crear Prompt' }}
+  </h2-theme>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+
+    <!-- Primera fila: Usuario y Descripción -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <form-select-theme 
+        formControlName="UserId"
+        placeholder="Seleccione un usuario"
+        [showError]="!!(form.get('UserId')?.invalid && form.get('UserId')?.touched)"
+        errorMessage="Debe seleccionar un usuario">
+        @for (user of users; track $index) {
+          <option [value]="user.Id">
+            {{ user.VcFirstName }} {{ user.VcFirstLastName }}
+          </option>
+        }
+      </form-select-theme>
+
+      <form-input-theme 
+        formControlName="VcDescription" 
+        placeholder="Descripción"
+        [showError]="!!(form.get('VcDescription')?.invalid && form.get('VcDescription')?.touched)"
+        errorMessage="La descripción es obligatoria">
+      </form-input-theme>
+    </div>
+
+    <!-- Segunda fila: Código Interno y Prompt de Intención -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <form-input-theme 
+        formControlName="VcInternalCode" 
+        placeholder="Código Interno"
+        [showError]="!!(form.get('VcInternalCode')?.invalid && form.get('VcInternalCode')?.touched)"
+        errorMessage="El código interno es obligatorio">
+      </form-input-theme>
+
+      <form-textarea-theme 
+        formControlName="TxIntentionPrompt" 
+        placeholder="Prompt de Intención"
+        [rows]="2"
+        [showError]="!!(form.get('TxIntentionPrompt')?.invalid && form.get('TxIntentionPrompt')?.touched)"
+        errorMessage="El prompt de intención es obligatorio">
+      </form-textarea-theme>
+    </div>
+
+    <!-- Cuarta fila: Prompt Principal -->
+    <div class="gap-4">
+      <form-textarea-theme 
+        formControlName="TxMainPrompt" 
+        placeholder="Prompt Principal"
+        [rows]="10"
+        [showError]="!!(form.get('TxMainPrompt')?.invalid && form.get('TxMainPrompt')?.touched)"
+        errorMessage="El prompt principal es obligatorio">
+      </form-textarea-theme>
+    </div>
+
+    <!-- Botones -->
+    <div class="flex justify-end space-x-4 pt-2">
+      <button-theme 
+        type="button" 
+        variant="secondary"
+        (click)="isModalMode ? closeModal() : redirectLink('/dashboard/company-prompts')">
+        Cancelar
+      </button-theme>
+      
+      <button-theme 
+        type="submit" 
+        [disabled]="form.invalid"
+        variant="primary">
+        {{ isEditMode ? 'Actualizar' : 'Crear' }}
+      </button-theme>
+    </div>
+  </form>
+</form-container-theme>
