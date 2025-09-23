@@ -4,10 +4,11 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { ActivatedRoute, Router } from '@angular/router';
 import { CompanyService } from '../../../services/company.service';
 import { PostCompanyPrompt } from '../../../shared/interfaces/companny-prompt.interface';
-import { GetCompanyResponse, GetUserResponse } from '../../../shared/interfaces/company.interface';
+import { GetCompanyResponse } from '../../../shared/interfaces/company.interface';
 import { BaseComponent } from '../../../shared/components/base/base.component';
 import { ThemeComponentsModule } from '../../../shared/components/theme-components';
 import { SnackBarService } from '../../../shared/components/snack-bar/service/snack-bar.service';
+import { AuthService } from '../../../auth/services/auth.service';
  
 
 @Component({
@@ -27,7 +28,7 @@ export class CreateCompanyPromptComponent extends BaseComponent {
   isEditMode = false;
   companyPromptId: string | null = null;
   companies: GetCompanyResponse[] = [];
-  users: GetUserResponse[] = [];
+  userIdLogged: number | undefined = undefined;
   @Input() companyId: number | null = null;
   @Input() editCompanyPromptId: number | null = null; // Para modo edición en modal
   @Output() onClose = new EventEmitter<boolean>();
@@ -38,6 +39,7 @@ export class CreateCompanyPromptComponent extends BaseComponent {
     private router: Router,
     private route: ActivatedRoute,
     private companyService: CompanyService,
+    private userData: AuthService,
     private snackBarService: SnackBarService
   ) {
     super();
@@ -45,7 +47,7 @@ export class CreateCompanyPromptComponent extends BaseComponent {
 
   override ngOnInit(): void {
     this.loadCompanies();
-    this.loadUsers();
+    this.userIdLogged = this.userData.getCurrentUser()?.Id;
     super.ngOnInit();
   }
 
@@ -71,7 +73,7 @@ export class CreateCompanyPromptComponent extends BaseComponent {
       VcInternalCode: ['', [Validators.required, Validators.maxLength(100)]],
       TxIntentionPrompt: ['', [Validators.required, Validators.maxLength(2000)]],
       TxMainPrompt: ['', [Validators.required, Validators.maxLength(5000)]],
-      UserId: ['', Validators.required],
+      UserId: [this.userIdLogged, Validators.required],
     });
 
     if (this.isEditMode) {
@@ -87,18 +89,6 @@ export class CreateCompanyPromptComponent extends BaseComponent {
       error: (error) => {
         this.snackBarService.open('Error al cargar las empresas:', {"type": "error"});
         console.error('Error al cargar las empresas:', error);
-      }
-    });
-  }
-
-  loadUsers(): void {
-    this.companyService.getUsers().subscribe({
-      next: (response) => {
-        this.users = response.data;
-      },
-      error: (error) => {
-        this.snackBarService.open('Error al cargar los usuarios:', {"type": "error"});
-        console.error('Error al cargar los usuarios:', error);
       }
     });
   }

@@ -1,4 +1,4 @@
-<div class="containerClasses">
+<div [class]="containerClasses">
   
   <div class="grid grid-cols-1 md:grid-cols-2">
     <!-- Título -->
@@ -14,15 +14,15 @@
             [(ngModel)]="searchTerm"
             (ngModelChange)="applyFilter()"
             placeholder="Buscar..."
-            class="searchInputClasses" />
+            [class]="searchInputClasses" />
     </div>
   </div>
   
   <!-- Tabla -->
   <div class="overflow-x-auto">
-    <table class="tbodyClasses">
+    <table [class]="tbodyClasses">
       <!-- Header -->
-      <thead class="theadClasses">
+      <thead [class]="theadClasses">
         <tr>
           @for (col of columns; track $index) {
             <th [style.width]="col.width"
@@ -37,7 +37,7 @@
       <!-- Body -->
       <tbody>
         @for (row of paginatedData; track $index) {
-          <tr class="rowClasses">
+          <tr [class]="rowClasses">
             @for (col of columns; track $index) {
               <td class="px-4 py-3">
                     {{ col.format ? (getNestedProperty(row, col.key) | date: col.format) : getNestedProperty(row, col.key) | truncateText:200 }}
@@ -82,11 +82,11 @@
   </div>
 
   <!-- Paginación -->
-  <div class="paginationTextClasses">
+  <div [class]="paginationTextClasses">
     
     <!-- Selector de tamaño -->
     <div class="flex items-center gap-2">
-      <label for="pageSize" class="paginationLabelClasses">Mostrar</label>
+      <label for="pageSize" [class]="paginationLabelClasses">Mostrar</label>
       <select id="pageSize"
               [(ngModel)]="pageSize"
               (ngModelChange)="changePageSize($event)"
