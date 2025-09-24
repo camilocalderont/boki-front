@@ -17,6 +17,7 @@ import { DialogService } from '../../shared/dialogs/services/dialog.service';
 import { SnackBarService } from '../../shared/components/snack-bar/service/snack-bar.service';
 import { CreateCompanyPromptComponent } from '../forms/create-company-prompt/create-company-prompt.component';
 import { CustomDialogComponent } from '../../shared/dialogs/custom-dialog/custom-dialog.component';
+import { ConfirmDialogComponent } from '../../shared/dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-company',
@@ -24,7 +25,8 @@ import { CustomDialogComponent } from '../../shared/dialogs/custom-dialog/custom
     CommonModule,
     DataGridComponent,
     ThemeComponentsModule,
-    CustomDialogComponent
+    CustomDialogComponent,
+    ConfirmDialogComponent  
   ],
   templateUrl: './company.component.html',
   styleUrls: ['./company.component.scss'],
@@ -146,10 +148,15 @@ export class CompanyComponent extends BaseComponent {
     this.companyPrompts = [];
   }
 
-  eliminarPrompt(promptId: number): void {
-    const confirmacion = confirm('¿Está seguro de que desea eliminar este prompt? Esta acción no se puede deshacer.');
-
-    if (confirmacion) {
+eliminarPrompt(promptId: number): void {
+  this.dialogService.open({
+    type: 'confirm',
+    title: 'Confirmar eliminación',
+    message: '¿Está seguro de que desea eliminar este prompt? Esta acción no se puede deshacer.',
+    confirmText: 'Eliminar',
+    cancelText: 'Cancelar'
+  }).subscribe(result => {
+    if (result) {
       this.companyService.deleteCompanyPromptById(promptId).subscribe({
         next: (response) => {
           if (response.status === "success") {
@@ -166,7 +173,8 @@ export class CompanyComponent extends BaseComponent {
         }
       });
     }
-  }
+  });
+}
 
   getCompanyName(companyId: number): string {
     const company = this.companies.find(c => c.Id === companyId);

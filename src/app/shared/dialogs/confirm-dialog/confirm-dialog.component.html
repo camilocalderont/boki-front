@@ -1,0 +1,54 @@
+<div *ngIf="visible" 
+     [class]="backdropClasses"
+     class="fixed inset-0 bg-black flex items-center justify-center z-50 transition-all duration-300">
+  
+  <modal-theme [contentClasses]="contentClasses" class="max-w-md">
+    <div class="text-center">
+      <!-- Icono -->
+      <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full mb-4" 
+           [ngClass]="data?.type === 'confirm' ? 'bg-red-100 dark:bg-red-900/20' : 'bg-blue-100 dark:bg-blue-900/20'">
+        <!-- Icono de advertencia para confirm -->
+        <svg *ngIf="data?.type === 'confirm'" 
+             class="h-6 w-6 text-red-600 dark:text-red-400" 
+             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
+        </svg>
+        
+        <!-- Icono de información para alert -->
+        <svg *ngIf="data?.type === 'alert'" 
+             class="h-6 w-6 text-blue-600 dark:text-blue-400" 
+             fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z" />
+        </svg>
+      </div>
+
+      <!-- Título -->
+      <h3 *ngIf="data?.title" class="text-lg font-semibold mb-3 text-gray-900 dark:text-white">
+        {{ data?.title }}
+      </h3>
+
+      <!-- Mensaje -->
+      <p class="text-sm text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
+        {{ data?.message }}
+      </p>
+    </div>
+
+    <!-- Botones -->
+    <div class="flex gap-3" [ngClass]="data?.type === 'confirm' ? 'flex-row-reverse' : 'justify-center'">
+      <!-- Botón confirmar -->
+      <button 
+        (click)="confirm()"
+        [class]="data?.confirmButtonClass || getConfirmButtonClass()">
+        {{ data?.confirmText }}
+      </button>
+      
+      <!-- Botón cancelar -->
+      <button 
+        *ngIf="data?.type === 'confirm'" 
+        (click)="cancel()"
+        [class]="data?.cancelButtonClass || getCancelButtonClass()">
+        {{ data?.cancelText }}
+      </button>
+    </div>
+  </modal-theme>
+</div>
