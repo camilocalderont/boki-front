@@ -3,19 +3,24 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PlanService } from '../../services/plan.service';
 import { GetAllPlansRs, PlanFeatures } from '../../shared/interfaces/plan.interface';
-import { GetCompanyPlansRs, PostCompanyPlanRq } from '../../shared/interfaces/company-plan.interface';
+import { PostCompanyPlanRq } from '../../shared/interfaces/company-plan.interface';
 import { SnackBarService } from '../../shared/components/snack-bar/service/snack-bar.service';
 import { ThemeComponentsModule } from '../../shared/components/theme-components/theme-components.module';
-
+import { DialogService } from '../../shared/dialogs/services/dialog.service';
+import { CreateCompanyPlanControlTokenComponent } from '../forms/create-company-plan-control-token/create-company-plan-control-token.component';
+import { CustomDialogComponent } from '../../shared/dialogs/custom-dialog/custom-dialog.component';
+import { BaseComponent } from '../../shared/components/base/base.component';
 
 @Component({
   selector: 'plans-component',
-  imports: [CommonModule, ThemeComponentsModule],
+  imports: [CommonModule,
+    ThemeComponentsModule,
+    CustomDialogComponent],
   templateUrl: './plans.component.html',
   styleUrl: './plans.component.scss'
 })
-export class PlansComponent implements OnInit {
-
+export class PlansComponent extends BaseComponent {
+  
   plans: GetAllPlansRs[] = [];
   selectedPlanId: number | null = null;
   companyId: number | null = null;
@@ -26,10 +31,13 @@ export class PlansComponent implements OnInit {
     private planService: PlanService,
     private route: ActivatedRoute,
     private router: Router,
-    private snackBarService: SnackBarService
-  ) {}
+    private snackBarService: SnackBarService,
+    private dialogService: DialogService,
+  ) {
+    super();
+  }
 
-  ngOnInit(): void {
+  protected override onComponentInit(): void {
     this.route.params.subscribe(params => {
       this.companyId = params['companyId'] ? +params['companyId'] : null;
       this.loadPlans();
@@ -149,6 +157,18 @@ export class PlansComponent implements OnInit {
       currency: 'COP',
       minimumFractionDigits: 0
     }).format(price);
+  }
+
+  openModalControl(): void {
+    this.dialogService.open({
+      type: 'custom',
+      component: CreateCompanyPlanControlTokenComponent,
+      inputs: { companyId: this.companyId }
+    }).subscribe(result => {
+      if (result) {
+        
+      }
+    });
   }
 
   goBack(): void {

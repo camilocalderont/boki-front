@@ -20,7 +20,7 @@ export class ModalThemeComponent extends BaseComponent {
   get modalClasses(): string {
     return [
       // Clases base del modal
-      'rounded-lg shadow-lg p-6 w-full max-w-xl transition-all duration-300',
+      'rounded-lg shadow-lg w-full transition-all duration-300',
       // Background - incluye tanto light como dark
       this.theme?.theme?.colors?.background?.primary?.light || 'bg-white',
       this.theme?.theme?.colors?.background?.primary?.dark || 'dark:bg-gray-800',

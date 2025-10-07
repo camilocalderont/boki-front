@@ -1,6 +1,6 @@
 <div class="plans-container">
   <div class="plans-header">
-    <h1 class="plans-title">Selecciona tu Plan</h1>
+    <h1-theme [class]="'mb-5'">Selecciona tu Plan</h1-theme>
     <p class="plans-subtitle">Elige el plan que mejor se adapte a las necesidades de tu empresa</p>
   </div>
 
@@ -45,32 +45,31 @@
       <div class="plan-features">
         <h4>Características incluidas:</h4>
         <ul class="features-list">
-          <li *ngFor="let feature of parsePlanProperties(plan.TxProperties).features">
-            <i class="fas fa-check-circle"></i>
-            <span [ngSwitch]="feature">
-              <span *ngSwitchCase="'basic_chat'">Chat Básico</span>
-              <span *ngSwitchCase="'chat_plus'">Chat Plus</span>
-              <span *ngSwitchCase="'chat_premium'">Chat Premium</span>
-              <span *ngSwitchCase="'email_support'">Soporte por Email</span>
-              <span *ngSwitchCase="'full_support'">Soporte Completo</span>
-              <span *ngSwitchDefault>{{ feature }}</span>
-            </span>
-          </li>
+          @for (feature of parsePlanProperties(plan.TxProperties).features; track $index) {
+            <li class="ms-2">
+              <span [ngSwitch]="feature">
+                <span *ngSwitchCase="'basic_chat'">Chat Básico</span>
+                <span *ngSwitchCase="'chat_plus'">Chat Plus</span>
+                <span *ngSwitchCase="'chat_premium'">Chat Premium</span>
+                <span *ngSwitchCase="'email_support'">Soporte por Email</span>
+                <span *ngSwitchCase="'full_support'">Soporte Completo</span>
+                <span *ngSwitchDefault>{{ feature }}</span>
+              </span>
+            </li>
+          }
         </ul>
       </div>
 
-      <div class="plan-limits">
+      <div class="plan-features">
         <h4>Límites del plan:</h4>
-        <section class="limits-grid">
-          <div class="limit-item">
-            <i class="fas fa-users"></i>
+        <ul class="features-list">
+          <li class="ms-2">
             <span>{{ parsePlanProperties(plan.TxProperties).limits.users }} usuarios</span>
-          </div>
-          <div class="limit-item">
-            <i class="fas fa-hdd"></i>
+          </li>
+          <li class="ms-2">
             <span>{{ parsePlanProperties(plan.TxProperties).limits.storage }} de almacenamiento</span>
-          </div>
-        </section>
+          </li>
+        </ul>
       </div>
 
       <div class="plan-status" *ngIf="selectedPlanId === plan.Id">
@@ -86,6 +85,18 @@
           <span>Haz clic para seleccionar este plan</span>
         </div>
       </div>
+
+      <div class="plan-action-button">
+        <button (click)="openModalControl(); $event.stopPropagation()"
+                class="inline-flex items-center px-2.5 py-2.5 bg-brand-blue text-white text-sm font-semibold rounded-xl hover:bg-brand-blue-dark focus:ring-4 focus:ring-blue-200 transition-all duration-200 shadow-sm hover:shadow-md"
+                [title]="'Abrir control del plan'">
+
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 512 512">
+            <path stroke-linecap="round" fill="#ffffff" stroke-linejoin="round" stroke-width="2"
+                d="M32 64C14.3 64 0 78.3 0 96s14.3 32 32 32l86.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 128c17.7 0 32-14.3 32-32s-14.3-32-32-32L265.3 64C253 35.7 224.8 16 192 16s-61 19.7-73.3 48L32 64zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l246.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48l54.7 0c17.7 0 32-14.3 32-32s-14.3-32-32-32l-54.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 224zm0 160c-17.7 0-32 14.3-32 32s14.3 32 32 32l54.7 0c12.3 28.3 40.5 48 73.3 48s61-19.7 73.3-48L480 448c17.7 0 32-14.3 32-32s-14.3-32-32-32l-246.7 0c-12.3-28.3-40.5-48-73.3-48s-61 19.7-73.3 48L32 384z"/>
+          </svg>
+        </button>
+      </div>
     </div>
   </div>
 
@@ -98,3 +109,5 @@
     </button-theme>
   </section>
 </div>
+
+<custom-dialog></custom-dialog>

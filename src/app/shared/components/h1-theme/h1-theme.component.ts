@@ -19,7 +19,7 @@ export class H1ThemeComponent extends BaseComponent {
 
   get cssClasses(): string {
     const themeClasses = [
-      'text-2xl font-bold',
+      'text-4xl font-bold',
       this.theme?.theme?.colors?.text?.primary?.light || 'text-gray-900',
       this.theme?.theme?.colors?.text?.primary?.dark || ''
     ].filter(cls => cls).join(' ');

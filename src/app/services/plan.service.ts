@@ -38,9 +38,7 @@ export class PlanService {
     const url = `${this.baseUrl}/company-plans/company/${companyId}`;
 
     return this.http.get<ApiSuccessResponse<GetCompanyPlansRs>>(url)
-      .pipe(
-        catchError(this.handleError)
-      );
+      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
   }
 
   postCompanyPlan(data: PostCompanyPlanRq): Observable<ApiSuccessResponse<GetCompanyPlansRs>> {
@@ -62,17 +60,33 @@ export class PlanService {
   }
 
   getAllCompanyPlanControlToken(): Observable<ApiSuccessResponse<GetCompanyPlanControlTokenRs[]>> {
-    const url = `${this.baseUrl}/company-plan-control-token`;
+    const url = `${this.baseUrl}/company-plan-control-tokens`;
 
     return this.http.get<ApiSuccessResponse<GetCompanyPlanControlTokenRs[]>>(url).pipe(
       catchError((error: HttpErrorResponse) => this.handleError(error))
     );
   }
 
-  postCompanyPlanControlToken(data: PostCompanyPlanControlTokenRq): Observable<ApiSuccessResponse<PostCompanyPlanControlTokenRq>> {
-    const url = `${this.baseUrl}/company-plan-control-token`;
+  getCompanyPlanControlTokenById(id: number): Observable<ApiSuccessResponse<GetCompanyPlanControlTokenRs>> {
+    const url = `${this.baseUrl}/company-plan-control-tokens/${id}`;
+
+    return this.http.get<ApiSuccessResponse<GetCompanyPlanControlTokenRs>>(url).pipe(
+      catchError((error: HttpErrorResponse) => this.handleError(error))
+    );
+  }
+
+  postCompanyPlanControlToken(data: PostCompanyPlanControlTokenRq): Observable<ApiSuccessResponse<GetCompanyPlanControlTokenRs>> {
+    const url = `${this.baseUrl}/company-plan-control-tokens`;
 
     return this.http.post<ApiSuccessResponse<GetCompanyPlanControlTokenRs>>(url, data).pipe(
+      catchError((error: HttpErrorResponse) => this.handleError(error))
+    );
+  }
+
+  putCompanyPlanControlToken(data: PostCompanyPlanControlTokenRq, id: number): Observable<ApiSuccessResponse<GetCompanyPlanControlTokenRs>> {
+    const url = `${this.baseUrl}/company-plan-control-tokens/${id}`;
+
+    return this.http.put<ApiSuccessResponse<GetCompanyPlanControlTokenRs>>(url, data).pipe(
       catchError((error: HttpErrorResponse) => this.handleError(error))
     );
   }

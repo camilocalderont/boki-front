@@ -1,0 +1,64 @@
+<form-container-theme>
+  <h2-theme class="mb-6">
+    {{ isEditMode ? 'Actualizar Token de Control' : 'Crear Token de Control' }}
+  </h2-theme>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" class="space-y-6">
+
+    <!-- CompanyPlanId is hidden as it comes from the input -->
+    <input type="hidden" formControlName="CompanyPlanId">
+
+    <!-- Año y Mes -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <form-input-theme
+        formControlName="IYear"
+        placeholder="Año"
+        type="number"
+        [showError]="!!(form.get('IYear')?.invalid && form.get('IYear')?.touched)"
+        errorMessage="El año es obligatorio">
+      </form-input-theme>
+
+      <form-input-theme
+        formControlName="IMonth"
+        placeholder="Mes"
+        type="number"
+        [showError]="!!(form.get('IMonth')?.invalid && form.get('IMonth')?.touched)"
+        errorMessage="El mes es obligatorio">
+      </form-input-theme>
+    </div>
+
+    <!-- Tokens de Interacción y Conversación -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <form-input-theme
+        formControlName="IMaxInteractionTokens"
+        placeholder="Máximo de Tokens de Interacción"
+        type="number"
+        [showError]="!!(form.get('IMaxInteractionTokens')?.invalid && form.get('IMaxInteractionTokens')?.touched)"
+        errorMessage="El máximo de tokens de interacción es obligatorio">
+      </form-input-theme>
+
+      <form-input-theme
+        formControlName="IMaxConversationTokens"
+        placeholder="Máximo de Tokens de Conversación"
+        type="number"
+        [showError]="!!(form.get('IMaxConversationTokens')?.invalid && form.get('IMaxConversationTokens')?.touched)"
+        errorMessage="El máximo de tokens de conversación es obligatorio">
+      </form-input-theme>
+    </div>
+
+    <!-- Botones -->
+    <div class="flex justify-end space-x-4 pt-2">
+      <button-theme
+        type="button"
+        variant="secondary"
+        (click)="closeModal()">
+        Cancelar
+      </button-theme>
+      <button-theme
+        type="submit"
+        [disabled]="form.invalid">
+        {{ isEditMode ? 'Actualizar' : 'Crear' }}
+      </button-theme>
+    </div>
+  </form>
+</form-container-theme>

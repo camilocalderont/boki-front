@@ -27,19 +27,6 @@ export class CreateCompanyComponent extends BaseComponent {
   companyId: string | null = null;
   userIdLogged: number | undefined = undefined;
 
-  /*
-  companyPrompts: GetCompanyPrompt[] = [];
-  columns: DataGridColumn[] = [
-    { key: 'Company.VcName', label: 'Empresa' },
-    { key: 'VcDescription', label: 'Descripción' },
-    { key: 'VcInternalCode', label: 'Código Interno' },
-    { key: 'TxIntentionPrompt', label: 'Intención' },
-    { key: 'TxMainPrompt', label: 'Prompt' },
-    { key: 'User.VcFirstName', label: 'Usuario' },
-    { key: 'created_at', label: 'Fecha de Creación', format: FORMAT_DATA.DATE },
-  ];
-  */
-
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -60,21 +47,10 @@ export class CreateCompanyComponent extends BaseComponent {
 
     if (this.isEditMode) {
       this.loadCompany(this.companyId!);
-      //this.loadCompanyPrompts();
     }
 
     this.userIdLogged = this.userData.getCurrentUser()?.Id;
   }
-
-  /*
-  loadCompanyPrompts(): void {
-    this.companyService.getCompanyPromptsByCompanyId(Number(this.companyId)).subscribe({
-      next: (response) => {
-        this.companyPrompts = response.data;
-      }
-    });
-  }
-  */
 
   initializeForm(): void {
     this.form = this.fb.group({
@@ -144,24 +120,6 @@ export class CreateCompanyComponent extends BaseComponent {
       });
     }
   }
-
-  /*
-  updateCompanyPrompt(id: number): void {
-    
-  }
-
-  abrirModal(): void {
-    this.dialogService.open({
-      type: 'custom',
-      component: CreateCompanyPromptComponent
-    }).subscribe(result => {
-      console.log('Modal cerrado con resultado:', result);
-      if (result) {
-        this.snackBarService.open('Modal aceptado', {"type": "success", "position": "bot-right"});
-      }
-    });
-  }
-  */
 
   redirectLink(link: string) {
     this.router.navigate([link]);
