@@ -10,12 +10,15 @@ import { DialogService } from '../../shared/dialogs/services/dialog.service';
 import { CreateCompanyPlanControlTokenComponent } from '../forms/create-company-plan-control-token/create-company-plan-control-token.component';
 import { CustomDialogComponent } from '../../shared/dialogs/custom-dialog/custom-dialog.component';
 import { BaseComponent } from '../../shared/components/base/base.component';
+import { ConfirmDialogComponent } from '../../shared/dialogs/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'plans-component',
   imports: [CommonModule,
     ThemeComponentsModule,
-    CustomDialogComponent],
+    CustomDialogComponent,
+    ConfirmDialogComponent
+  ],
   templateUrl: './plans.component.html',
   styleUrl: './plans.component.scss'
 })
@@ -130,16 +133,19 @@ export class PlansComponent extends BaseComponent {
 
     const isFirstSelection = this.selectedPlanId === null;
     const actionText = isFirstSelection ? 'seleccionar' : 'cambiar a';
-    const currentPlanText = isFirstSelection ? '' : ' actual';
 
-    const confirmMessage = `¿Estás seguro de que deseas ${actionText} este plan${currentPlanText}?\n\n` +
-      `Plan: ${this.formatPrice(plan.IValueMonthly)}/mes\n` +
-      `Conversaciones: ${plan.IMaxConversation.toLocaleString()}\n` +
-      `Precio anual: ${this.formatPrice(plan.IValueYearly)}`;
-
-    if (confirm(confirmMessage)) {
-      this.selectPlan(plan.Id);
-    }
+    this.dialogService.open({
+      type: 'confirm',
+      title: 'Confirmar acción',
+      message: `¿Estás seguro de que deseas ${actionText} este plan?`,
+      confirmText: 'Confirmar',
+      cancelText: 'Cancelar',
+      confirmButtonClass: 'flex-1 px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800'
+    }).subscribe(result => {
+      if (result) {
+        this.selectPlan(plan.Id);
+      }
+    });
   }
 
   parsePlanProperties(properties: string): PlanFeatures {
