@@ -1,0 +1,55 @@
+<section-theme>
+  <app-tabs [tabs]="tabs" [activeTab]="activeTab" (tabChange)="onTabChange($event)"></app-tabs>
+
+  <!-- Professionals Tab -->
+  <div *ngIf="activeTab === 'professionals'">
+    <div class="mb-4">
+      <button-theme (click)="createProfessional()">
+        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+        Crear Profesional
+      </button-theme>
+    </div>
+    <data-grid [columns]="professionalColumns" [data]="professionals" [pageSize]="10" (update)="editProfessional($event)"></data-grid>
+  </div>
+
+  <!-- Schedules Tab -->
+  <div *ngIf="activeTab === 'schedules'">
+    <div class="p-8 text-center" *ngIf="!selectedProfessional">
+      <div class="mb-4">
+        <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h2-theme>Gestion de Horarios</h2-theme>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Seleccione un profesional en la lista para gestionar sus horarios.</p>
+      <div class="mt-4 space-y-2">
+        <div *ngFor="let prof of professionals"
+          (click)="selectProfessional(prof)"
+          class="cursor-pointer p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800 transition">
+          <span class="font-medium text-gray-900 dark:text-white">{{ prof.VcFirstName }} {{ prof.VcFirstLastName }}</span>
+          <span class="text-sm text-gray-500 dark:text-gray-400 ml-2">{{ prof.VcSpecialization }}</span>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="selectedProfessional" class="p-4">
+      <div class="flex items-center justify-between mb-4">
+        <h2-theme>Horarios de {{ selectedProfessional.VcFirstName }} {{ selectedProfessional.VcFirstLastName }}</h2-theme>
+        <button-theme (click)="selectedProfessional = null">Cambiar profesional</button-theme>
+      </div>
+      <p class="text-gray-500 dark:text-gray-400">Configuracion de horarios - proximamente</p>
+    </div>
+  </div>
+
+  <!-- Professional Services Tab -->
+  <div *ngIf="activeTab === 'prof-services'">
+    <div class="p-8 text-center">
+      <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
+      </svg>
+      <h2-theme>Servicios Asociados</h2-theme>
+      <p class="text-gray-500 dark:text-gray-400 mt-2">Asocie servicios a profesionales - proximamente</p>
+    </div>
+  </div>
+</section-theme>

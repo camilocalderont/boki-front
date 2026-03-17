@@ -1,0 +1,324 @@
+<div class="max-w-4xl mx-auto space-y-6">
+
+  <!-- Progress Steps -->
+  <div class="flex items-center justify-center space-x-4 mb-8">
+    @for (step of [1, 2, 3]; track step) {
+      <div class="flex items-center">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center text-sm font-bold transition-colors"
+             [class]="currentStep() >= step
+               ? 'bg-brand-blue text-white'
+               : 'bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400'">
+          {{ step }}
+        </div>
+        <span class="ml-2 text-sm font-medium text-gray-700 dark:text-gray-300 hidden sm:inline">
+          {{ step === 1 ? 'Servicio' : step === 2 ? 'Detalles' : 'Confirmar' }}
+        </span>
+        @if (step < 3) {
+          <div class="w-12 h-0.5 mx-3"
+               [class]="currentStep() > step ? 'bg-brand-blue' : 'bg-gray-200 dark:bg-gray-700'"></div>
+        }
+      </div>
+    }
+  </div>
+
+  <!-- Step 1: Select Service -->
+  @if (currentStep() === 1) {
+    <div class="space-y-6">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-white">Selecciona un servicio</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        @for (service of services; track service.Id) {
+          <div class="p-4 rounded-xl border-2 cursor-pointer transition-all hover:shadow-md"
+               [class]="selectedService()?.Id === service.Id
+                 ? 'border-brand-blue bg-blue-50 dark:bg-blue-900/20'
+                 : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800'"
+               (click)="selectService(service)">
+            <h3 class="font-semibold text-gray-900 dark:text-white">{{ service.VcName }}</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">{{ service.VcDescription }}</p>
+            <div class="flex items-center justify-between mt-3">
+              <span class="text-sm text-gray-600 dark:text-gray-300">
+                <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                {{ service.VcTime }}
+              </span>
+              <span class="font-bold text-brand-blue dark:text-blue-400">
+                {{ service.IRegularPrice | currency:'COP':'symbol-narrow':'1.0-0' }}
+              </span>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Summary + Continue -->
+      @if (selectedService()) {
+        <div class="flex items-center justify-between p-4 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+          <div>
+            <span class="text-sm text-gray-500 dark:text-gray-400">Seleccionado:</span>
+            <span class="ml-2 font-semibold text-gray-900 dark:text-white">{{ selectedService()!.VcName }}</span>
+          </div>
+          <button-theme (click)="goToStep2()">Continuar</button-theme>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Step 2: Professional + Date + Time -->
+  @if (currentStep() === 2) {
+    <div class="space-y-6">
+
+      <!-- Professionals -->
+      <div>
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Selecciona un profesional</h2>
+        <div class="flex flex-wrap gap-3">
+          @for (prof of professionals; track prof.Id) {
+            <div class="flex items-center gap-3 p-3 rounded-xl border-2 cursor-pointer transition-all"
+                 [class]="selectedProfessional()?.Id === prof.Id
+                   ? 'border-brand-blue bg-blue-50 dark:bg-blue-900/20'
+                   : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-md'"
+                 (click)="selectProfessional(prof)">
+              <!-- Avatar -->
+              <div class="w-10 h-10 rounded-full bg-brand-blue flex items-center justify-center text-white font-bold text-sm">
+                {{ prof.VcFirstName?.charAt(0) }}{{ prof.VcFirstLastName?.charAt(0) }}
+              </div>
+              <div>
+                <p class="font-medium text-gray-900 dark:text-white text-sm">{{ prof.VcFirstName }} {{ prof.VcFirstLastName }}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400">{{ prof.VcSpecialization }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+
+      <!-- Calendar -->
+      @if (selectedProfessional()) {
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Fecha</h3>
+          <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-thin">
+            @for (day of calendarDates; track day.date) {
+              <div class="flex-shrink-0 w-16 p-2 rounded-xl text-center cursor-pointer transition-all border"
+                   [class]="selectedDate() === day.date
+                     ? 'border-brand-blue bg-brand-blue text-white'
+                     : 'border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 hover:border-brand-blue'"
+                   (click)="selectDate(day.date)">
+                <div class="text-[10px] uppercase font-medium"
+                     [class]="selectedDate() === day.date ? 'text-blue-100' : 'text-gray-400 dark:text-gray-500'">
+                  {{ day.month }}
+                </div>
+                <div class="text-lg font-bold"
+                     [class]="selectedDate() === day.date ? '' : 'text-gray-900 dark:text-white'">
+                  {{ day.label }}
+                </div>
+                <div class="text-xs"
+                     [class]="selectedDate() === day.date ? 'text-blue-100' : 'text-gray-500 dark:text-gray-400'">
+                  {{ day.dayName }}
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Time Slots -->
+      @if (selectedDate() && selectedProfessional()) {
+        <div>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-3">Hora</h3>
+
+          @if (isLoading) {
+            <p class="text-gray-500 dark:text-gray-400">Cargando horarios disponibles...</p>
+          } @else if (!hasSlots) {
+            <p class="text-gray-500 dark:text-gray-400">No hay horarios disponibles para esta fecha.</p>
+          } @else {
+            <div class="space-y-4">
+              @if (availableSlots.manana.length > 0) {
+                <div>
+                  <span class="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 block">Mañana</span>
+                  <div class="flex flex-wrap gap-2">
+                    @for (slot of availableSlots.manana; track slot) {
+                      <button class="px-4 py-2 rounded-lg text-sm font-medium transition-all border"
+                              [class]="selectedTime() === slot
+                                ? 'border-brand-blue bg-brand-blue text-white'
+                                : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:border-brand-blue'"
+                              (click)="selectTime(slot)">
+                        {{ slot }}
+                      </button>
+                    }
+                  </div>
+                </div>
+              }
+              @if (availableSlots.tarde.length > 0) {
+                <div>
+                  <span class="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 block">Tarde</span>
+                  <div class="flex flex-wrap gap-2">
+                    @for (slot of availableSlots.tarde; track slot) {
+                      <button class="px-4 py-2 rounded-lg text-sm font-medium transition-all border"
+                              [class]="selectedTime() === slot
+                                ? 'border-brand-blue bg-brand-blue text-white'
+                                : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:border-brand-blue'"
+                              (click)="selectTime(slot)">
+                        {{ slot }}
+                      </button>
+                    }
+                  </div>
+                </div>
+              }
+              @if (availableSlots.noche.length > 0) {
+                <div>
+                  <span class="text-sm font-medium text-gray-600 dark:text-gray-300 mb-2 block">Noche</span>
+                  <div class="flex flex-wrap gap-2">
+                    @for (slot of availableSlots.noche; track slot) {
+                      <button class="px-4 py-2 rounded-lg text-sm font-medium transition-all border"
+                              [class]="selectedTime() === slot
+                                ? 'border-brand-blue bg-brand-blue text-white'
+                                : 'border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:border-brand-blue'"
+                              (click)="selectTime(slot)">
+                        {{ slot }}
+                      </button>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Navigation -->
+      <div class="flex items-center justify-between pt-4">
+        <button-theme variant="secondary" (click)="goBack()">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          Atrás
+        </button-theme>
+        @if (selectedProfessional() && selectedDate() && selectedTime()) {
+          <button-theme (click)="goToStep3()">Continuar</button-theme>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Step 3: Client + Confirmation -->
+  @if (currentStep() === 3) {
+    <div class="space-y-6">
+      <h2 class="text-xl font-bold text-gray-900 dark:text-white">Datos del cliente</h2>
+
+      <!-- Client Search -->
+      @if (!selectedClient() && !showNewClientForm) {
+        <div class="space-y-3">
+          <div class="relative">
+            <input type="text"
+                   [(ngModel)]="clientSearchQuery"
+                   (ngModelChange)="searchClients()"
+                   placeholder="Buscar por teléfono, cédula o nombre..."
+                   class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:border-brand-blue focus:ring-2 focus:ring-blue-200 dark:focus:ring-blue-800" />
+          </div>
+
+          <!-- Search Results -->
+          @if (clientSearchResults.length > 0) {
+            <div class="border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+              @for (client of clientSearchResults; track client.Id) {
+                <div class="p-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 border-b border-gray-100 dark:border-gray-700 last:border-b-0"
+                     (click)="selectClient(client)">
+                  <p class="font-medium text-gray-900 dark:text-white">{{ client.VcFirstName }} {{ client.VcFirstLastName }}</p>
+                  <p class="text-sm text-gray-500 dark:text-gray-400">{{ client.VcPhone }} · {{ client.VcIdentificationNumber }}</p>
+                </div>
+              }
+            </div>
+          }
+
+          <button class="text-sm text-brand-blue dark:text-blue-400 hover:underline" (click)="toggleNewClientForm()">
+            + Crear nuevo cliente
+          </button>
+        </div>
+      }
+
+      <!-- New Client Form -->
+      @if (showNewClientForm) {
+        <div class="p-4 rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 space-y-3">
+          <h3 class="font-semibold text-gray-900 dark:text-white">Nuevo cliente</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <input type="text" [(ngModel)]="newClient.VcFirstName" placeholder="Nombre *"
+                   class="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm" />
+            <input type="text" [(ngModel)]="newClient.VcFirstLastName" placeholder="Apellido *"
+                   class="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm" />
+            <input type="text" [(ngModel)]="newClient.VcPhone" placeholder="Teléfono *"
+                   class="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm" />
+            <input type="text" [(ngModel)]="newClient.VcIdentificationNumber" placeholder="Cédula *"
+                   class="px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm" />
+          </div>
+          <div class="flex gap-2">
+            <button-theme (click)="createAndSelectClient()">Crear y seleccionar</button-theme>
+            <button-theme variant="secondary" (click)="toggleNewClientForm()">Cancelar</button-theme>
+          </div>
+        </div>
+      }
+
+      <!-- Selected Client -->
+      @if (selectedClient()) {
+        <div class="p-4 rounded-xl border-2 border-brand-blue bg-blue-50 dark:bg-blue-900/20">
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="font-semibold text-gray-900 dark:text-white">{{ selectedClient()!.VcFirstName }} {{ selectedClient()!.VcFirstLastName }}</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">{{ selectedClient()!.VcPhone }} · {{ selectedClient()!.VcIdentificationNumber }}</p>
+            </div>
+            <button class="text-sm text-red-500 hover:underline" (click)="selectedClient.set(null)">Cambiar</button>
+          </div>
+        </div>
+      }
+
+      <!-- Summary -->
+      <div class="p-6 rounded-xl bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 space-y-3">
+        <h3 class="text-lg font-bold text-gray-900 dark:text-white">Resumen de la cita</h3>
+
+        <div class="grid grid-cols-2 gap-y-2 text-sm">
+          <span class="text-gray-500 dark:text-gray-400">Servicio:</span>
+          <span class="font-medium text-gray-900 dark:text-white">{{ selectedService()?.VcName }}</span>
+
+          <span class="text-gray-500 dark:text-gray-400">Profesional:</span>
+          <span class="font-medium text-gray-900 dark:text-white">{{ selectedProfessional()?.VcFirstName }} {{ selectedProfessional()?.VcFirstLastName }}</span>
+
+          <span class="text-gray-500 dark:text-gray-400">Fecha:</span>
+          <span class="font-medium text-gray-900 dark:text-white">{{ selectedDate() }}</span>
+
+          <span class="text-gray-500 dark:text-gray-400">Hora:</span>
+          <span class="font-medium text-gray-900 dark:text-white">{{ selectedTime() }}</span>
+
+          @if (selectedClient()) {
+            <span class="text-gray-500 dark:text-gray-400">Cliente:</span>
+            <span class="font-medium text-gray-900 dark:text-white">{{ selectedClient()!.VcFirstName }} {{ selectedClient()!.VcFirstLastName }}</span>
+          }
+
+          <span class="text-gray-500 dark:text-gray-400">Precio:</span>
+          <span class="font-bold text-brand-blue dark:text-blue-400">{{ selectedService()?.IRegularPrice | currency:'COP':'symbol-narrow':'1.0-0' }}</span>
+        </div>
+      </div>
+
+      <!-- Error -->
+      @if (errorMessage) {
+        <div class="p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-400 text-sm">
+          {{ errorMessage }}
+        </div>
+      }
+
+      <!-- Actions -->
+      <div class="flex items-center justify-between pt-4">
+        <button-theme variant="secondary" (click)="goBack()">
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+          </svg>
+          Atrás
+        </button-theme>
+        @if (selectedClient()) {
+          <button-theme (click)="confirmAppointment()" [class.opacity-50]="isSubmitting" [class.pointer-events-none]="isSubmitting">
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
+            </svg>
+            {{ isSubmitting ? 'Confirmando...' : 'Confirmar Cita' }}
+          </button-theme>
+        }
+      </div>
+    </div>
+  }
+
+</div>

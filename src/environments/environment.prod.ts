@@ -5,5 +5,4 @@ export const environment = {
   appName: 'Bokibot',
   enableDebugMode: false,
   tokenValidationInterval: 10 * 60 * 1000, // 10 minutos
-  apiToken: 'SMFGAHDJVqUr2xWifzjpLWC66qdNCPjFGonBROOKs'
 };

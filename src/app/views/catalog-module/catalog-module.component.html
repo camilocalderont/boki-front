@@ -1,0 +1,29 @@
+<section-theme>
+  <app-tabs [tabs]="tabs" [activeTab]="activeTab" (tabChange)="onTabChange($event)"></app-tabs>
+
+  <!-- Categories Tab -->
+  <div *ngIf="activeTab === 'categories'">
+    <div class="mb-4">
+      <button-theme (click)="createCategory()">
+        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+        Crear Categoria
+      </button-theme>
+    </div>
+    <data-grid [columns]="categoryColumns" [data]="categories" [pageSize]="10" (update)="editCategory($event)"></data-grid>
+  </div>
+
+  <!-- Services Tab -->
+  <div *ngIf="activeTab === 'services'">
+    <div class="mb-4">
+      <button-theme (click)="createService()">
+        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+        Crear Servicio
+      </button-theme>
+    </div>
+    <data-grid [columns]="serviceColumns" [data]="services" [pageSize]="10" (update)="editService($event)"></data-grid>
+  </div>
+</section-theme>

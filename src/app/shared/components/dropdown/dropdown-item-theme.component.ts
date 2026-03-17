@@ -39,7 +39,7 @@ export class DropdownItemThemeComponent extends BaseComponent {
       // Normal item text colors - usando buttons.ghost.text del tema
       this.theme?.theme?.colors?.buttons?.ghost?.text?.light || '',
       // Hardcodeado temporalmente para que se vea negro en dark mode
-      'dark:text-gray-900',
+      'dark:text-gray-100',
       // Normal item hover background - usando buttons.ghost.backgroundHover del tema
       this.theme?.theme?.colors?.buttons?.ghost?.backgroundHover?.light || '',
       this.theme?.theme?.colors?.buttons?.ghost?.backgroundHover?.dark || '',

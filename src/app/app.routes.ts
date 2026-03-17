@@ -19,39 +19,29 @@ export const routes: Routes = [
         title: 'Dashboard Principal'
       },
       {
+        path: 'company',
+        loadComponent: () => import('./views/company-module/company-module.component').then(m => m.CompanyModuleComponent),
+        title: 'Empresa'
+      },
+      {
         path: 'companies',
-        loadComponent: () => import('./views/company/company.component').then(m => m.CompanyComponent),
-        title: 'Empresas',
+        redirectTo: 'company',
+        pathMatch: 'full'
       },
       {
-        path: 'companies/create',
-        loadComponent: () => import('./views/forms/create-company/create-company.component').then(m => m.CreateCompanyComponent),
-        title: 'Crear Empresa'
-      },
-      {
-        path: 'companies/update/:id',
-        loadComponent: () => import('./views/forms/create-company/create-company.component').then(m => m.CreateCompanyComponent),
-        title: 'Editar Empresa'
+        path: 'catalog',
+        loadComponent: () => import('./views/catalog-module/catalog-module.component').then(m => m.CatalogModuleComponent),
+        title: 'Catalogo de Servicios'
       },
       {
         path: 'categories',
-        loadComponent: () => import('./views/category/category.component').then(m => m.CategoryComponent),
-        title: 'Categorías',
+        redirectTo: 'catalog',
+        pathMatch: 'full'
       },
       {
-        path: 'categories/create',
-        loadComponent: () => import('./views/forms/create-category/create-category.component').then(m => m.CreateCategoryComponent),
-        title: 'Crear Categoría'
-      },
-      {
-        path: 'categories/update/:id',
-        loadComponent: () => import('./views/forms/create-category/create-category.component').then(m => m.CreateCategoryComponent),
-        title: 'Editar Categoría'
-      },
-      {
-        path: 'plans/:companyId',
-        loadComponent: () => import('./views/plans/plans.component').then(m => m.PlansComponent),
-        title: 'Planes de Empresa'
+        path: 'professionals',
+        loadComponent: () => import('./views/professional-module/professional-module.component').then(m => m.ProfessionalModuleComponent),
+        title: 'Profesionales'
       },
       {
         path: 'faqs',
@@ -67,6 +57,16 @@ export const routes: Routes = [
         path: 'faqs/update/:id',
         loadComponent: () => import('./views/forms/create-faqs/create-faqs.component').then(m => m.CreateFaqsComponent),
         title: 'Editar FAQ'
+      },
+      {
+        path: 'appointments',
+        loadComponent: () => import('./views/appointments/appointments.component').then(m => m.AppointmentsComponent),
+        title: 'Citas'
+      },
+      {
+        path: 'appointments/new',
+        loadComponent: () => import('./views/appointments/booking-wizard/booking-wizard.component').then(m => m.BookingWizardComponent),
+        title: 'Nueva Cita'
       }
     ]
   },

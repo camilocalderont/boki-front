@@ -28,7 +28,10 @@ export class IconButtonThemeComponent extends BaseComponent {
       'p-3 rounded-xl transition-all duration-200 relative group',
       // Corregido: usando ghost button hover que sí existe en el JSON
       this.theme?.theme?.colors?.buttons?.ghost?.backgroundHover?.light || 'hover:bg-gray-50',
-      this.theme?.theme?.colors?.buttons?.ghost?.backgroundHover?.dark || ''
+      this.theme?.theme?.colors?.buttons?.ghost?.backgroundHover?.dark || 'dark:hover:bg-gray-700',
+      // Text color classes para visibilidad en ambos modos
+      this.theme?.theme?.colors?.text?.primary?.light || 'text-gray-600',
+      this.theme?.theme?.colors?.text?.primary?.dark || 'dark:text-gray-300',
     ].filter(cls => cls).join(' ');
   }
 

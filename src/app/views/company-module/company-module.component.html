@@ -1,0 +1,42 @@
+<section-theme>
+  <app-tabs [tabs]="tabs" [activeTab]="activeTab" (tabChange)="onTabChange($event)"></app-tabs>
+
+  <!-- Company Tab -->
+  <div *ngIf="activeTab === 'company'">
+    <div class="mb-4">
+      <button-theme (click)="editCompany(companies[0]?.Id)" *ngIf="companies.length > 0">
+        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+        </svg>
+        Editar Empresa
+      </button-theme>
+    </div>
+    <data-grid [columns]="companyColumns" [data]="companies" [pageSize]="5" (update)="editCompany($event)"></data-grid>
+  </div>
+
+  <!-- Branches Tab -->
+  <div *ngIf="activeTab === 'branches'">
+    <div class="mb-4">
+      <button-theme>
+        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+        Crear Sede
+      </button-theme>
+    </div>
+    <data-grid [columns]="branchColumns" [data]="branches" [pageSize]="10" (update)="editBranch($event)"></data-grid>
+  </div>
+
+  <!-- Rooms Tab -->
+  <div *ngIf="activeTab === 'rooms'">
+    <div class="mb-4">
+      <button-theme>
+        <svg class="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+        </svg>
+        Crear Consultorio
+      </button-theme>
+    </div>
+    <data-grid [columns]="roomColumns" [data]="rooms" [pageSize]="10" (update)="editRoom($event)"></data-grid>
+  </div>
+</section-theme>

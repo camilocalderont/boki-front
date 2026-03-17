@@ -1,0 +1,10 @@
+{
+  "items": [
+    { "label": "Dashboard", "icon": "home", "route": "/dashboard", "visible": true, "order": 1 },
+    { "label": "Empresa", "icon": "building", "route": "/dashboard/company", "visible": true, "order": 2 },
+    { "label": "Servicios", "icon": "briefcase", "route": "/dashboard/catalog", "visible": true, "order": 3 },
+    { "label": "Profesionales", "icon": "users", "route": "/dashboard/professionals", "visible": true, "order": 4 },
+    { "label": "FAQS", "icon": "question", "route": "/dashboard/faqs", "visible": true, "order": 5 },
+    { "label": "Citas", "icon": "calendar", "route": "/dashboard/appointments", "visible": true, "order": 6 }
+  ]
+}

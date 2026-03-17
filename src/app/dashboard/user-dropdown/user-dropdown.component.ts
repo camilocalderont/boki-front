@@ -4,10 +4,12 @@ import {
   OnDestroy,
   ElementRef,
   ViewChild,
+  inject,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { AuthService } from '../../auth/services/auth.service';
+import { ThemeService } from '../../services/theme.service';
 import { AvatarThemeComponent } from '../../shared/components/dropdown/avatar-theme.component';
 import { DropdownContainerThemeComponent } from '../../shared/components/dropdown/dropdown-container-theme.component';
 import { DropdownHeaderThemeComponent } from '../../shared/components/dropdown/dropdown-header-theme.component';
@@ -36,20 +38,14 @@ export class UserDropdownComponent implements OnInit, OnDestroy {
   @ViewChild('dropdownContainer', { static: true })
   dropdownContainer!: ElementRef;
 
+  themeService = inject(ThemeService);
   isDropdownOpen = false;
-  isDarkMode = false;
   currentUser: any = null;
 
   constructor(private authService: AuthService, private router: Router) {}
 
   ngOnInit(): void {
-    // Obtener usuario del sessionStorage
     this.loadUserFromSession();
-
-    // Inicializar el dark mode
-    this.initializeDarkMode();
-
-    // Listener para clics fuera del dropdown
     document.addEventListener('click', this.onDocumentClick.bind(this));
   }
 
@@ -63,7 +59,6 @@ export class UserDropdownComponent implements OnInit, OnDestroy {
       if (userData) {
         this.currentUser = JSON.parse(userData);
       } else {
-        // Si no hay datos en sessionStorage, usar datos por defecto
         this.currentUser = {
           name: 'Usuario Demo',
           email: 'demo@ejemplo.com',
@@ -75,27 +70,6 @@ export class UserDropdownComponent implements OnInit, OnDestroy {
         name: 'Usuario Demo',
         email: 'demo@ejemplo.com',
       };
-    }
-  }
-
-  private initializeDarkMode(): void {
-    // Obtener estado del dark mode del localStorage
-    this.isDarkMode = localStorage.getItem('darkMode') === 'true';
-
-    // Aplicar el tema al cargar el componente
-    this.applyTheme();
-  }
-
-  private applyTheme(): void {
-    // Aplicar/quitar clase dark al html y body
-    const htmlElement = document.documentElement;
-
-    if (this.isDarkMode) {
-      htmlElement.classList.add('dark');
-      document.body.classList.add('dark');
-    } else {
-      htmlElement.classList.remove('dark');
-      document.body.classList.remove('dark');
     }
   }
 
@@ -123,16 +97,7 @@ export class UserDropdownComponent implements OnInit, OnDestroy {
   }
 
   toggleDarkMode(): void {
-    this.isDarkMode = !this.isDarkMode;
-
-    // Guardar preferencia en localStorage
-    localStorage.setItem('darkMode', this.isDarkMode.toString());
-
-    // Aplicar el tema usando el método privado
-    this.applyTheme();
-
-    // Log para debugging
-    console.log('Dark mode:', this.isDarkMode ? 'Activado' : 'Desactivado');
+    this.themeService.toggle();
   }
 
   logout(): void {

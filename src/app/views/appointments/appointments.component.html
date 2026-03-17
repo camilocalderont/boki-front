@@ -1,0 +1,21 @@
+<div class="space-y-8 p-1">
+  <section>
+    <button-theme (click)="createAppointment()">
+      <svg class="w-4 h-4 mr-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+      </svg>
+      Nueva Cita
+    </button-theme>
+  </section>
+
+  <section-theme class="p-2 rounded-2xl">
+    <data-grid
+      [columns]="columns"
+      [data]="appointments"
+      [pageSize]="10"
+      [pageSizeOptions]="[5,10,20,50]"
+      [title]="'Citas'"
+      (update)="updateAppointment($event)">
+    </data-grid>
+  </section-theme>
+</div>
