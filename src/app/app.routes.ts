@@ -1,84 +1,72 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './core/guards/auth.guard';
+import { authGuard, noAuthGuard } from '@features/auth';
 
 export const routes: Routes = [
+  // Auth — new FSD pages
   {
     path: 'auth',
-    loadChildren: () => import('./auth/auth.routes').then(m => m.AUTH_ROUTES)
+    canActivate: [noAuthGuard],
+    children: [
+      {
+        path: 'login',
+        loadComponent: () => import('@pages/login').then(m => m.LoginPageComponent),
+        title: 'Iniciar Sesión',
+      },
+      {
+        path: 'register',
+        loadComponent: () => import('@pages/register').then(m => m.RegisterPageComponent),
+        title: 'Registro',
+      },
+      { path: '', redirectTo: 'login', pathMatch: 'full' },
+    ],
   },
-  
-  // Rutas del dashboard 
+
+  // Dashboard — FSD layout shell with new pages
   {
     path: 'dashboard',
-    loadComponent: () => import('./dashboard/dashboard-layout/dashboard-layout.component').then(m => m.DashboardLayoutComponent),
-    canActivate: [authGuard], 
+    loadComponent: () => import('@pages/shell').then(m => m.ShellPageComponent),
+    canActivate: [authGuard],
     children: [
       {
         path: '',
-        loadComponent: () => import('./dashboard/main/main.component').then(m => m.MainComponent),
-        title: 'Dashboard Principal'
+        loadComponent: () => import('@pages/dashboard').then(m => m.DashboardPageComponent),
+        title: 'Dashboard Principal',
       },
       {
         path: 'company',
-        loadComponent: () => import('./views/company-module/company-module.component').then(m => m.CompanyModuleComponent),
-        title: 'Empresa'
+        loadComponent: () => import('@pages/company').then(m => m.CompanyPageComponent),
+        title: 'Empresa',
       },
-      {
-        path: 'companies',
-        redirectTo: 'company',
-        pathMatch: 'full'
-      },
+      { path: 'companies', redirectTo: 'company', pathMatch: 'full' },
       {
         path: 'catalog',
-        loadComponent: () => import('./views/catalog-module/catalog-module.component').then(m => m.CatalogModuleComponent),
-        title: 'Catalogo de Servicios'
+        loadComponent: () => import('@pages/catalog').then(m => m.CatalogPageComponent),
+        title: 'Catálogo de Servicios',
       },
-      {
-        path: 'categories',
-        redirectTo: 'catalog',
-        pathMatch: 'full'
-      },
+      { path: 'categories', redirectTo: 'catalog', pathMatch: 'full' },
       {
         path: 'professionals',
-        loadComponent: () => import('./views/professional-module/professional-module.component').then(m => m.ProfessionalModuleComponent),
-        title: 'Profesionales'
+        loadComponent: () => import('@pages/professionals').then(m => m.ProfessionalsPageComponent),
+        title: 'Profesionales',
       },
       {
         path: 'faqs',
-        loadComponent: () => import('./views/faqs/faqs.component').then(m => m.FaqsComponent),
-        title: 'FAQS',
+        loadComponent: () => import('@pages/faqs').then(m => m.FaqsPageComponent),
+        title: 'FAQs',
       },
       {
-        path: 'faqs/create',
-        loadComponent: () => import('./views/forms/create-faqs/create-faqs.component').then(m => m.CreateFaqsComponent),
-        title: 'Crear FAQ'
-      },
-      {
-        path: 'faqs/update/:id',
-        loadComponent: () => import('./views/forms/create-faqs/create-faqs.component').then(m => m.CreateFaqsComponent),
-        title: 'Editar FAQ'
+        path: 'plans',
+        loadComponent: () => import('@pages/plans').then(m => m.PlansPageComponent),
+        title: 'Planes',
       },
       {
         path: 'appointments',
-        loadComponent: () => import('./views/appointments/appointments.component').then(m => m.AppointmentsComponent),
-        title: 'Citas'
+        loadComponent: () => import('@pages/appointments').then(m => m.AppointmentsPageComponent),
+        title: 'Citas',
       },
-      {
-        path: 'appointments/new',
-        loadComponent: () => import('./views/appointments/booking-wizard/booking-wizard.component').then(m => m.BookingWizardComponent),
-        title: 'Nueva Cita'
-      }
-    ]
+    ],
   },
 
-  {
-    path: '',
-    redirectTo: '/dashboard', 
-    pathMatch: 'full'
-  },
-  
-  {
-    path: '**',
-    redirectTo: '/dashboard'
-  }
+  { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
+  { path: '**', redirectTo: '/dashboard' },
 ];

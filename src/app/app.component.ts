@@ -1,36 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ThemeConfigService } from './services/theme-config.service';
-
+import { BkAlertCenterComponent } from '@widgets/alert-center';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
+  imports: [RouterOutlet, BkAlertCenterComponent],
+  template: `
+    <router-outlet />
+    <bk-alert-center />
+  `,
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'boki-front';
-  themeConfig: any = null;
-
-  constructor(private themeConfigService: ThemeConfigService) {}
-
-  ngOnInit(): void {
-    this.loadThemeConfig();
-  }
-
-  private loadThemeConfig(): void {
-    this.themeConfigService.getThemeConfig().subscribe({
-      next: (response) => {
-        this.themeConfig = response.data;
-
-      },
-      error: (error) => {
-        console.error('❌ Error cargando configuración de tema:', error);
-      }
-    });
-  }
-
-
 }

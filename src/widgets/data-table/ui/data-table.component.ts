@@ -1,0 +1,300 @@
+import {
+  Component,
+  ChangeDetectionStrategy,
+  input,
+  output,
+  signal,
+  computed,
+  TemplateRef,
+  ContentChild,
+} from '@angular/core';
+import { BkSearchInputComponent, BkPaginationComponent, BkButtonComponent } from '@shared/ui';
+
+export interface DataTableColumn {
+  key: string;
+  label: string;
+  sortable?: boolean;
+  width?: string;
+}
+
+@Component({
+  selector: 'bk-data-table',
+  standalone: true,
+  imports: [BkSearchInputComponent, BkPaginationComponent, BkButtonComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  template: `
+    <div class="bk-data-table">
+      <div class="bk-data-table__toolbar">
+        <div class="bk-data-table__toolbar-left">
+          <ng-content select="[tableActions]" />
+        </div>
+        <div class="bk-data-table__toolbar-right">
+          <bk-search-input
+            [placeholder]="searchPlaceholder()"
+            (searchChange)="onSearch($event)"
+          />
+        </div>
+      </div>
+
+      <div class="bk-data-table__wrapper">
+        <table class="bk-data-table__table">
+          <thead>
+            <tr>
+              @for (col of columns(); track col.key) {
+                <th
+                  class="bk-data-table__th"
+                  [style.width]="col.width || 'auto'"
+                  [class.bk-data-table__th--sortable]="col.sortable"
+                  (click)="col.sortable ? onSort(col.key) : null"
+                >
+                  {{ col.label }}
+                  @if (col.sortable && sortKey() === col.key) {
+                    <span class="bk-data-table__sort-icon">
+                      {{ sortDirection() === 'asc' ? '\u2191' : '\u2193' }}
+                    </span>
+                  }
+                </th>
+              }
+              @if (showActions()) {
+                <th class="bk-data-table__th bk-data-table__th--actions">Acciones</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (row of pagedData(); track trackId($index, row)) {
+              <tr class="bk-data-table__tr">
+                @for (col of columns(); track col.key) {
+                  <td class="bk-data-table__td">{{ row[col.key] }}</td>
+                }
+                @if (showActions()) {
+                  <td class="bk-data-table__td bk-data-table__td--actions">
+                    <div class="bk-data-table__action-group">
+                      @if (showEditAction()) {
+                        <bk-button variant="ghost" size="sm" (clicked)="editClicked.emit(row)">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                        </bk-button>
+                      }
+                      @if (showDeleteAction()) {
+                        <bk-button variant="ghost" size="sm" (clicked)="deleteClicked.emit(row)">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+                        </bk-button>
+                      }
+                    </div>
+                  </td>
+                }
+              </tr>
+            } @empty {
+              <tr>
+                <td class="bk-data-table__empty" [attr.colspan]="columns().length + (showActions() ? 1 : 0)">
+                  {{ emptyMessage() }}
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      @if (paginated()) {
+        <div class="bk-data-table__footer">
+          <bk-pagination
+            [totalItems]="filteredData().length"
+            [pageSize]="pageSize()"
+            [currentPage]="currentPage()"
+            (pageChanged)="currentPage.set($event)"
+            (pageSizeChanged)="onPageSizeChange($event)"
+          />
+        </div>
+      }
+    </div>
+  `,
+  styles: `
+    .bk-data-table {
+      background: var(--bk-bg-surface, #fff);
+      border: 1px solid var(--bk-border-color-default, #E2E8F0);
+      border-radius: var(--bk-border-radius-lg, 12px);
+      overflow: hidden;
+    }
+
+    .bk-data-table__toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px;
+      gap: 12px;
+      border-bottom: 1px solid var(--bk-border-color-default, #E2E8F0);
+    }
+
+    .bk-data-table__toolbar-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .bk-data-table__toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 200px;
+      max-width: 280px;
+    }
+
+    .bk-data-table__wrapper {
+      overflow-x: auto;
+    }
+
+    .bk-data-table__table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .bk-data-table__th {
+      padding: 12px 16px;
+      font-size: var(--bk-font-size-sm, 12px);
+      font-weight: 600;
+      color: var(--bk-color-text-secondary, #64748B);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-align: left;
+      background: var(--bk-bg-page, #F8FAFC);
+      border-bottom: 1px solid var(--bk-border-color-default, #E2E8F0);
+      white-space: nowrap;
+      user-select: none;
+    }
+
+    .bk-data-table__th--sortable {
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+
+    .bk-data-table__th--sortable:hover {
+      color: var(--bk-color-primary, #2563EB);
+    }
+
+    .bk-data-table__th--actions {
+      width: 100px;
+      text-align: center;
+    }
+
+    .bk-data-table__sort-icon {
+      margin-left: 4px;
+      font-size: 12px;
+    }
+
+    .bk-data-table__tr {
+      transition: background-color 0.1s;
+    }
+
+    .bk-data-table__tr:hover {
+      background: color-mix(in srgb, var(--bk-color-primary, #2563EB) 3%, transparent);
+    }
+
+    .bk-data-table__td {
+      padding: 12px 16px;
+      font-size: var(--bk-font-size-base, 14px);
+      color: var(--bk-color-text-primary, #0F172A);
+      border-bottom: 1px solid var(--bk-border-color-default, #E2E8F0);
+    }
+
+    .bk-data-table__td--actions {
+      text-align: center;
+    }
+
+    .bk-data-table__action-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+    }
+
+    .bk-data-table__empty {
+      padding: 32px 16px;
+      text-align: center;
+      font-size: var(--bk-font-size-sm, 12px);
+      color: var(--bk-color-text-muted, #94A3B8);
+    }
+
+    .bk-data-table__footer {
+      padding: 0 16px;
+      border-top: 1px solid var(--bk-border-color-default, #E2E8F0);
+    }
+  `,
+})
+export class BkDataTableComponent {
+  readonly data = input<Record<string, any>[]>([]);
+  readonly columns = input<DataTableColumn[]>([]);
+  readonly searchPlaceholder = input<string>('Buscar...');
+  readonly emptyMessage = input<string>('No hay datos disponibles');
+  readonly paginated = input<boolean>(true);
+  readonly showActions = input<boolean>(true);
+  readonly showEditAction = input<boolean>(true);
+  readonly showDeleteAction = input<boolean>(true);
+  readonly trackByKey = input<string>('id');
+
+  readonly editClicked = output<Record<string, any>>();
+  readonly deleteClicked = output<Record<string, any>>();
+
+  readonly searchTerm = signal('');
+  readonly currentPage = signal(1);
+  readonly pageSize = signal(10);
+  readonly sortKey = signal('');
+  readonly sortDirection = signal<'asc' | 'desc'>('asc');
+
+  readonly filteredData = computed(() => {
+    let result = [...this.data()];
+    const term = this.searchTerm().toLowerCase();
+
+    if (term) {
+      result = result.filter(row =>
+        this.columns().some(col =>
+          String(row[col.key] ?? '').toLowerCase().includes(term)
+        )
+      );
+    }
+
+    const key = this.sortKey();
+    if (key) {
+      const dir = this.sortDirection() === 'asc' ? 1 : -1;
+      result.sort((a, b) => {
+        const va = a[key] ?? '';
+        const vb = b[key] ?? '';
+        return va > vb ? dir : va < vb ? -dir : 0;
+      });
+    }
+
+    return result;
+  });
+
+  readonly pagedData = computed(() => {
+    if (!this.paginated()) return this.filteredData();
+    const start = (this.currentPage() - 1) * this.pageSize();
+    return this.filteredData().slice(start, start + this.pageSize());
+  });
+
+  trackId(index: number, row: Record<string, any>): string | number {
+    const key = this.trackByKey();
+    if (key) {
+      const val = row[key];
+      if (val !== undefined && val !== null && val !== '') return val;
+    }
+    return index;
+  }
+
+  onSearch(term: string): void {
+    this.searchTerm.set(term);
+    this.currentPage.set(1);
+  }
+
+  onSort(key: string): void {
+    if (this.sortKey() === key) {
+      this.sortDirection.update(d => d === 'asc' ? 'desc' : 'asc');
+    } else {
+      this.sortKey.set(key);
+      this.sortDirection.set('asc');
+    }
+  }
+
+  onPageSizeChange(size: number): void {
+    this.pageSize.set(size);
+    this.currentPage.set(1);
+  }
+}

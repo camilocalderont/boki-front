@@ -1,0 +1,154 @@
+{
+  "light": {
+    "tenant": "default",
+    "logo": {
+      "url": "/assets/logos/bokibot_logo.png",
+      "altText": "BokiBot Platform",
+      "width": 120
+    },
+    "colors": {
+      "primary": "#2563EB",
+      "secondary": "#7C3AED",
+      "accent": "#F59E0B",
+      "success": "#10B981",
+      "warning": "#F59E0B",
+      "danger": "#EF4444",
+      "info": "#3B82F6",
+      "textPrimary": "#0F172A",
+      "textSecondary": "#64748B",
+      "textMuted": "#94A3B8"
+    },
+    "typography": {
+      "fontFamily": "'Inter', system-ui, -apple-system, sans-serif",
+      "fontFamilyMono": "'JetBrains Mono', monospace",
+      "fontSizeBase": "14px",
+      "fontSizeSm": "12px",
+      "fontSizeLg": "16px",
+      "fontSizeXl": "20px",
+      "fontWeightNormal": 400,
+      "fontWeightBold": 600,
+      "lineHeight": "1.5"
+    },
+    "borders": {
+      "radiusSm": "6px",
+      "radiusMd": "8px",
+      "radiusLg": "12px",
+      "radiusFull": "9999px",
+      "widthDefault": "1px",
+      "colorDefault": "#E2E8F0"
+    },
+    "sizing": {
+      "inputHeight": "36px",
+      "buttonHeight": "36px",
+      "componentSm": "32px",
+      "componentMd": "36px",
+      "componentLg": "40px",
+      "sidebarWidth": "240px",
+      "headerHeight": "56px"
+    },
+    "spacing": {
+      "xs": "4px",
+      "sm": "8px",
+      "md": "16px",
+      "lg": "24px",
+      "xl": "32px"
+    },
+    "shadows": {
+      "sm": "0 1px 2px rgba(0, 0, 0, 0.05)",
+      "md": "0 4px 6px rgba(0, 0, 0, 0.07)",
+      "lg": "0 10px 15px rgba(0, 0, 0, 0.1)"
+    },
+    "zIndex": {
+      "dropdown": 1000,
+      "modal": 1050,
+      "tooltip": 1100
+    },
+    "alerts": {
+      "borderRadius": "8px",
+      "showIcon": true,
+      "position": "top-right",
+      "duration": 5000
+    },
+    "backgrounds": {
+      "page": "#F8FAFC",
+      "surface": "#FFFFFF",
+      "overlay": "rgba(0, 0, 0, 0.5)"
+    }
+  },
+  "dark": {
+    "tenant": "default",
+    "logo": {
+      "url": "/assets/logos/bokibot_logo.png",
+      "altText": "BokiBot Platform",
+      "width": 120
+    },
+    "colors": {
+      "primary": "#60A5FA",
+      "secondary": "#A78BFA",
+      "accent": "#FBBF24",
+      "success": "#34D399",
+      "warning": "#FBBF24",
+      "danger": "#F87171",
+      "info": "#93C5FD",
+      "textPrimary": "#F1F5F9",
+      "textSecondary": "#CBD5E1",
+      "textMuted": "#64748B"
+    },
+    "typography": {
+      "fontFamily": "'Inter', system-ui, -apple-system, sans-serif",
+      "fontFamilyMono": "'JetBrains Mono', monospace",
+      "fontSizeBase": "14px",
+      "fontSizeSm": "12px",
+      "fontSizeLg": "16px",
+      "fontSizeXl": "20px",
+      "fontWeightNormal": 400,
+      "fontWeightBold": 600,
+      "lineHeight": "1.5"
+    },
+    "borders": {
+      "radiusSm": "6px",
+      "radiusMd": "8px",
+      "radiusLg": "12px",
+      "radiusFull": "9999px",
+      "widthDefault": "1px",
+      "colorDefault": "#334155"
+    },
+    "sizing": {
+      "inputHeight": "36px",
+      "buttonHeight": "36px",
+      "componentSm": "32px",
+      "componentMd": "36px",
+      "componentLg": "40px",
+      "sidebarWidth": "240px",
+      "headerHeight": "56px"
+    },
+    "spacing": {
+      "xs": "4px",
+      "sm": "8px",
+      "md": "16px",
+      "lg": "24px",
+      "xl": "32px"
+    },
+    "shadows": {
+      "sm": "0 1px 2px rgba(0, 0, 0, 0.2)",
+      "md": "0 4px 6px rgba(0, 0, 0, 0.3)",
+      "lg": "0 10px 15px rgba(0, 0, 0, 0.4)"
+    },
+    "zIndex": {
+      "dropdown": 1000,
+      "modal": 1050,
+      "tooltip": 1100
+    },
+    "alerts": {
+      "borderRadius": "8px",
+      "showIcon": true,
+      "position": "top-right",
+      "duration": 5000
+    },
+    "backgrounds": {
+      "page": "#0F172A",
+      "surface": "#1E293B",
+      "overlay": "rgba(0, 0, 0, 0.7)"
+    }
+  }
+}

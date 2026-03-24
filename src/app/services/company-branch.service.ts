@@ -6,12 +6,15 @@ import { ApiSuccessResponse, CustomError } from '../shared/interfaces/api.interf
 
 export interface CompanyBranch {
   Id: number;
+  CompanyId: number;
   VcName: string;
+  VcDescription: string;
   VcAddress: string;
   VcEmail: string;
   VcPhone: string;
+  VcBranchManagerName: string;
+  VcImage: string;
   BIsPrincipal: boolean;
-  CompanyId: number;
   created_at: string;
   updated_at: string;
   Rooms?: Room[];
@@ -70,6 +73,24 @@ export class CompanyBranchService {
       .get<ApiSuccessResponse<CompanyBranch[]>>(
         `${this.baseUrl}/company-branches?CompanyId=${companyId}`
       )
+      .pipe(catchError(this.handleError));
+  }
+
+  create(data: any): Observable<ApiSuccessResponse<CompanyBranch>> {
+    return this.http
+      .post<ApiSuccessResponse<CompanyBranch>>(`${this.baseUrl}/company-branches`, data)
+      .pipe(catchError(this.handleError));
+  }
+
+  update(id: number, data: any): Observable<ApiSuccessResponse<CompanyBranch>> {
+    return this.http
+      .put<ApiSuccessResponse<CompanyBranch>>(`${this.baseUrl}/company-branches/${id}`, data)
+      .pipe(catchError(this.handleError));
+  }
+
+  delete(id: number): Observable<ApiSuccessResponse<null>> {
+    return this.http
+      .delete<ApiSuccessResponse<null>>(`${this.baseUrl}/company-branches/${id}`)
       .pipe(catchError(this.handleError));
   }
 

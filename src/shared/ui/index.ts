@@ -1,0 +1,19 @@
+// Shared UI — atomic design system components
+export { BkButtonComponent } from './button/button.component';
+export type { BkButtonVariant, BkButtonSize } from './button/button.component';
+export { BkInputComponent } from './input/input.component';
+export { BkSelectComponent } from './select/select.component';
+export type { BkSelectOption } from './select/select.component';
+export { BkTextareaComponent } from './textarea/textarea.component';
+export { BkToggleComponent } from './toggle/toggle.component';
+export { BkModalComponent } from './modal/modal.component';
+export { BkBadgeComponent } from './badge/badge.component';
+export { BkCardComponent } from './card/card.component';
+export { BkSpinnerComponent } from './spinner/spinner.component';
+export { BkTabsComponent } from './tabs/tabs.component';
+export type { BkTabItem } from './tabs/tabs.component';
+export { BkFormFieldComponent } from './form-field/form-field.component';
+export { BkPaginationComponent } from './pagination/pagination.component';
+export { BkSearchInputComponent } from './search-input/search-input.component';
+export { BkIconComponent } from './icon/icon.component';
+export { BkTooltipComponent } from './tooltip/tooltip.component';

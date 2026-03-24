@@ -1,10 +1,69 @@
-@import url('https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* ========================================
+   Fallback theme — applied if JSON fails to load
+   ThemeService overwrites these when JSON loads successfully
+   ======================================== */
+:root {
+  --bk-color-primary: #2563EB;
+  --bk-color-secondary: #7C3AED;
+  --bk-color-accent: #F59E0B;
+  --bk-color-success: #10B981;
+  --bk-color-warning: #F59E0B;
+  --bk-color-danger: #EF4444;
+  --bk-color-info: #3B82F6;
+  --bk-color-text-primary: #0F172A;
+  --bk-color-text-secondary: #64748B;
+  --bk-color-text-muted: #94A3B8;
 
-* {
+  --bk-font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  --bk-font-family-mono: 'JetBrains Mono', monospace;
+  --bk-font-size-base: 14px;
+  --bk-font-size-sm: 12px;
+  --bk-font-size-lg: 16px;
+  --bk-font-size-xl: 20px;
+  --bk-font-weight-normal: 400;
+  --bk-font-weight-bold: 600;
+  --bk-line-height: 1.5;
+
+  --bk-border-radius-sm: 6px;
+  --bk-border-radius-md: 8px;
+  --bk-border-radius-lg: 12px;
+  --bk-border-radius-full: 9999px;
+  --bk-border-width-default: 1px;
+  --bk-border-color-default: #E2E8F0;
+
+  --bk-size-input-height: 36px;
+  --bk-size-button-height: 36px;
+  --bk-size-component-sm: 32px;
+  --bk-size-component-md: 36px;
+  --bk-size-component-lg: 40px;
+  --bk-size-sidebar-width: 240px;
+  --bk-size-header-height: 56px;
+
+  --bk-space-xs: 4px;
+  --bk-space-sm: 8px;
+  --bk-space-md: 16px;
+  --bk-space-lg: 24px;
+  --bk-space-xl: 32px;
+
+  --bk-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --bk-shadow-md: 0 4px 6px rgba(0, 0, 0, 0.07);
+  --bk-shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+
+  --bk-z-dropdown: 1000;
+  --bk-z-modal: 1050;
+  --bk-z-tooltip: 1100;
+
+  --bk-bg-page: #F8FAFC;
+  --bk-bg-surface: #FFFFFF;
+  --bk-bg-overlay: rgba(0, 0, 0, 0.5);
+}
+
+/* ========================================
+   Global reset
+   ======================================== */
+*, *::before, *::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
@@ -17,6 +76,45 @@ html, body {
 }
 
 body {
-  font-family: 'Roboto', Arial, sans-serif;
-  color: #202124;
+  font-family: var(--bk-font-family);
+  font-size: var(--bk-font-size-base);
+  line-height: var(--bk-line-height);
+  color: var(--bk-color-text-primary);
+  background-color: var(--bk-bg-page);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Accessible focus */
+:focus-visible {
+  outline: 2px solid var(--bk-color-primary);
+  outline-offset: 2px;
+}
+
+/* Screen reader only */
+.bk-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--bk-color-text-muted);
+  border-radius: var(--bk-border-radius-full);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--bk-color-text-secondary);
 }
