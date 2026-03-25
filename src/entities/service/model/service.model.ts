@@ -24,3 +24,15 @@ export interface ServiceStage {
   IDurationMinutes: number;
   BIsProfessionalBussy: boolean;
 }
+
+export interface CreateServiceRequest {
+  VcName: string;
+  VcDescription?: string;
+  IMinimalPrice: number;
+  IMaximalPrice: number;
+  IRegularPrice: number;
+  DTaxes?: number;
+  VcTime: string;
+  CompanyId: number;
+  CategoryId: number;
+}

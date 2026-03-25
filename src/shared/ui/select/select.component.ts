@@ -52,7 +52,7 @@ export interface BkSelectOption {
 
       <!-- Dropdown panel -->
       @if (isOpen()) {
-        <div class="bk-select__dropdown">
+        <div class="bk-select__dropdown" [class.bk-select__dropdown--up]="dropUp()">
           <!-- Search -->
           @if (searchable()) {
             <div class="bk-select__search-box">
@@ -283,8 +283,19 @@ export interface BkSelectOption {
       line-height: 1.4;
     }
 
+    .bk-select__dropdown--up {
+      top: auto;
+      bottom: calc(100% + 4px);
+      animation: bk-select-fade-up 0.12s ease-out;
+    }
+
     @keyframes bk-select-fade {
       from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes bk-select-fade-up {
+      from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
   `,
@@ -311,6 +322,7 @@ export class BkSelectComponent implements ControlValueAccessor {
 
   // ── Internal state ──
   readonly isOpen = signal(false);
+  readonly dropUp = signal(false);
   readonly searchTerm = signal('');
   readonly singleValue = signal<string>('');
   readonly multiValues = signal<Set<string>>(new Set());
@@ -364,6 +376,10 @@ export class BkSelectComponent implements ControlValueAccessor {
     this.isOpen.update(v => !v);
     if (this.isOpen()) {
       this.searchTerm.set('');
+      // Detect if dropdown should open upward
+      const rect = this.hostEl.nativeElement.getBoundingClientRect();
+      const spaceBelow = window.innerHeight - rect.bottom;
+      this.dropUp.set(spaceBelow < 300);
       setTimeout(() => this.searchInput()?.nativeElement?.focus(), 50);
     }
   }

@@ -27,4 +27,10 @@ export class CatalogStore {
   addService(item: ServiceEntity): void { this._services.update(list => [...list, item]); }
   removeCategory(id: number): void { this._categories.update(list => list.filter(i => i.Id !== id)); }
   removeService(id: number): void { this._services.update(list => list.filter(i => i.Id !== id)); }
+  updateCategory(id: number, updated: Category): void {
+    this._categories.update(list => list.map(i => i.Id === id ? updated : i));
+  }
+  updateService(id: number, updated: ServiceEntity): void {
+    this._services.update(list => list.map(i => i.Id === id ? updated : i));
+  }
 }

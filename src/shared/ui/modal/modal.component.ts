@@ -76,7 +76,7 @@ import {
       border-radius: var(--bk-border-radius-lg, 12px);
       box-shadow: var(--bk-shadow-lg, 0 20px 60px rgba(0, 0, 0, 0.3));
       max-height: 90vh;
-      overflow: hidden;
+      overflow: visible;
       animation: bk-modal-scale-in 0.2s ease-out;
     }
 
@@ -121,6 +121,7 @@ import {
     .bk-modal-body {
       padding: 1.5rem;
       overflow-y: auto;
+      max-height: calc(90vh - 4rem);
     }
 
     @keyframes bk-modal-fade-in {

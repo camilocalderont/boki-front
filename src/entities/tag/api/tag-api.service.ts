@@ -4,34 +4,34 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { APP_CONSTANTS } from '@shared/config';
 import { ApiSuccessResponse, CustomError } from '@shared/api';
-import { Faq, CreateFaqRequest } from '../model/faq.model';
+import { Tag, CreateTagRequest } from '../model/tag.model';
 
 @Injectable({ providedIn: 'root' })
-export class FaqApiService {
+export class TagApiService {
   private http = inject(HttpClient);
-  private baseUrl = `${APP_CONSTANTS.apiBaseUrl}/faqs`;
+  private baseUrl = `${APP_CONSTANTS.apiBaseUrl}/tags`;
 
-  getAll(): Observable<ApiSuccessResponse<Faq[]>> {
+  getAll(): Observable<ApiSuccessResponse<Tag[]>> {
     return this.http
-      .get<ApiSuccessResponse<Faq[]>>(this.baseUrl)
+      .get<ApiSuccessResponse<Tag[]>>(this.baseUrl)
       .pipe(catchError(this.handleError));
   }
 
-  getByCompany(companyId: number): Observable<ApiSuccessResponse<Faq[]>> {
+  getByCompany(companyId: number): Observable<ApiSuccessResponse<Tag[]>> {
     return this.http
-      .get<ApiSuccessResponse<Faq[]>>(`${this.baseUrl}/company/${companyId}`)
+      .get<ApiSuccessResponse<Tag[]>>(`${this.baseUrl}/company/${companyId}`)
       .pipe(catchError(this.handleError));
   }
 
-  create(data: CreateFaqRequest): Observable<ApiSuccessResponse<Faq>> {
+  create(data: CreateTagRequest): Observable<ApiSuccessResponse<Tag>> {
     return this.http
-      .post<ApiSuccessResponse<Faq>>(this.baseUrl, data)
+      .post<ApiSuccessResponse<Tag>>(this.baseUrl, data)
       .pipe(catchError(this.handleError));
   }
 
-  update(id: number, data: Partial<CreateFaqRequest>): Observable<ApiSuccessResponse<Faq>> {
+  update(id: number, data: Partial<CreateTagRequest>): Observable<ApiSuccessResponse<Tag>> {
     return this.http
-      .put<ApiSuccessResponse<Faq>>(`${this.baseUrl}/${id}`, data)
+      .put<ApiSuccessResponse<Tag>>(`${this.baseUrl}/${id}`, data)
       .pipe(catchError(this.handleError));
   }
 

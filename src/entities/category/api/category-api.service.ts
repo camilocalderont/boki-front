@@ -31,7 +31,7 @@ export class CategoryApiService {
 
   update(id: number, data: Partial<CreateCategoryRequest>): Observable<ApiSuccessResponse<Category>> {
     return this.http
-      .patch<ApiSuccessResponse<Category>>(`${this.baseUrl}/${id}`, data)
+      .put<ApiSuccessResponse<Category>>(`${this.baseUrl}/${id}`, data)
       .pipe(catchError(this.handleError));
   }
 
