@@ -19,5 +19,6 @@ export class ProfessionalStore {
   setError(msg: string): void { this._error.set(msg); this._loading.set(false); }
   selectItem(id: number | null): void { this._selectedId.set(id); }
   addItem(item: Professional): void { this._items.update(list => [...list, item]); }
-  removeItem(id: number): void { this._items.update(list => list.filter(i => i.id !== id)); }
+  removeItem(id: number): void { this._items.update(list => list.filter(i => i.Id !== id)); }
+  updateItem(item: Professional): void { this._items.update(list => list.map(i => i.Id === item.Id ? item : i)); }
 }

@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { APP_CONSTANTS } from '@shared/config';
 import { ApiSuccessResponse, CustomError } from '@shared/api';
-import { ServiceEntity, CreateServiceRequest } from '../model/service.model';
+import { ServiceEntity, ServiceStage, CreateServiceRequest } from '../model/service.model';
 
 @Injectable({ providedIn: 'root' })
 export class ServiceApiService {
@@ -50,6 +50,18 @@ export class ServiceApiService {
   delete(id: number): Observable<ApiSuccessResponse<void>> {
     return this.http
       .delete<ApiSuccessResponse<void>>(`${this.baseUrl}/${id}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  getServiceStages(serviceId: number): Observable<ApiSuccessResponse<ServiceStage[]>> {
+    return this.http
+      .get<ApiSuccessResponse<ServiceStage[]>>(`${this.baseUrl}/${serviceId}/stages`)
+      .pipe(catchError(this.handleError));
+  }
+
+  updateServiceStages(serviceId: number, stages: Omit<ServiceStage, 'Id' | 'ServiceId'>[]): Observable<ApiSuccessResponse<ServiceStage[]>> {
+    return this.http
+      .put<ApiSuccessResponse<ServiceStage[]>>(`${this.baseUrl}/${serviceId}/stages`, { ServiceStages: stages })
       .pipe(catchError(this.handleError));
   }
 

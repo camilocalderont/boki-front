@@ -83,6 +83,7 @@ import {
     .bk-modal-sm { width: min(24rem, 95vw); }
     .bk-modal-md { width: min(32rem, 95vw); }
     .bk-modal-lg { width: min(48rem, 95vw); }
+    .bk-modal-xl { width: min(64rem, 95vw); }
 
     .bk-modal-header {
       display: flex;
@@ -143,7 +144,7 @@ export class BkModalComponent {
   title = input<string>('');
 
   /** Width preset for the modal panel. */
-  size = input<'sm' | 'md' | 'lg'>('md');
+  size = input<'sm' | 'md' | 'lg' | 'xl'>('md');
 
   /** Whether the modal can be closed by the user. */
   closeable = input<boolean>(true);

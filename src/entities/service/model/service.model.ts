@@ -18,11 +18,13 @@ export interface ServiceEntity {
 }
 
 export interface ServiceStage {
-  Id: number;
-  ServiceId: number;
+  Id?: number;
+  ServiceId?: number;
   ISequence: number;
   IDurationMinutes: number;
+  VcDescription?: string;
   BIsProfessionalBussy: boolean;
+  BIsActive?: boolean;
 }
 
 export interface CreateServiceRequest {

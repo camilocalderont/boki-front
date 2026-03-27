@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { APP_CONSTANTS } from '@shared/config';
 import { ApiSuccessResponse, CustomError } from '@shared/api';
-import { Professional } from '../model/professional.model';
+import { Professional, CreateProfessionalRequest, ProfessionalBussinessHour } from '../model/professional.model';
 
 @Injectable({ providedIn: 'root' })
 export class ProfessionalApiService {
@@ -26,6 +26,42 @@ export class ProfessionalApiService {
   getByService(serviceId: number): Observable<ApiSuccessResponse<Professional[]>> {
     return this.http
       .get<ApiSuccessResponse<Professional[]>>(`${this.baseUrl}/service/${serviceId}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  create(data: CreateProfessionalRequest): Observable<ApiSuccessResponse<Professional>> {
+    return this.http
+      .post<ApiSuccessResponse<Professional>>(this.baseUrl, data)
+      .pipe(catchError(this.handleError));
+  }
+
+  update(id: number, data: Partial<CreateProfessionalRequest>): Observable<ApiSuccessResponse<Professional>> {
+    return this.http
+      .put<ApiSuccessResponse<Professional>>(`${this.baseUrl}/${id}`, data)
+      .pipe(catchError(this.handleError));
+  }
+
+  delete(id: number): Observable<ApiSuccessResponse<void>> {
+    return this.http
+      .delete<ApiSuccessResponse<void>>(`${this.baseUrl}/${id}`)
+      .pipe(catchError(this.handleError));
+  }
+
+  getBusinessHours(professionalId: number): Observable<ApiSuccessResponse<ProfessionalBussinessHour[]>> {
+    return this.http
+      .get<ApiSuccessResponse<ProfessionalBussinessHour[]>>(`${this.baseUrl}/${professionalId}/business-hours`)
+      .pipe(catchError(this.handleError));
+  }
+
+  updateBusinessHours(
+    professionalId: number,
+    hours: Omit<ProfessionalBussinessHour, 'Id' | 'ProfessionalId' | 'CompanyBranchRoom'>[],
+  ): Observable<ApiSuccessResponse<ProfessionalBussinessHour[]>> {
+    return this.http
+      .put<ApiSuccessResponse<ProfessionalBussinessHour[]>>(
+        `${this.baseUrl}/${professionalId}/business-hours`,
+        { BussinessHours: hours },
+      )
       .pipe(catchError(this.handleError));
   }
 

@@ -17,3 +17,5 @@ export { BkPaginationComponent } from './pagination/pagination.component';
 export { BkSearchInputComponent } from './search-input/search-input.component';
 export { BkIconComponent } from './icon/icon.component';
 export { BkTooltipComponent } from './tooltip/tooltip.component';
+export { BkCheckboxComponent } from './checkbox/checkbox.component';
+export type { BkCheckboxSize, BkCheckboxColor, BkCheckboxShape } from './checkbox/checkbox.component';

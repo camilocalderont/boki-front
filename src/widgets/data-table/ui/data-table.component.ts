@@ -74,6 +74,16 @@ export interface DataTableColumn {
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
                         </bk-button>
                       }
+                      @if (showScheduleAction()) {
+                        <bk-button variant="ghost" size="sm" (clicked)="scheduleClicked.emit(row)">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        </bk-button>
+                      }
+                      @if (showStagesAction()) {
+                        <bk-button variant="ghost" size="sm" (clicked)="stagesClicked.emit(row)">
+                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg>
+                        </bk-button>
+                      }
                       @if (showDeleteAction()) {
                         <bk-button variant="ghost" size="sm" (clicked)="deleteClicked.emit(row)">
                           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
@@ -228,10 +238,14 @@ export class BkDataTableComponent {
   readonly showActions = input<boolean>(true);
   readonly showEditAction = input<boolean>(true);
   readonly showDeleteAction = input<boolean>(true);
+  readonly showScheduleAction = input<boolean>(false);
+  readonly showStagesAction = input<boolean>(false);
   readonly trackByKey = input<string>('id');
 
   readonly editClicked = output<Record<string, any>>();
   readonly deleteClicked = output<Record<string, any>>();
+  readonly scheduleClicked = output<Record<string, any>>();
+  readonly stagesClicked = output<Record<string, any>>();
 
   readonly searchTerm = signal('');
   readonly currentPage = signal(1);

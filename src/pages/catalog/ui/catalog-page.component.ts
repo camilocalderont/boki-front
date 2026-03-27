@@ -6,7 +6,7 @@ import { BkDataTableComponent } from '@widgets/data-table';
 import type { DataTableColumn } from '@widgets/data-table';
 import { BkConfirmDialogComponent } from '@widgets/confirm-dialog';
 import { AlertService } from '@shared/lib';
-import { CatalogStore, CategoryFormComponent, ServiceFormComponent } from '@features/manage-catalog';
+import { CatalogStore, CategoryFormComponent, ServiceFormComponent, ServiceStagesFormComponent } from '@features/manage-catalog';
 import type { CategoryFormOutput, ServiceFormOutput } from '@features/manage-catalog';
 import { CategoryApiService } from '@entities/category';
 import type { Category, CreateCategoryRequest } from '@entities/category';
@@ -24,7 +24,7 @@ import { map } from 'rxjs';
     BkSpinnerComponent, BkTabsComponent, BkButtonComponent,
     BkDataTableComponent, BkModalComponent, BkConfirmDialogComponent,
     BkSelectComponent,
-    CategoryFormComponent, ServiceFormComponent,
+    CategoryFormComponent, ServiceFormComponent, ServiceStagesFormComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
@@ -75,10 +75,12 @@ import { map } from 'rxjs';
                 [columns]="serviceColumns"
                 [showActions]="true"
                 [showDeleteAction]="true"
+                [showStagesAction]="true"
                 trackByKey="Id"
                 emptyMessage="Seleccione una empresa para ver sus servicios"
                 (editClicked)="onEdit($event)"
                 (deleteClicked)="onDelete($event)"
+                (stagesClicked)="onStages($event)"
               />
             }
           }
@@ -121,6 +123,19 @@ import { map } from 'rxjs';
         (confirm)="confirmDelete()"
         (cancel)="showDeleteConfirm.set(false)"
       />
+
+      <!-- Service Stages Modal -->
+      <bk-modal [open]="showStagesModal()" title="Etapas del Servicio" size="xl" (closed)="closeStagesModal()">
+        @if (selectedServiceForStages()) {
+          <bk-service-stages-form
+            [existingStages]="stagesData()"
+            [serviceTime]="selectedServiceForStages()?.['VcTime'] ?? '00:00'"
+            [loading]="savingStages()"
+            (saved)="saveStages($event)"
+            (cancelled)="closeStagesModal()"
+          />
+        }
+      </bk-modal>
     </div>
   `,
   styles: [`
@@ -157,7 +172,11 @@ export class CatalogPageComponent implements OnInit {
   readonly showCategoryModal = signal(false);
   readonly showServiceModal = signal(false);
   readonly showDeleteConfirm = signal(false);
+  readonly showStagesModal = signal(false);
   readonly selectedItem = signal<Record<string, any> | null>(null);
+  readonly selectedServiceForStages = signal<Record<string, any> | null>(null);
+  readonly savingStages = signal(false);
+  readonly stagesData = signal<any[]>([]);
 
   readonly companies = signal<{ id: string; name: string }[]>([]);
   readonly allCategories = signal<Category[]>([]);
@@ -285,6 +304,38 @@ export class CatalogPageComponent implements OnInit {
     this.showCategoryModal.set(false);
     this.showServiceModal.set(false);
     this.selectedItem.set(null);
+  }
+
+  // ── Service Stages ──
+
+  onStages(row: Record<string, any>): void {
+    this.selectedServiceForStages.set(row);
+    this.stagesData.set(row['ServiceStages'] ?? []);
+    this.showStagesModal.set(true);
+  }
+
+  closeStagesModal(): void {
+    this.showStagesModal.set(false);
+    this.selectedServiceForStages.set(null);
+    this.stagesData.set([]);
+  }
+
+  saveStages(stages: any[]): void {
+    const service = this.selectedServiceForStages();
+    if (!service) return;
+    this.savingStages.set(true);
+    this.svcApi.updateServiceStages(service['Id'], stages).subscribe({
+      next: () => {
+        this.alertService.showSuccess('Etapas actualizadas correctamente');
+        this.closeStagesModal();
+        this.loadServicesByCompany();
+        this.savingStages.set(false);
+      },
+      error: (err) => {
+        this.alertService.showError(err.message || 'Error al guardar etapas');
+        this.savingStages.set(false);
+      },
+    });
   }
 
   // ── Category CRUD ──
