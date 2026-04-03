@@ -47,3 +47,40 @@ export interface CreateCompanyPromptRequest {
   TxMainPrompt: string;
   UserId: number;
 }
+
+export type GalleryCategory = 'venue' | 'service' | 'portfolio';
+
+export interface CompanyGalleryImage {
+  Id: number;
+  CompanyId: number;
+  VcCategory: GalleryCategory;
+  VcCategoryName?: string;
+  ProfessionalId?: number;
+  ServiceId?: number;
+  VcImageUrl: string;
+  VcDescription?: string;
+  ISortOrder: number;
+  created_at: Date;
+  updated_at: Date;
+}
+
+export interface CreateGalleryImageRequest {
+  CompanyId: number;
+  VcCategory: GalleryCategory;
+  VcCategoryName?: string;
+  ProfessionalId?: number;
+  ServiceId?: number;
+  VcImageUrl: string;
+  VcDescription?: string;
+  ISortOrder?: number;
+}
+
+export interface UpdateGalleryImageRequest {
+  VcCategory?: GalleryCategory;
+  VcCategoryName?: string;
+  ProfessionalId?: number;
+  ServiceId?: number;
+  VcImageUrl?: string;
+  VcDescription?: string;
+  ISortOrder?: number;
+}

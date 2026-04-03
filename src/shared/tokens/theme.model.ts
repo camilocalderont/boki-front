@@ -81,6 +81,7 @@ export interface ThemeShadows {
   sm: string;
   md: string;
   lg: string;
+  card?: string;
 }
 
 export interface ThemeZIndex {

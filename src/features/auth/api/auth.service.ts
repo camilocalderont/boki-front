@@ -28,6 +28,7 @@ export class AuthApiService {
           this.authStore.handleLoginSuccess(
             response.data.token,
             response.data.user,
+            response.data.roles,
           );
         }),
         catchError(error => {

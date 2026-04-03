@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormControl } from '@angular/forms';
-import { BkSpinnerComponent, BkTabsComponent, BkButtonComponent, BkModalComponent, BkSelectComponent } from '@shared/ui';
+import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
+import { BkSpinnerComponent, BkTabsComponent, BkButtonComponent, BkModalComponent, BkSelectComponent, BkCardComponent, BkInputComponent } from '@shared/ui';
 import type { BkTabItem, BkSelectOption } from '@shared/ui';
 import { BkDataTableComponent } from '@widgets/data-table';
 import type { DataTableColumn } from '@widgets/data-table';
@@ -11,7 +11,7 @@ import type { BranchFormOutput } from '@features/manage-company';
 import { BranchRoomStore, BranchRoomFormComponent } from '@features/manage-branch-room';
 import type { BranchRoomFormOutput } from '@features/manage-branch-room';
 import { CompanyApiService } from '@entities/company';
-import type { CompanyFormValue, BranchFormValue } from '@entities/company';
+import type { CompanyFormValue, BranchFormValue, CompanyGalleryImage, GalleryCategory } from '@entities/company';
 import { BranchRoomApiService } from '@entities/branch-room';
 import { UserStore } from '@entities/user';
 import { CompanyBranchService, CompanyBranch } from '@app/services/company-branch.service';
@@ -24,7 +24,7 @@ import { map, forkJoin, of } from 'rxjs';
     ReactiveFormsModule,
     BkSpinnerComponent, BkTabsComponent, BkButtonComponent,
     BkDataTableComponent, BkModalComponent, BkConfirmDialogComponent,
-    BkSelectComponent,
+    BkSelectComponent, BkCardComponent, BkInputComponent,
     CompanyFormComponent, BranchFormComponent, BranchRoomFormComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,10 +35,12 @@ import { map, forkJoin, of } from 'rxjs';
           <h1 class="bk-page__title">Empresas</h1>
           <p class="bk-page__subtitle">Gestión de datos de empresa, sedes y consultorios</p>
         </div>
-        <bk-button variant="primary" size="md" (clicked)="openCreate()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          {{ createButtonLabel() }}
-        </bk-button>
+        @if (activeTab() !== 'galeria') {
+          <bk-button variant="primary" size="md" (clicked)="openCreate()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            {{ createButtonLabel() }}
+          </bk-button>
+        }
       </div>
 
       <bk-tabs [tabs]="tabs" [activeTab]="activeTab()" (tabChange)="onTabChange($event)" />
@@ -93,6 +95,75 @@ import { map, forkJoin, of } from 'rxjs';
                 (deleteClicked)="onDelete($event)"
               />
             }
+            @case ('galeria') {
+              <div class="bk-page__filter-bar">
+                <bk-select label="Empresa" [formControl]="selectedCompanyIdForGallery" placeholder="Seleccione una empresa"
+                  [options]="companySelectOptions()" [searchable]="true" />
+              </div>
+
+              @if (selectedCompanyIdForGallery.value) {
+                <bk-card>
+                  <h3 class="bk-gallery-form__title">Agregar imagen</h3>
+                  <form [formGroup]="galleryForm" (ngSubmit)="addGalleryImage()" class="bk-gallery-form">
+                    <bk-input
+                      label="URL de imagen"
+                      placeholder="https://ejemplo.com/imagen.jpg"
+                      formControlName="VcImageUrl"
+                      [error]="galleryUrlError()"
+                    />
+                    <div class="bk-gallery-form__select-wrapper">
+                      <label class="bk-gallery-form__label">Categoría</label>
+                      <select class="bk-gallery-form__native-select" formControlName="VcCategory">
+                        <option value="">Seleccione una categoría</option>
+                        <option value="venue">Establecimiento</option>
+                        <option value="service">Servicios</option>
+                        <option value="portfolio">Portfolio</option>
+                      </select>
+                    </div>
+                    <bk-input
+                      label="Descripción (opcional)"
+                      placeholder="Descripción de la imagen"
+                      formControlName="VcDescription"
+                    />
+                    <bk-button
+                      type="submit"
+                      variant="primary"
+                      size="md"
+                      [disabled]="galleryForm.invalid || savingGallery()"
+                    >
+                      @if (savingGallery()) {
+                        <bk-spinner />
+                      } @else {
+                        Agregar imagen
+                      }
+                    </bk-button>
+                  </form>
+                </bk-card>
+
+                <div class="bk-gallery-grid">
+                  @if (galleryLoading()) {
+                    <div class="bk-page__loader"><bk-spinner /></div>
+                  } @else if (galleryImages().length === 0) {
+                    <p class="bk-gallery-empty">No hay imágenes en la galería. Agrega la primera imagen arriba.</p>
+                  } @else {
+                    @for (image of galleryImages(); track image.Id) {
+                      <div class="bk-gallery-item">
+                        <img [src]="image.VcImageUrl" [alt]="image.VcDescription || 'Imagen de galería'" class="bk-gallery-item__img" />
+                        <div class="bk-gallery-item__overlay">
+                          <span class="bk-gallery-item__category">{{ galleryCategoryLabel(image.VcCategory) }}</span>
+                          @if (image.VcDescription) {
+                            <p class="bk-gallery-item__desc">{{ image.VcDescription }}</p>
+                          }
+                          <bk-button variant="danger" size="sm" (clicked)="confirmDeleteGalleryImage(image)">
+                            Eliminar
+                          </bk-button>
+                        </div>
+                      </div>
+                    }
+                  }
+                </div>
+              }
+            }
           }
         }
       </div>
@@ -142,6 +213,17 @@ import { map, forkJoin, of } from 'rxjs';
         (confirm)="confirmDelete()"
         (cancel)="showDeleteConfirm.set(false)"
       />
+
+      <!-- Gallery Image Delete Confirmation -->
+      <bk-confirm-dialog
+        [open]="showGalleryDeleteConfirm()"
+        title="¿Eliminar imagen?"
+        message="Esta acción no se puede deshacer. Se eliminará la imagen de la galería."
+        confirmLabel="Eliminar"
+        variant="danger"
+        (confirm)="confirmDeleteGallery()"
+        (cancel)="showGalleryDeleteConfirm.set(false)"
+      />
     </div>
   `,
   styles: [`
@@ -162,6 +244,24 @@ import { map, forkJoin, of } from 'rxjs';
       border: 1px solid var(--bk-border-color-default, #e5e7eb);
     }
     .bk-page__filter-bar bk-select { flex: 1; max-width: 400px; }
+
+    /* Gallery form */
+    .bk-gallery-form__title { font-size: var(--bk-font-size-base, 14px); font-weight: 600; color: var(--bk-color-text-primary); margin: 0 0 16px; }
+    .bk-gallery-form { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: end; }
+    .bk-gallery-form__select-wrapper { display: flex; flex-direction: column; gap: var(--bk-space-xs); }
+    .bk-gallery-form__label { font-size: var(--bk-font-size-sm, 12px); font-weight: 500; color: var(--bk-color-text-secondary, #64748B); text-transform: uppercase; letter-spacing: 0.05em; }
+    .bk-gallery-form__native-select { width: 100%; height: var(--bk-size-input-height, 40px); padding: 0 var(--bk-space-sm, 8px); font-size: var(--bk-font-size-base, 14px); color: var(--bk-color-text-primary); background: var(--bk-bg-surface); border: var(--bk-border-width-default, 1px) solid var(--bk-border-color-default, #e5e7eb); border-radius: var(--bk-border-radius-md, 6px); outline: none; box-sizing: border-box; }
+    .bk-gallery-form__native-select:focus { border-color: var(--bk-color-primary); box-shadow: 0 0 0 2px color-mix(in srgb, var(--bk-color-primary) 20%, transparent); }
+
+    /* Gallery grid */
+    .bk-gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-top: 20px; }
+    .bk-gallery-empty { color: var(--bk-color-text-muted); text-align: center; padding: 48px 0; font-size: var(--bk-font-size-sm, 12px); }
+    .bk-gallery-item { position: relative; border-radius: var(--bk-border-radius-md, 8px); overflow: hidden; aspect-ratio: 1; background: var(--bk-bg-surface); border: 1px solid var(--bk-border-color-default, #e5e7eb); }
+    .bk-gallery-item__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .bk-gallery-item__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.55); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; opacity: 0; transition: opacity 0.2s ease; padding: 12px; }
+    .bk-gallery-item:hover .bk-gallery-item__overlay { opacity: 1; }
+    .bk-gallery-item__category { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #fff; background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; }
+    .bk-gallery-item__desc { font-size: 11px; color: rgba(255,255,255,0.9); text-align: center; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
   `],
 })
 export class CompanyPageComponent implements OnInit {
@@ -192,6 +292,28 @@ export class CompanyPageComponent implements OnInit {
   readonly selectedCompanyId = new FormControl('');
   readonly selectedCompanyIdForRooms = new FormControl('');
   readonly selectedBranchIdForRooms = new FormControl('');
+  readonly selectedCompanyIdForGallery = new FormControl('');
+
+  // Gallery state
+  readonly galleryImages = signal<CompanyGalleryImage[]>([]);
+  readonly galleryLoading = signal(false);
+  readonly savingGallery = signal(false);
+  readonly showGalleryDeleteConfirm = signal(false);
+  readonly selectedGalleryImage = signal<CompanyGalleryImage | null>(null);
+
+  readonly galleryForm = new FormGroup({
+    VcImageUrl: new FormControl('', [Validators.required, Validators.pattern(/^https?:\/\/.+/)]),
+    VcCategory: new FormControl<GalleryCategory | ''>('', Validators.required),
+    VcDescription: new FormControl(''),
+  });
+
+  readonly galleryUrlError = computed(() => {
+    const ctrl = this.galleryForm.get('VcImageUrl');
+    if (!ctrl) return '';
+    if (ctrl.touched && ctrl.hasError('required')) return 'La URL es obligatoria';
+    if (ctrl.touched && ctrl.hasError('pattern')) return 'Ingresa una URL válida (http/https)';
+    return '';
+  });
 
   readonly companySelectOptions = computed<BkSelectOption[]>(() =>
     this.companyOptions().map(c => ({ value: c.id, label: c.name }))
@@ -232,6 +354,7 @@ export class CompanyPageComponent implements OnInit {
     { id: 'datos', label: 'Datos de Empresa' },
     { id: 'sedes', label: 'Sedes' },
     { id: 'consultorios', label: 'Consultorios' },
+    { id: 'galeria', label: 'Galería' },
   ];
 
   readonly companyColumns: DataTableColumn[] = [
@@ -270,6 +393,9 @@ export class CompanyPageComponent implements OnInit {
 
     // Cambiar sede en tab Consultorios → filtrar tabla
     this.selectedBranchIdForRooms.valueChanges.subscribe(v => this.activeBranchFilter.set(v ?? ''));
+
+    // Cambiar empresa en tab Galería → recargar imágenes
+    this.selectedCompanyIdForGallery.valueChanges.subscribe(() => this.loadGallery());
   }
 
   onTabChange(tabId: string): void {
@@ -289,6 +415,13 @@ export class CompanyPageComponent implements OnInit {
           this.selectedCompanyIdForRooms.setValue(firstId); // triggers valueChanges → auto-load
         } else {
           this.loadRoomsByCompany(); // force reload with fresh data
+        }
+      }
+      if (tabId === 'galeria') {
+        if (!this.selectedCompanyIdForGallery.value) {
+          this.selectedCompanyIdForGallery.setValue(firstId); // triggers valueChanges → auto-load
+        } else {
+          this.loadGallery(); // force reload with fresh data
         }
       }
     }
@@ -503,6 +636,86 @@ export class CompanyPageComponent implements OnInit {
         this.loading.set(false);
       },
       error: () => { this.branches.set([]); this.loading.set(false); },
+    });
+  }
+
+  // ── Gallery ──
+
+  galleryCategoryLabel(category: GalleryCategory): string {
+    const labels: Record<GalleryCategory, string> = {
+      venue: 'Establecimiento',
+      service: 'Servicios',
+      portfolio: 'Portfolio',
+    };
+    return labels[category] ?? category;
+  }
+
+  loadGallery(): void {
+    const companyId = Number(this.selectedCompanyIdForGallery.value);
+    if (!companyId) return;
+    this.galleryLoading.set(true);
+    this.companyApi.getGallery(companyId).subscribe({
+      next: (res) => {
+        this.galleryImages.set(res.data ?? []);
+        this.galleryLoading.set(false);
+      },
+      error: () => {
+        this.galleryImages.set([]);
+        this.galleryLoading.set(false);
+      },
+    });
+  }
+
+  addGalleryImage(): void {
+    if (this.galleryForm.invalid) {
+      this.galleryForm.markAllAsTouched();
+      return;
+    }
+    const companyId = Number(this.selectedCompanyIdForGallery.value);
+    if (!companyId) return;
+
+    this.savingGallery.set(true);
+    const values = this.galleryForm.value;
+
+    this.companyApi.createGalleryImage({
+      CompanyId: companyId,
+      VcCategory: values.VcCategory as GalleryCategory,
+      VcImageUrl: values.VcImageUrl!,
+      VcDescription: values.VcDescription || undefined,
+    }).subscribe({
+      next: () => {
+        this.alertService.showSuccess('Imagen agregada a la galería');
+        this.galleryForm.reset();
+        this.loadGallery();
+        this.savingGallery.set(false);
+      },
+      error: (err) => {
+        this.alertService.showError(err.message || 'Error al agregar imagen');
+        this.savingGallery.set(false);
+      },
+    });
+  }
+
+  confirmDeleteGalleryImage(image: CompanyGalleryImage): void {
+    this.selectedGalleryImage.set(image);
+    this.showGalleryDeleteConfirm.set(true);
+  }
+
+  confirmDeleteGallery(): void {
+    const image = this.selectedGalleryImage();
+    if (!image) return;
+
+    this.companyApi.deleteGalleryImage(image.Id).subscribe({
+      next: () => {
+        this.alertService.showSuccess('Imagen eliminada de la galería');
+        this.showGalleryDeleteConfirm.set(false);
+        this.selectedGalleryImage.set(null);
+        this.loadGallery();
+      },
+      error: (err) => {
+        this.alertService.showError(err.message || 'Error al eliminar imagen');
+        this.showGalleryDeleteConfirm.set(false);
+      },
     });
   }
 

@@ -19,3 +19,4 @@ export { BkIconComponent } from './icon/icon.component';
 export { BkTooltipComponent } from './tooltip/tooltip.component';
 export { BkCheckboxComponent } from './checkbox/checkbox.component';
 export type { BkCheckboxSize, BkCheckboxColor, BkCheckboxShape } from './checkbox/checkbox.component';
+export { BkSkeletonComponent } from './skeleton/skeleton.component';

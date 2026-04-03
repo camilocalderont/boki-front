@@ -1,12 +1,15 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserStore } from '@entities/user';
+import { MenuStore } from '@entities/menu';
 import { STORAGE_KEYS } from '@shared/config';
+import type { BackendRoleDto } from '../../../entities/user/api/user.dto';
 
 @Injectable({ providedIn: 'root' })
 export class AuthStore {
   private readonly router = inject(Router);
   private readonly userStore = inject(UserStore);
+  private readonly menuStore = inject(MenuStore);
 
   private readonly _loading = signal(false);
   private readonly _error = signal<string | null>(null);
@@ -34,6 +37,7 @@ export class AuthStore {
       VcFirstLastName: string;
       VcNickName?: string;
     },
+    roles?: BackendRoleDto[],
   ): void {
     sessionStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, token);
     sessionStorage.setItem(STORAGE_KEYS.AUTH_USER, JSON.stringify(user));
@@ -44,6 +48,7 @@ export class AuthStore {
       firstName: user.VcFirstName,
       firstLastName: user.VcFirstLastName,
       nickName: user.VcNickName,
+      roles: (roles ?? []).map(r => ({ id: r.Id, name: r.VcName, code: r.VcCode })),
     });
 
     this._error.set(null);
@@ -54,6 +59,7 @@ export class AuthStore {
     sessionStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
     sessionStorage.removeItem(STORAGE_KEYS.AUTH_USER);
     this.userStore.clearUser();
+    this.menuStore.clear();
     this.router.navigate(['/auth/login']);
   }
 

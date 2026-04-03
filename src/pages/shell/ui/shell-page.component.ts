@@ -1,9 +1,9 @@
-import { Component, ChangeDetectionStrategy, inject, signal, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, ChangeDetectionStrategy, inject, OnInit, DestroyRef } from '@angular/core';
 import { catchError, map, of } from 'rxjs';
 import { BkLayoutShellComponent } from '@widgets/layout-shell';
-import { SidebarItem } from '@widgets/sidebar';
 import { AuthStore } from '@features/auth';
+import { MenuStore, MenuApiService, toMenuItem } from '@entities/menu';
+import { UserStore } from '@entities/user';
 
 @Component({
   standalone: true,
@@ -11,7 +11,7 @@ import { AuthStore } from '@features/auth';
   imports: [BkLayoutShellComponent],
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `
-    <bk-layout-shell [sidebarItems]="sidebarItems()" [showSidebar]="true">
+    <bk-layout-shell [sidebarItems]="menuStore.sidebarItems()" [showSidebar]="true">
       <div class="bk-shell-page__user-actions" header-actions>
         <button
           class="bk-shell-page__logout-btn"
@@ -41,18 +41,32 @@ import { AuthStore } from '@features/auth';
 })
 export class ShellPageComponent implements OnInit {
   protected authStore = inject(AuthStore);
-  private http = inject(HttpClient);
-
-  sidebarItems = signal<SidebarItem[]>([]);
+  protected menuStore = inject(MenuStore);
+  private menuApi = inject(MenuApiService);
+  private userStore = inject(UserStore);
+  private destroyRef = inject(DestroyRef);
 
   ngOnInit(): void {
-    this.http.get<{ items: SidebarItem[] }>('assets/config/navigation.json').pipe(
-      map(config => config.items
-        .filter((item: any) => item.visible)
-        .sort((a: any, b: any) => a.order - b.order)
-        .map((item: any) => ({ id: item.label, label: item.label, icon: item.icon, route: item.route }))
-      ),
+    this.loadMenus();
+    this.startMenuRefreshInterval();
+  }
+
+  private loadMenus(): void {
+    const user = this.userStore.currentUser();
+    if (!user) return;
+
+    this.menuStore.setLoading(true);
+    this.menuApi.getUserMenus(user.id).pipe(
+      map(response => (response.data ?? []).map(toMenuItem)),
       catchError(() => of([])),
-    ).subscribe(items => this.sidebarItems.set(items));
+    ).subscribe(items => {
+      this.menuStore.setMenus(items);
+      this.menuStore.setLoading(false);
+    });
+  }
+
+  private startMenuRefreshInterval(): void {
+    const intervalId = setInterval(() => this.loadMenus(), 5 * 60 * 1000);
+    this.destroyRef.onDestroy(() => clearInterval(intervalId));
   }
 }

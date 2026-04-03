@@ -3,6 +3,10 @@ export type {
   CompanyPrompt,
   CreateCompanyRequest,
   CreateCompanyPromptRequest,
+  CompanyGalleryImage,
+  CreateGalleryImageRequest,
+  UpdateGalleryImageRequest,
+  GalleryCategory,
 } from './model/company.model';
 export type { CompanyFormValue } from './model/company.validators';
 export { COMPANY_VALIDATORS, getCompanyErrorMessage } from './model/company.validators';

@@ -2,7 +2,16 @@ import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { AUTH_TOKEN_GETTER } from './auth.tokens';
 
-const PUBLIC_ROUTES = ['/users/login', '/users/register'];
+const PUBLIC_ROUTES = [
+  '/users/login',
+  '/users/register',
+  '/onboarding/initiate',
+  '/onboarding/validate',
+  '/onboarding/step/1',
+  '/solercia-service-types',
+  '/plans',
+  '/public/',
+];
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const isPublicRoute = PUBLIC_ROUTES.some(route => req.url.includes(route));

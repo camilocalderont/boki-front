@@ -9,6 +9,8 @@ import {
   CompanyPrompt,
   CreateCompanyRequest,
   CreateCompanyPromptRequest,
+  CompanyGalleryImage,
+  CreateGalleryImageRequest,
 } from '../model/company.model';
 
 @Injectable({
@@ -85,6 +87,40 @@ export class CompanyApiService {
 
   deletePrompt(id: number): Observable<ApiSuccessResponse<null>> {
     const url = `${this.baseUrl}/company-prompts/${id}`;
+
+    return this.http
+      .delete<ApiSuccessResponse<null>>(url)
+      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+  }
+
+  // ── Gallery ──
+
+  getGallery(companyId: number): Observable<ApiSuccessResponse<CompanyGalleryImage[]>> {
+    const url = `${this.baseUrl}/company-gallery/${companyId}`;
+
+    return this.http
+      .get<ApiSuccessResponse<CompanyGalleryImage[]>>(url)
+      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+  }
+
+  createGalleryImage(dto: CreateGalleryImageRequest): Observable<ApiSuccessResponse<CompanyGalleryImage>> {
+    const url = `${this.baseUrl}/company-gallery`;
+
+    return this.http
+      .post<ApiSuccessResponse<CompanyGalleryImage>>(url, dto)
+      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+  }
+
+  createGalleryBatch(companyId: number, images: CreateGalleryImageRequest[]): Observable<ApiSuccessResponse<CompanyGalleryImage[]>> {
+    const url = `${this.baseUrl}/company-gallery/batch`;
+
+    return this.http
+      .post<ApiSuccessResponse<CompanyGalleryImage[]>>(url, { companyId, images })
+      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+  }
+
+  deleteGalleryImage(id: number): Observable<ApiSuccessResponse<null>> {
+    const url = `${this.baseUrl}/company-gallery/${id}`;
 
     return this.http
       .delete<ApiSuccessResponse<null>>(url)

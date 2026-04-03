@@ -9,7 +9,14 @@ export interface BackendLoginResponse {
   data: {
     token: string;
     user: BackendUser;
+    roles?: BackendRoleDto[];
   };
+}
+
+export interface BackendRoleDto {
+  Id: number;
+  VcName: string;
+  VcCode: string;
 }
 
 export interface BackendUser {

@@ -4,6 +4,10 @@ export const ROUTES = {
     LOGIN: 'auth/login',
     REGISTER: 'auth/register',
   },
+  ONBOARDING: {
+    START: 'auth/onboarding/start',
+    WIZARD: 'auth/onboarding',
+  },
   DASHBOARD: {
     ROOT: 'dashboard',
     COMPANY: 'dashboard/company',

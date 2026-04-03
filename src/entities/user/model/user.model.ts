@@ -8,6 +8,7 @@ export interface User {
   nickName?: string;
   phone?: string;
   identificationNumber?: string;
+  roles?: { id: number; name: string; code: string }[];
 }
 
 export interface LoginCredentials {

@@ -117,6 +117,7 @@ export class ThemeService {
     root.setProperty('--bk-shadow-sm', cfg.shadows.sm);
     root.setProperty('--bk-shadow-md', cfg.shadows.md);
     root.setProperty('--bk-shadow-lg', cfg.shadows.lg);
+    root.setProperty('--bk-shadow-card', cfg.shadows.card ?? cfg.shadows.md);
 
     // Z-Index
     root.setProperty('--bk-z-dropdown', String(cfg.zIndex.dropdown));
