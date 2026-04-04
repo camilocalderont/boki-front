@@ -94,6 +94,48 @@ export interface ClientAppointmentHistory {
   CurrentState: { VcName: string };
 }
 
+// ── Multi-booking models ──
+
+export interface CompanyConfig {
+  professionalCount: number;
+  frequencyMinutes: number;
+}
+
+export interface MultiAvailabilityItem {
+  ServiceId: number;
+  ProfessionalId?: number | null;
+}
+
+export interface MultiAvailabilityQuery {
+  Date: string;
+  Items: MultiAvailabilityItem[];
+}
+
+export interface NextAvailableDateResult {
+  date: string | null;  // comes as "YYYY-MM-DD HH:mm:ss" from DateFormatInterceptor
+  firstSlot: string | null;
+}
+
+export interface CreateMultiAppointmentItem {
+  ServiceId: number;
+  ProfessionalId?: number | null;
+}
+
+export interface CreateMultiAppointmentDto {
+  Date: string;
+  StartTime: string;
+  Items: CreateMultiAppointmentItem[];
+  ClientName: string;
+  ClientEmail: string;
+  ClientPhone: string;
+  BookingNotes?: string;
+}
+
+export interface MultiAppointmentResult {
+  appointments: PublicAppointment[];
+  groupToken: string;
+}
+
 export interface GalleryImage {
   Id: number;
   CompanyId: number;

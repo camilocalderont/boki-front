@@ -8,8 +8,13 @@ import {
   ClientAppointmentHistory,
   ClientProfile,
   ClientSettings,
+  CompanyConfig,
+  CreateMultiAppointmentDto,
   CreatePublicAppointmentDto,
   GalleryImage,
+  MultiAppointmentResult,
+  MultiAvailabilityQuery,
+  NextAvailableDateResult,
   PublicAppointment,
   PublicCategory,
   PublicCompany,
@@ -110,6 +115,33 @@ export class PublicBookingApiService {
   updateClientSettings(token: string, settings: ClientSettings): Observable<ApiSuccessResponse<ClientSettings>> {
     return this.http
       .patch<ApiSuccessResponse<ClientSettings>>(`${this.baseUrl}/client/${token}/settings`, settings)
+      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+  }
+
+  // ── Multi-booking endpoints ──
+
+  getCompanyConfig(slug: string): Observable<ApiSuccessResponse<CompanyConfig>> {
+    return this.http
+      .get<ApiSuccessResponse<CompanyConfig>>(`${this.baseUrl}/${slug}/config`)
+      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+  }
+
+  getMultiAvailability(slug: string, query: MultiAvailabilityQuery): Observable<ApiSuccessResponse<string[]>> {
+    return this.http
+      .post<ApiSuccessResponse<string[]>>(`${this.baseUrl}/${slug}/availability/multi`, query)
+      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+  }
+
+  getNextAvailableDate(slug: string, items: { ServiceId: number; ProfessionalId?: number | null }[]): Observable<ApiSuccessResponse<NextAvailableDateResult>> {
+    const params = new HttpParams().set('items', JSON.stringify(items));
+    return this.http
+      .get<ApiSuccessResponse<NextAvailableDateResult>>(`${this.baseUrl}/${slug}/availability/next`, { params })
+      .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
+  }
+
+  createMultiAppointment(slug: string, dto: CreateMultiAppointmentDto): Observable<ApiSuccessResponse<MultiAppointmentResult>> {
+    return this.http
+      .post<ApiSuccessResponse<MultiAppointmentResult>>(`${this.baseUrl}/${slug}/appointments/multi`, dto)
       .pipe(catchError((error: HttpErrorResponse) => this.handleError(error)));
   }
 
