@@ -137,6 +137,7 @@ interface PortfolioGroup {
     }
 
     .professional-group {
+      margin-top: var(--bk-space-lg, 1.5rem);
       margin-bottom: var(--bk-space-xl);
     }
 

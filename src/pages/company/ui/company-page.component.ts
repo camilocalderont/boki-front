@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit } from '@angular/core';
-import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
-import { BkSpinnerComponent, BkTabsComponent, BkButtonComponent, BkModalComponent, BkSelectComponent, BkCardComponent, BkInputComponent } from '@shared/ui';
+import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit, ViewChild } from '@angular/core';
+import { ReactiveFormsModule, FormControl, FormGroup } from '@angular/forms';
+import { BkSpinnerComponent, BkTabsComponent, BkButtonComponent, BkModalComponent, BkSelectComponent, BkCardComponent, BkInputComponent, BkFileUploadComponent, BkIconComponent } from '@shared/ui';
 import type { BkTabItem, BkSelectOption } from '@shared/ui';
 import { BkDataTableComponent } from '@widgets/data-table';
 import type { DataTableColumn } from '@widgets/data-table';
@@ -10,12 +10,15 @@ import { CompanyStore, CompanyFormComponent, BranchFormComponent } from '@featur
 import type { BranchFormOutput } from '@features/manage-company';
 import { BranchRoomStore, BranchRoomFormComponent } from '@features/manage-branch-room';
 import type { BranchRoomFormOutput } from '@features/manage-branch-room';
-import { CompanyApiService } from '@entities/company';
+import { CompanyApiService, StorageApiService } from '@entities/company';
 import type { CompanyFormValue, BranchFormValue, CompanyGalleryImage, GalleryCategory } from '@entities/company';
 import { BranchRoomApiService } from '@entities/branch-room';
+import { ServiceApiService } from '@entities/service';
+import type { ServiceEntity } from '@entities/service';
 import { UserStore } from '@entities/user';
 import { CompanyBranchService, CompanyBranch } from '@app/services/company-branch.service';
-import { map, forkJoin, of } from 'rxjs';
+import { HttpErrorResponse } from '@angular/common/http';
+import { map, forkJoin, switchMap } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -25,6 +28,7 @@ import { map, forkJoin, of } from 'rxjs';
     BkSpinnerComponent, BkTabsComponent, BkButtonComponent,
     BkDataTableComponent, BkModalComponent, BkConfirmDialogComponent,
     BkSelectComponent, BkCardComponent, BkInputComponent,
+    BkFileUploadComponent, BkIconComponent,
     CompanyFormComponent, BranchFormComponent, BranchRoomFormComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,7 +41,7 @@ import { map, forkJoin, of } from 'rxjs';
         </div>
         @if (activeTab() !== 'galeria') {
           <bk-button variant="primary" size="md" (clicked)="openCreate()">
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <bk-icon name="plus" size="sm" />
             {{ createButtonLabel() }}
           </bk-button>
         }
@@ -102,63 +106,86 @@ import { map, forkJoin, of } from 'rxjs';
               </div>
 
               @if (selectedCompanyIdForGallery.value) {
+                <!-- Internal tabs: Establecimiento / Servicios -->
+                <div class="bk-gallery-tabs">
+                  <button
+                    class="bk-gallery-tab"
+                    [class.bk-gallery-tab--active]="galleryTab() === 'venue'"
+                    (click)="galleryTab.set('venue')"
+                    type="button"
+                  >Establecimiento ({{ venueImages().length }})</button>
+                  <button
+                    class="bk-gallery-tab"
+                    [class.bk-gallery-tab--active]="galleryTab() === 'service'"
+                    (click)="galleryTab.set('service')"
+                    type="button"
+                  >Servicios ({{ serviceImages().length }})</button>
+                </div>
+
                 <bk-card>
-                  <h3 class="bk-gallery-form__title">Agregar imagen</h3>
-                  <form [formGroup]="galleryForm" (ngSubmit)="addGalleryImage()" class="bk-gallery-form">
-                    <bk-input
-                      label="URL de imagen"
-                      placeholder="https://ejemplo.com/imagen.jpg"
-                      formControlName="VcImageUrl"
-                      [error]="galleryUrlError()"
+                  <h3 class="bk-gallery-form__title">
+                    Agregar imagen — {{ galleryTab() === 'venue' ? 'Establecimiento' : 'Servicios' }}
+                  </h3>
+                  <form [formGroup]="galleryForm" (ngSubmit)="addGalleryImage()" class="bk-gallery-form-v2">
+                    <bk-file-upload
+                      #galleryUploader
+                      class="bk-gallery-form-v2__uploader"
+                      (fileSelected)="onGalleryFileSelected($event)"
+                      (fileError)="onGalleryFileError($event)"
+                      (fileRemoved)="onGalleryFileRemoved()"
                     />
-                    <div class="bk-gallery-form__select-wrapper">
-                      <label class="bk-gallery-form__label">Categoría</label>
-                      <select class="bk-gallery-form__native-select" formControlName="VcCategory">
-                        <option value="">Seleccione una categoría</option>
-                        <option value="venue">Establecimiento</option>
-                        <option value="service">Servicios</option>
-                        <option value="portfolio">Portfolio</option>
-                      </select>
-                    </div>
-                    <bk-input
-                      label="Descripción (opcional)"
-                      placeholder="Descripción de la imagen"
-                      formControlName="VcDescription"
-                    />
-                    <bk-button
-                      type="submit"
-                      variant="primary"
-                      size="md"
-                      [disabled]="galleryForm.invalid || savingGallery()"
-                    >
-                      @if (savingGallery()) {
-                        <bk-spinner />
-                      } @else {
-                        Agregar imagen
+                    <div class="bk-gallery-form-v2__meta">
+                      @if (galleryTab() === 'service') {
+                        <bk-select
+                          label="Servicio"
+                          formControlName="ServiceId"
+                          placeholder="Selecciona un servicio"
+                          [options]="serviceSelectOptions()"
+                          [searchable]="true"
+                        />
                       }
-                    </bk-button>
+                      <bk-input
+                        label="Descripción (opcional)"
+                        placeholder="Descripción de la imagen"
+                        formControlName="VcDescription"
+                      />
+                      <bk-button
+                        type="submit"
+                        variant="primary"
+                        size="md"
+                        [disabled]="!selectedFile() || savingGallery() || (galleryTab() === 'service' && !galleryForm.get('ServiceId')?.value)"
+                      >
+                        @if (savingGallery()) {
+                          <bk-spinner />
+                        } @else {
+                          Subir imagen
+                        }
+                      </bk-button>
+                    </div>
                   </form>
                 </bk-card>
 
                 <div class="bk-gallery-grid">
                   @if (galleryLoading()) {
                     <div class="bk-page__loader"><bk-spinner /></div>
-                  } @else if (galleryImages().length === 0) {
-                    <p class="bk-gallery-empty">No hay imágenes en la galería. Agrega la primera imagen arriba.</p>
                   } @else {
-                    @for (image of galleryImages(); track image.Id) {
-                      <div class="bk-gallery-item">
-                        <img [src]="image.VcImageUrl" [alt]="image.VcDescription || 'Imagen de galería'" class="bk-gallery-item__img" />
-                        <div class="bk-gallery-item__overlay">
-                          <span class="bk-gallery-item__category">{{ galleryCategoryLabel(image.VcCategory) }}</span>
-                          @if (image.VcDescription) {
-                            <p class="bk-gallery-item__desc">{{ image.VcDescription }}</p>
-                          }
-                          <bk-button variant="danger" size="sm" (clicked)="confirmDeleteGalleryImage(image)">
-                            Eliminar
-                          </bk-button>
+                    @let activeImages = galleryTab() === 'venue' ? venueImages() : serviceImages();
+                    @if (activeImages.length === 0) {
+                      <p class="bk-gallery-empty">No hay imágenes en esta categoría. Agrega la primera imagen arriba.</p>
+                    } @else {
+                      @for (image of activeImages; track image.Id) {
+                        <div class="bk-gallery-item">
+                          <img [src]="image.VcImageUrl" [alt]="image.VcDescription || 'Imagen de galería'" class="bk-gallery-item__img" />
+                          <div class="bk-gallery-item__overlay">
+                            @if (image.VcDescription) {
+                              <p class="bk-gallery-item__desc">{{ image.VcDescription }}</p>
+                            }
+                            <button class="bk-gallery-item__delete" type="button" (click)="confirmDeleteGalleryImage(image)">
+                              <bk-icon name="trash" size="sm" class="text-red-500" />
+                            </button>
+                          </div>
                         </div>
-                      </div>
+                      }
                     }
                   }
                 </div>
@@ -245,13 +272,19 @@ import { map, forkJoin, of } from 'rxjs';
     }
     .bk-page__filter-bar bk-select { flex: 1; max-width: 400px; }
 
-    /* Gallery form */
+    /* Gallery form title */
     .bk-gallery-form__title { font-size: var(--bk-font-size-base, 14px); font-weight: 600; color: var(--bk-color-text-primary); margin: 0 0 16px; }
-    .bk-gallery-form { display: grid; grid-template-columns: 1fr 1fr 1fr auto; gap: 12px; align-items: end; }
-    .bk-gallery-form__select-wrapper { display: flex; flex-direction: column; gap: var(--bk-space-xs); }
-    .bk-gallery-form__label { font-size: var(--bk-font-size-sm, 12px); font-weight: 500; color: var(--bk-color-text-secondary, #64748B); text-transform: uppercase; letter-spacing: 0.05em; }
-    .bk-gallery-form__native-select { width: 100%; height: var(--bk-size-input-height, 40px); padding: 0 var(--bk-space-sm, 8px); font-size: var(--bk-font-size-base, 14px); color: var(--bk-color-text-primary); background: var(--bk-bg-surface); border: var(--bk-border-width-default, 1px) solid var(--bk-border-color-default, #e5e7eb); border-radius: var(--bk-border-radius-md, 6px); outline: none; box-sizing: border-box; }
-    .bk-gallery-form__native-select:focus { border-color: var(--bk-color-primary); box-shadow: 0 0 0 2px color-mix(in srgb, var(--bk-color-primary) 20%, transparent); }
+
+    /* Gallery tabs */
+    .bk-gallery-tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--bk-border-color-default, #e5e7eb); }
+    .bk-gallery-tab { padding: 8px 16px; font-size: var(--bk-font-size-sm, 13px); font-weight: 500; color: var(--bk-color-text-secondary, #64748B); background: none; border: none; border-bottom: 2px solid transparent; cursor: pointer; transition: color 0.15s, border-color 0.15s; margin-bottom: -1px; }
+    .bk-gallery-tab:hover { color: var(--bk-color-primary, #2563EB); }
+    .bk-gallery-tab--active { color: var(--bk-color-primary, #2563EB); border-bottom-color: var(--bk-color-primary, #2563EB); font-weight: 600; }
+
+    /* Gallery form v2 */
+    .bk-gallery-form-v2 { display: grid; grid-template-columns: 200px 1fr; gap: 16px; align-items: start; }
+    .bk-gallery-form-v2__uploader { min-height: 120px; }
+    .bk-gallery-form-v2__meta { display: flex; flex-direction: column; gap: 12px; }
 
     /* Gallery grid */
     .bk-gallery-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; margin-top: 20px; }
@@ -260,14 +293,19 @@ import { map, forkJoin, of } from 'rxjs';
     .bk-gallery-item__img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .bk-gallery-item__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.55); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; opacity: 0; transition: opacity 0.2s ease; padding: 12px; }
     .bk-gallery-item:hover .bk-gallery-item__overlay { opacity: 1; }
-    .bk-gallery-item__category { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: #fff; background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 12px; }
     .bk-gallery-item__desc { font-size: 11px; color: rgba(255,255,255,0.9); text-align: center; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+
+    /* Gallery delete button */
+    .bk-gallery-item__delete { background: rgba(0,0,0,0.3); border: none; border-radius: 6px; padding: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.15s; }
+    .bk-gallery-item__delete:hover { background: rgba(220, 38, 38, 0.7); }
   `],
 })
 export class CompanyPageComponent implements OnInit {
   protected store = inject(CompanyStore);
   protected roomStore = inject(BranchRoomStore);
   private companyApi = inject(CompanyApiService);
+  private storageApi = inject(StorageApiService);
+  private serviceApi = inject(ServiceApiService);
   private branchService = inject(CompanyBranchService);
   private roomApi = inject(BranchRoomApiService);
   private alertService = inject(AlertService);
@@ -300,19 +338,30 @@ export class CompanyPageComponent implements OnInit {
   readonly savingGallery = signal(false);
   readonly showGalleryDeleteConfirm = signal(false);
   readonly selectedGalleryImage = signal<CompanyGalleryImage | null>(null);
+  readonly selectedFile = signal<File | null>(null);
+  readonly previewUrl = signal<string | null>(null);
+  readonly galleryTab = signal<'venue' | 'service'>('venue');
+
+  @ViewChild('galleryUploader') galleryUploader?: BkFileUploadComponent;
+
+  readonly companyServices = signal<ServiceEntity[]>([]);
+  readonly serviceSelectOptions = computed<BkSelectOption[]>(() =>
+    this.companyServices().map(s => ({ value: String(s.Id), label: s.VcName }))
+  );
+
+  readonly venueImages = computed(() => this.galleryImages().filter(i => i.VcCategory === 'venue'));
+  readonly serviceImages = computed(() => this.galleryImages().filter(i => i.VcCategory === 'service'));
 
   readonly galleryForm = new FormGroup({
-    VcImageUrl: new FormControl('', [Validators.required, Validators.pattern(/^https?:\/\/.+/)]),
-    VcCategory: new FormControl<GalleryCategory | ''>('', Validators.required),
     VcDescription: new FormControl(''),
+    ServiceId: new FormControl(''),
   });
 
-  readonly galleryUrlError = computed(() => {
-    const ctrl = this.galleryForm.get('VcImageUrl');
-    if (!ctrl) return '';
-    if (ctrl.touched && ctrl.hasError('required')) return 'La URL es obligatoria';
-    if (ctrl.touched && ctrl.hasError('pattern')) return 'Ingresa una URL válida (http/https)';
-    return '';
+  readonly selectedCompanySlug = computed(() => {
+    const id = this.selectedCompanyIdForGallery.value;
+    if (!id) return '';
+    const company = this.store.items().find((c: any) => String(c.Id ?? c.id) === id) as any;
+    return company?.VcSlug ?? `company-${id}`;
   });
 
   readonly companySelectOptions = computed<BkSelectOption[]>(() =>
@@ -664,36 +713,90 @@ export class CompanyPageComponent implements OnInit {
         this.galleryLoading.set(false);
       },
     });
+    this.loadCompanyServices(companyId);
+  }
+
+  private loadCompanyServices(companyId: number): void {
+    this.serviceApi.getByCompany(companyId).subscribe({
+      next: (res) => this.companyServices.set(res.data ?? []),
+      error: () => this.companyServices.set([]),
+    });
+  }
+
+  onGalleryFileSelected(file: File): void {
+    this.selectedFile.set(file);
+  }
+
+  onGalleryFileError(msg: string): void {
+    this.selectedFile.set(null);
+    this.alertService.showError(msg);
+  }
+
+  onGalleryFileRemoved(): void {
+    this.selectedFile.set(null);
   }
 
   addGalleryImage(): void {
-    if (this.galleryForm.invalid) {
-      this.galleryForm.markAllAsTouched();
+    const file = this.selectedFile();
+    if (!file) {
+      this.alertService.showError('Selecciona una imagen primero');
       return;
     }
     const companyId = Number(this.selectedCompanyIdForGallery.value);
     if (!companyId) return;
 
-    this.savingGallery.set(true);
+    const category = this.galleryTab();
     const values = this.galleryForm.value;
 
-    this.companyApi.createGalleryImage({
-      CompanyId: companyId,
-      VcCategory: values.VcCategory as GalleryCategory,
-      VcImageUrl: values.VcImageUrl!,
-      VcDescription: values.VcDescription || undefined,
-    }).subscribe({
+    if (category === 'service' && !values.ServiceId) {
+      this.alertService.showError('Selecciona un servicio para asociar la imagen');
+      return;
+    }
+
+    this.savingGallery.set(true);
+    const folder = `${this.selectedCompanySlug()}/gallery`;
+
+    const selectedService = category === 'service'
+      ? this.companyServices().find(s => String(s.Id) === values.ServiceId)
+      : null;
+
+    this.storageApi.upload(file, folder).pipe(
+      switchMap(res => this.companyApi.createGalleryImage({
+        CompanyId: companyId,
+        VcCategory: category,
+        VcImageUrl: res.data.key,
+        VcDescription: values.VcDescription || undefined,
+        ...(selectedService ? {
+          ServiceId: selectedService.Id,
+          VcCategoryName: selectedService.VcName,
+        } : {}),
+      })),
+    ).subscribe({
       next: () => {
-        this.alertService.showSuccess('Imagen agregada a la galería');
+        this.alertService.showSuccess('Imagen subida y agregada a la galería');
         this.galleryForm.reset();
+        this.selectedFile.set(null);
+        this.previewUrl.set(null);
+        this.galleryUploader?.reset();
         this.loadGallery();
         this.savingGallery.set(false);
       },
-      error: (err) => {
-        this.alertService.showError(err.message || 'Error al agregar imagen');
+      error: (err: HttpErrorResponse) => {
+        const msg = this.getUploadErrorMessage(err);
+        this.alertService.showError(msg);
         this.savingGallery.set(false);
       },
     });
+  }
+
+  private getUploadErrorMessage(err: HttpErrorResponse): string {
+    if (err.status === 413) {
+      return 'La imagen es demasiado grande. El tamaño máximo permitido es 5 MB.';
+    }
+    if (err.status === 400) {
+      return err.error?.message || 'Formato de archivo no permitido. Usa JPG, PNG, WEBP o GIF.';
+    }
+    return err.error?.message || 'Error al subir la imagen. Intenta de nuevo.';
   }
 
   confirmDeleteGalleryImage(image: CompanyGalleryImage): void {

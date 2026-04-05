@@ -42,7 +42,7 @@ import type { OnboardingStep2Request } from '../model/onboarding.model';
           type="email"
           placeholder="negocio@ejemplo.com"
           formControlName="VcPrincipalEmail"
-          [error]="fieldError('VcPrincipalEmail', 'Ingresá un email válido')"
+          [error]="fieldError('VcPrincipalEmail', 'Ingresa un email válido')"
         />
       </div>
 

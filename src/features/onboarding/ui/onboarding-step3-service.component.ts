@@ -97,7 +97,7 @@ const INDUSTRY_TEMPLATES: IndustryTemplate[] = [
       <button type="button" class="bk-ob-step3__back" (click)="back.emit()">← Volver al paso anterior</button>
 
       <p class="bk-ob-step3__subtitle">
-        Seleccioná los módulos que querés activar en tu cuenta. Podés cambiarlos después.
+        Selecciona los módulos que quieres activar en tu cuenta. Puedes cambiarlos después.
       </p>
 
       <div class="bk-ob-step3__grid">
@@ -144,7 +144,7 @@ const INDUSTRY_TEMPLATES: IndustryTemplate[] = [
         @if (selectedTemplate()) {
           <div class="bk-ob-step3__preview">
             <label class="bk-ob-step3__preview-label">
-              Seleccioná las categorías y servicios que querés incluir:
+              Selecciona las categorías y servicios que quieres incluir:
             </label>
             @for (cat of selectedTemplate()!.categories; track cat.name) {
               <div class="bk-ob-step3__preview-category">

@@ -152,7 +152,7 @@ export class PublicAppointmentPageComponent implements OnInit {
       },
       error: () => {
         this.error.set('Cita no encontrada');
-        this.errorDetail.set('No pudimos encontrar una cita con ese enlace. Verificá que el enlace sea correcto.');
+        this.errorDetail.set('No pudimos encontrar una cita con ese enlace. Verifica que el enlace sea correcto.');
         this.loading.set(false);
       },
     });

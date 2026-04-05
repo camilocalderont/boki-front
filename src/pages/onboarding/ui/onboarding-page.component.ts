@@ -256,7 +256,7 @@ export class OnboardingPageComponent implements OnInit {
     if (error.error?.errors?.[0]?.message) return error.error.errors[0].message;
     if (error.status === 409) return 'Ya existe un registro con estos datos.';
     if (error.status === 404) return 'Token inválido o expirado.';
-    if (error.status === 0) return 'Error de conexión. Verificá tu internet.';
-    return 'Ocurrió un error. Intentá de nuevo.';
+    if (error.status === 0) return 'Error de conexión. Verifica tu internet.';
+    return 'Ocurrió un error. Intenta de nuevo.';
   }
 }

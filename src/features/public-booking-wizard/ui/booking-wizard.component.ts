@@ -17,7 +17,9 @@ import {
   BkSpinnerComponent,
   BkIconComponent,
   BkBadgeComponent,
+  BkDayPickerComponent,
 } from '@shared/ui';
+import type { DayPickerItem } from '@shared/ui';
 import { PublicBookingApiService } from '@entities/public-booking';
 import type {
   PublicService,
@@ -38,6 +40,7 @@ import type {
     BkSpinnerComponent,
     BkIconComponent,
     BkBadgeComponent,
+    BkDayPickerComponent,
     DecimalPipe,
   ],
   template: `
@@ -162,19 +165,11 @@ import type {
                   <bk-button variant="ghost" size="sm" (clicked)="nextWeek()">▶</bk-button>
                 </div>
 
-                <div class="grid grid-cols-7 gap-2 text-center">
-                  @for (d of weekDates(); track d.dateStr) {
-                    <button (click)="!d.isPast && selectDate(d.dateStr)"
-                            [disabled]="d.isPast"
-                            class="flex flex-col items-center py-2 rounded-lg text-xs transition-colors disabled:opacity-30"
-                            [style.background-color]="selectedDate() === d.dateStr ? 'var(--bk-color-primary)' : 'transparent'"
-                            [style.color]="selectedDate() === d.dateStr ? 'white' : 'var(--bk-color-text-primary)'"
-                            [style.cursor]="d.isPast ? 'not-allowed' : 'pointer'">
-                      <span class="font-medium">{{ d.dayName }}</span>
-                      <span class="text-lg font-bold">{{ d.dayNumber }}</span>
-                    </button>
-                  }
-                </div>
+                <bk-day-picker
+                  [days]="dayPickerItems()"
+                  [selectedDate]="selectedDate()"
+                  (dateSelected)="selectDate($event)"
+                />
               </div>
             </bk-card>
 
@@ -451,6 +446,15 @@ export class BookingWizardComponent {
     ];
     return `${months[start.getMonth()]} ${start.getFullYear()}`;
   });
+
+  dayPickerItems = computed<DayPickerItem[]>(() =>
+    this.weekDates().map(d => ({
+      dateStr: d.dateStr,
+      dayName: d.dayName,
+      dayNumber: d.dayNumber,
+      isPast: d.isPast,
+    }))
+  );
 
   filteredSlots = computed(() => {
     const slots = this.availableSlots();

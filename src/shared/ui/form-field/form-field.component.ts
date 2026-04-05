@@ -23,6 +23,8 @@ import {
     </div>
   `,
   styles: `
+    :host { display: block; }
+
     .bk-form-field {
       display: flex;
       flex-direction: column;

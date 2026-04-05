@@ -197,6 +197,7 @@ import type { GalleryImageItem } from '@widgets/gallery-viewer';
     .split-right {
       position: sticky;
       top: calc(var(--bk-size-header-height, 56px) + 57px + var(--bk-space-lg, 1.5rem));
+      transition: top 0.25s ease;
     }
 
     /* ── Section headings ── */
@@ -794,11 +795,18 @@ export class PublicCompanyPageComponent implements OnInit, OnDestroy {
   /** Images for the hero gallery (first 3 venue images) */
   companyImages = computed((): string[] => {
     const gallery = this.galleryData();
-    const venue = gallery['venue'] || [];
-    if (venue.length > 0) {
-      return venue.slice(0, 3).map(g => g.VcImageUrl);
-    }
-    // Fallback to TxImages from Company entity
+    const venue = (gallery['venue'] || []).map(g => g.VcImageUrl);
+
+    if (venue.length >= 3) return venue.slice(0, 3);
+
+    // Completar con imágenes de otras categorías si venue no tiene 3
+    const service = (gallery['service'] || []).map(g => g.VcImageUrl);
+    const portfolio = (gallery['portfolio'] || []).map(g => g.VcImageUrl);
+    const combined = [...venue, ...service, ...portfolio];
+
+    if (combined.length > 0) return combined.slice(0, 3);
+
+    // Fallback a TxImages del entity Company
     const comp = this.company();
     if (!comp?.TxImages) return [];
     try {
@@ -857,7 +865,7 @@ export class PublicCompanyPageComponent implements OnInit, OnDestroy {
         this.loading.set(false);
       },
       error: () => {
-        this.error.set('No pudimos cargar la información de esta empresa. Verificá el enlace e intentá de nuevo.');
+        this.error.set('No pudimos cargar la información de esta empresa. Verifica el enlace e intenta de nuevo.');
         this.loading.set(false);
       },
     });
@@ -936,6 +944,14 @@ export class PublicCompanyPageComponent implements OnInit, OnDestroy {
           const tabsBar = document.querySelector('.tabs-bar') as HTMLElement;
           if (tabsBar) {
             tabsBar.style.top = pastGallery ? '0' : 'var(--bk-size-header-height, 56px)';
+          }
+
+          const splitRight = document.querySelector('.split-right') as HTMLElement;
+          if (splitRight) {
+            const tabsHeight = tabsBar?.offsetHeight || 44;
+            splitRight.style.top = pastGallery
+              ? `${tabsHeight + 16}px`
+              : `calc(var(--bk-size-header-height, 56px) + ${tabsHeight}px + var(--bk-space-md, 1rem))`;
           }
         },
         { threshold: 0 },

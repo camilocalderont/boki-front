@@ -13,3 +13,5 @@ export { COMPANY_VALIDATORS, getCompanyErrorMessage } from './model/company.vali
 export type { BranchFormValue } from './model/company-branch.validators';
 export { BRANCH_VALIDATORS, getBranchErrorMessage } from './model/company-branch.validators';
 export { CompanyApiService } from './api/company-api.service';
+export { StorageApiService } from './api/storage-api.service';
+export type { StorageUploadResult } from './api/storage-api.service';

@@ -117,6 +117,25 @@ Estos componentes usan el sistema viejo de theming (Tailwind classes desde JSON)
 - **CSS**: `var(--bk-*)` para colores/sizing, Tailwind para layout utilities
 - **Auth**: token en `sessionStorage`, `AUTH_TOKEN_GETTER` InjectionToken para interceptor desacoplado
 
+## Sistema de íconos
+
+Todos los íconos se renderizan con `<bk-icon>` de `@shared/ui`. **Nunca** pegar SVGs inline en templates.
+
+```html
+<!-- Color via Tailwind text-* | variant: outline (default) | fill -->
+<bk-icon name="edit" class="text-slate-500" />
+<bk-icon name="trash" variant="fill" size="lg" class="text-red-500" />
+```
+
+| Archivo | Rol |
+|---------|-----|
+| `src/shared/ui/icon/icon.component.ts` | `BkIconComponent` — selector `bk-icon` |
+| `src/shared/ui/icon/icon.registry.ts` | `ICON_REGISTRY` — paths SVG outline + fill (fuente: Heroicons v2 MIT) |
+
+**Agregar un ícono**: copiar inner SVG de heroicons.com → pegar como nueva entrada en `icon.registry.ts`.
+
+**Nunca** instalar `lucide-angular`, `ng-icons` ni ninguna librería de íconos — el registry es la única fuente.
+
 ## Documentación detallada
 
 Ver `boki-front-docs/docs/` para especificaciones completas:

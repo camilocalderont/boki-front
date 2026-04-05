@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, inject, signal, computed, OnInit, ViewChild } from '@angular/core';
 import { ReactiveFormsModule, FormControl } from '@angular/forms';
-import { BkSpinnerComponent, BkButtonComponent, BkModalComponent, BkSelectComponent } from '@shared/ui';
+import { BkSpinnerComponent, BkButtonComponent, BkModalComponent, BkSelectComponent, BkFileUploadComponent, BkIconComponent } from '@shared/ui';
 import type { BkSelectOption } from '@shared/ui';
 import { BkDataTableComponent } from '@widgets/data-table';
 import type { DataTableColumn } from '@widgets/data-table';
@@ -10,11 +10,13 @@ import { ProfessionalStore, ProfessionalFormComponent, BusinessHoursFormComponen
 import type { ProfessionalFormOutput } from '@features/manage-professionals';
 import { ProfessionalApiService } from '@entities/professional';
 import type { CreateProfessionalRequest } from '@entities/professional';
-import { CompanyApiService } from '@entities/company';
+import { CompanyApiService, StorageApiService } from '@entities/company';
+import type { CompanyGalleryImage } from '@entities/company';
 import { ServiceApiService } from '@entities/service';
 import { BranchRoomApiService } from '@entities/branch-room';
 import { UserStore } from '@entities/user';
-import { map } from 'rxjs';
+import { CompanyBranchService } from '@app/services/company-branch.service';
+import { map, switchMap } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -23,7 +25,7 @@ import { map } from 'rxjs';
     ReactiveFormsModule,
     BkSpinnerComponent, BkButtonComponent, BkModalComponent,
     BkDataTableComponent, BkConfirmDialogComponent,
-    BkSelectComponent,
+    BkSelectComponent, BkFileUploadComponent, BkIconComponent,
     ProfessionalFormComponent, BusinessHoursFormComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,7 +37,7 @@ import { map } from 'rxjs';
           <p class="bk-page__subtitle">Gestión de profesionales, servicios y horarios</p>
         </div>
         <bk-button variant="primary" size="md" (clicked)="openCreate()">
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          <bk-icon name="plus" size="sm" />
           Crear Profesional
         </bk-button>
       </div>
@@ -54,11 +56,13 @@ import { map } from 'rxjs';
           [showActions]="true"
           [showDeleteAction]="true"
           [showScheduleAction]="true"
+          [showPortfolioAction]="true"
           trackByKey="Id"
           emptyMessage="No hay profesionales registrados para esta empresa"
           (editClicked)="onEdit($event)"
           (deleteClicked)="onDelete($event)"
           (scheduleClicked)="onSchedule($event)"
+          (portfolioClicked)="onPortfolio($event)"
         />
       }
 
@@ -102,6 +106,80 @@ import { map } from 'rxjs';
         (confirm)="confirmDelete()"
         (cancel)="showDeleteConfirm.set(false)"
       />
+
+      <!-- Portfolio Modal -->
+      <bk-modal [open]="showPortfolioModal()" title="Portfolio del profesional" size="lg" (closed)="closePortfolioModal()">
+        @if (portfolioItem()) {
+          <p class="bk-page__hours-subtitle">
+            {{ portfolioItem()!['FullName'] }}
+          </p>
+
+          <div class="bk-portfolio-upload-section">
+            <bk-file-upload
+              #portfolioUploader
+              label="Arrastra o haz clic para subir foto de portfolio"
+              (fileSelected)="portfolioFile.set($event)"
+            />
+            <div class="bk-portfolio-upload-meta">
+              <div class="bk-portfolio-desc-field">
+                <label class="bk-portfolio-desc-label">Descripción (opcional)</label>
+                <input
+                  type="text"
+                  class="bk-portfolio-desc-input"
+                  placeholder="Descripción de la foto"
+                  [value]="portfolioDescriptionValue()"
+                  (input)="portfolioDescriptionValue.set($any($event).target.value)"
+                />
+              </div>
+              <bk-button
+                variant="primary"
+                size="md"
+                [disabled]="!portfolioFile() || portfolioSaving()"
+                (clicked)="addPortfolioImage()"
+              >
+                @if (portfolioSaving()) {
+                  <bk-spinner />
+                } @else {
+                  Subir foto
+                }
+              </bk-button>
+            </div>
+          </div>
+        }
+
+        @if (portfolioLoading()) {
+          <div class="bk-page__loader"><bk-spinner /></div>
+        } @else if (portfolioImages().length === 0) {
+          <p class="bk-portfolio-empty">Este profesional aún no tiene fotos de portfolio.</p>
+        } @else {
+          <div class="bk-portfolio-grid">
+            @for (img of portfolioImages(); track img.Id) {
+              <div class="bk-portfolio-item">
+                <img [src]="img.VcImageUrl" [alt]="img.VcDescription || 'Portfolio'" class="bk-portfolio-item__img" />
+                <div class="bk-portfolio-item__overlay">
+                  @if (img.VcDescription) {
+                    <p class="bk-portfolio-item__desc">{{ img.VcDescription }}</p>
+                  }
+                  <button class="bk-portfolio-item__delete" type="button" (click)="confirmDeletePortfolioImage(img)">
+                    <bk-icon name="trash" size="sm" class="text-red-500" />
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </bk-modal>
+
+      <!-- Portfolio Delete Confirmation -->
+      <bk-confirm-dialog
+        [open]="showPortfolioDeleteConfirm()"
+        title="¿Eliminar foto?"
+        message="Esta acción no se puede deshacer."
+        confirmLabel="Eliminar"
+        variant="danger"
+        (confirm)="deletePortfolioImage()"
+        (cancel)="showPortfolioDeleteConfirm.set(false)"
+      />
     </div>
   `,
   styles: [`
@@ -127,6 +205,21 @@ import { map } from 'rxjs';
       color: var(--bk-color-text-primary);
       margin-bottom: var(--bk-space-md, 1rem);
     }
+    .bk-portfolio-upload-section { display: grid; grid-template-columns: 200px 1fr; gap: 16px; align-items: start; margin-bottom: 20px; }
+    .bk-portfolio-upload-meta { display: flex; flex-direction: column; gap: 12px; }
+    .bk-portfolio-empty { color: var(--bk-color-text-muted); text-align: center; padding: 32px 0; font-size: var(--bk-font-size-sm, 12px); }
+    .bk-portfolio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-top: 16px; }
+    .bk-portfolio-item { position: relative; border-radius: var(--bk-border-radius-md, 8px); overflow: hidden; aspect-ratio: 1; background: var(--bk-bg-surface); border: 1px solid var(--bk-border-color-default, #e5e7eb); }
+    .bk-portfolio-item__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .bk-portfolio-item__overlay { position: absolute; inset: 0; background: rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; justify-content: flex-end; gap: 6px; opacity: 0; transition: opacity 0.2s ease; padding: 8px; }
+    .bk-portfolio-item:hover .bk-portfolio-item__overlay { opacity: 1; }
+    .bk-portfolio-item__desc { font-size: 11px; color: rgba(255,255,255,0.9); text-align: center; margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+    .bk-portfolio-item__delete { background: rgba(0,0,0,0.3); border: none; border-radius: 6px; padding: 5px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .bk-portfolio-item__delete:hover { background: rgba(220, 38, 38, 0.7); }
+    .bk-portfolio-desc-field { display: flex; flex-direction: column; gap: var(--bk-space-xs, 4px); }
+    .bk-portfolio-desc-label { font-size: var(--bk-font-size-sm, 12px); font-weight: 500; color: var(--bk-color-text-secondary, #64748B); text-transform: uppercase; letter-spacing: 0.05em; }
+    .bk-portfolio-desc-input { width: 100%; height: var(--bk-size-input-height, 40px); padding: 0 var(--bk-space-sm, 8px); font-size: var(--bk-font-size-base, 14px); color: var(--bk-color-text-primary); background: var(--bk-bg-surface); border: var(--bk-border-width-default, 1px) solid var(--bk-border-color-default, #e5e7eb); border-radius: var(--bk-border-radius-md, 6px); outline: none; box-sizing: border-box; }
+    .bk-portfolio-desc-input:focus { border-color: var(--bk-color-primary); box-shadow: 0 0 0 2px color-mix(in srgb, var(--bk-color-primary) 20%, transparent); }
   `],
 })
 export class ProfessionalsPageComponent implements OnInit {
@@ -136,7 +229,11 @@ export class ProfessionalsPageComponent implements OnInit {
   private serviceApi = inject(ServiceApiService);
   private branchRoomApi = inject(BranchRoomApiService);
   private alertService = inject(AlertService);
+  private storageApi = inject(StorageApiService);
+  private branchService = inject(CompanyBranchService);
   private userStore = inject(UserStore);
+
+  @ViewChild('portfolioUploader') portfolioUploader?: BkFileUploadComponent;
 
   readonly loading = signal(false);
   readonly saving = signal(false);
@@ -148,9 +245,20 @@ export class ProfessionalsPageComponent implements OnInit {
   readonly hoursItem = signal<Record<string, any> | null>(null);
   readonly existingHours = signal<any[]>([]);
 
+  readonly showPortfolioModal = signal(false);
+  readonly portfolioItem = signal<Record<string, any> | null>(null);
+  readonly portfolioImages = signal<CompanyGalleryImage[]>([]);
+  readonly portfolioLoading = signal(false);
+  readonly portfolioSaving = signal(false);
+  readonly portfolioFile = signal<File | null>(null);
+  readonly portfolioDescriptionValue = signal('');
+  readonly showPortfolioDeleteConfirm = signal(false);
+  readonly portfolioDeleteTarget = signal<CompanyGalleryImage | null>(null);
+
   readonly companies = signal<{ id: string; name: string }[]>([]);
   readonly allServices = signal<{ Id: number; VcName: string; CompanyId: number }[]>([]);
   readonly allBranchRooms = signal<{ Id: number; VcNumber: string; CompanyBranch?: any }[]>([]);
+  readonly companyBranchIds = signal<Set<number>>(new Set());
 
   readonly selectedCompanyId = new FormControl('');
 
@@ -165,9 +273,21 @@ export class ProfessionalsPageComponent implements OnInit {
     return filtered.map(s => ({ value: String(s.Id), label: s.VcName }));
   });
 
-  readonly branchRoomSelectOptions = computed<BkSelectOption[]>(() =>
-    this.allBranchRooms().map(r => ({ value: String(r.Id), label: r.VcNumber }))
-  );
+  readonly branchRoomSelectOptions = computed<BkSelectOption[]>(() => {
+    const branchIds = this.companyBranchIds();
+    const rooms = this.allBranchRooms();
+    const filtered = branchIds.size > 0
+      ? rooms.filter(r => r.CompanyBranch?.Id && branchIds.has(r.CompanyBranch.Id))
+      : rooms;
+    return filtered.map(r => ({ value: String(r.Id), label: r.VcNumber }));
+  });
+
+  readonly portfolioCompanySlug = computed(() => {
+    const item = this.portfolioItem();
+    if (!item) return '';
+    const companyId = item['CompanyId'];
+    return `company-${companyId}`;
+  });
 
   readonly columns: DataTableColumn[] = [
     { key: 'FullName', label: 'Nombre completo', sortable: true },
@@ -197,6 +317,7 @@ export class ProfessionalsPageComponent implements OnInit {
         this.loadProfessionalsByCompany();
         this.loadServicesByCompany();
         this.loadBranchRooms();
+        this.loadCompanyBranches(Number(v));
       }
     });
   }
@@ -240,6 +361,103 @@ export class ProfessionalsPageComponent implements OnInit {
     this.selectedItem.set(null);
     this.hoursItem.set(null);
     this.existingHours.set([]);
+  }
+
+  // ── Portfolio ──
+
+  onPortfolio(row: Record<string, any>): void {
+    this.portfolioItem.set(row);
+    this.portfolioImages.set([]);
+    this.portfolioFile.set(null);
+    this.portfolioDescriptionValue.set('');
+    this.showPortfolioModal.set(true);
+    this.loadPortfolioImages();
+  }
+
+  private loadPortfolioImages(): void {
+    const item = this.portfolioItem();
+    if (!item) return;
+    const companyId = Number(item['CompanyId']);
+    if (!companyId) return;
+    this.portfolioLoading.set(true);
+    this.companyApi.getGallery(companyId).subscribe({
+      next: (res) => {
+        const profId = item['Id'];
+        const all = res.data ?? [];
+        this.portfolioImages.set(
+          all.filter(img => img.VcCategory === 'portfolio' && img.ProfessionalId === profId)
+        );
+        this.portfolioLoading.set(false);
+      },
+      error: () => {
+        this.portfolioImages.set([]);
+        this.portfolioLoading.set(false);
+      },
+    });
+  }
+
+  addPortfolioImage(): void {
+    const file = this.portfolioFile();
+    const item = this.portfolioItem();
+    if (!file || !item) return;
+    const companyId = Number(item['CompanyId']);
+    if (!companyId) return;
+
+    this.portfolioSaving.set(true);
+    const folder = `${this.portfolioCompanySlug()}/portfolio`;
+
+    this.storageApi.upload(file, folder).pipe(
+      switchMap(res => this.companyApi.createGalleryImage({
+        CompanyId: companyId,
+        VcCategory: 'portfolio',
+        ProfessionalId: Number(item['Id']),
+        VcImageUrl: res.data.key,
+        VcDescription: this.portfolioDescriptionValue() || undefined,
+      }))
+    ).subscribe({
+      next: () => {
+        this.alertService.showSuccess('Imagen de portfolio subida correctamente');
+        this.portfolioFile.set(null);
+        this.portfolioDescriptionValue.set('');
+        this.portfolioUploader?.reset();
+        this.loadPortfolioImages();
+        this.portfolioSaving.set(false);
+      },
+      error: (err) => {
+        this.alertService.showError(err.message || 'Error al subir imagen');
+        this.portfolioSaving.set(false);
+      },
+    });
+  }
+
+  confirmDeletePortfolioImage(image: CompanyGalleryImage): void {
+    this.portfolioDeleteTarget.set(image);
+    this.showPortfolioDeleteConfirm.set(true);
+  }
+
+  deletePortfolioImage(): void {
+    const image = this.portfolioDeleteTarget();
+    if (!image) return;
+    this.companyApi.deleteGalleryImage(image.Id).subscribe({
+      next: () => {
+        this.alertService.showSuccess('Imagen eliminada correctamente');
+        this.showPortfolioDeleteConfirm.set(false);
+        this.portfolioDeleteTarget.set(null);
+        this.loadPortfolioImages();
+      },
+      error: (err) => {
+        this.alertService.showError(err.message || 'Error al eliminar imagen');
+        this.showPortfolioDeleteConfirm.set(false);
+      },
+    });
+  }
+
+  closePortfolioModal(): void {
+    this.showPortfolioModal.set(false);
+    this.portfolioItem.set(null);
+    this.portfolioImages.set([]);
+    this.portfolioFile.set(null);
+    this.portfolioDescriptionValue.set('');
   }
 
   // ── Professional CRUD ──
@@ -418,6 +636,16 @@ export class ProfessionalsPageComponent implements OnInit {
         this.allBranchRooms.set(res.data ?? []);
       },
       error: () => this.allBranchRooms.set([]),
+    });
+  }
+
+  private loadCompanyBranches(companyId: number): void {
+    this.branchService.getByCompany(companyId).subscribe({
+      next: (res: any) => {
+        const branches: any[] = Array.isArray(res.data) ? res.data : (res.data?.branches ?? []);
+        this.companyBranchIds.set(new Set(branches.map((b: any) => b.Id)));
+      },
+      error: () => this.companyBranchIds.set(new Set()),
     });
   }
 }

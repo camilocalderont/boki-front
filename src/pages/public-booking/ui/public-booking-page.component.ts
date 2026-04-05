@@ -16,7 +16,9 @@ import {
   BkBadgeComponent,
   BkSearchInputComponent,
   BkFormFieldComponent,
+  BkDayPickerComponent,
 } from '@shared/ui';
+import type { DayPickerItem } from '@shared/ui';
 import { BookingSidebarComponent } from '@widgets/booking-sidebar';
 import { createDebounced } from '@shared/lib';
 import { PublicBookingApiService } from '@entities/public-booking';
@@ -79,9 +81,18 @@ function toDateStr(date: Date): string {
     BkBadgeComponent,
     BkSearchInputComponent,
     BkFormFieldComponent,
+    BkDayPickerComponent,
     BookingSidebarComponent,
   ],
   styles: [`
+    .confirm-form {
+      max-width: 32rem;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--bk-space-lg, 1.5rem);
+    }
+
     .step-circle {
       width: 28px;
       height: 28px;
@@ -235,36 +246,6 @@ function toDateStr(date: Date): string {
     }
 
     /* ── Step 3: Calendar / time ── */
-    .day-circle {
-      width: 52px;
-      height: 64px;
-      border-radius: var(--bk-border-radius-md);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      border: 2px solid var(--bk-border-color-default);
-      transition: border-color 0.15s, background-color 0.15s;
-      background-color: var(--bk-bg-surface);
-      gap: 2px;
-    }
-    .day-circle:hover {
-      border-color: var(--bk-color-primary);
-    }
-    .day-circle.selected {
-      background-color: var(--bk-color-primary);
-      border-color: var(--bk-color-primary);
-      color: #fff;
-    }
-    .day-circle.today:not(.selected) {
-      border-color: var(--bk-color-primary);
-    }
-    .day-circle.disabled {
-      opacity: 0.35;
-      cursor: not-allowed;
-      pointer-events: none;
-    }
     .time-slot {
       cursor: pointer;
       border: 1px solid var(--bk-border-color-default);
@@ -739,24 +720,12 @@ function toDateStr(date: Date): string {
                 </div>
 
                 <!-- Círculos de días -->
-                <div class="flex gap-2 mb-8 overflow-x-auto pb-1">
-                  @for (day of weekDays(); track day.dateStr) {
-                    <div
-                      class="day-circle"
-                      [class.selected]="selectedDate() === day.dateStr"
-                      [class.today]="day.isToday"
-                      [class.disabled]="day.isPast"
-                      (click)="!day.isPast && selectDate(day.dateStr)">
-                      <span class="text-xs"
-                            [style.color]="selectedDate() === day.dateStr ? '#fff' : day.isPast ? 'var(--bk-color-text-muted)' : 'var(--bk-color-text-muted)'">
-                        {{ day.dayName }}
-                      </span>
-                      <span class="text-sm font-semibold"
-                            [style.color]="selectedDate() === day.dateStr ? '#fff' : day.isPast ? 'var(--bk-color-text-muted)' : 'var(--bk-color-text-primary)'">
-                        {{ day.label }}
-                      </span>
-                    </div>
-                  }
+                <div class="mb-8">
+                  <bk-day-picker
+                    [days]="dayPickerItems()"
+                    [selectedDate]="selectedDate()"
+                    (dateSelected)="selectDate($event)"
+                  />
                 </div>
 
                 <!-- Slots de tiempo -->
@@ -806,7 +775,7 @@ function toDateStr(date: Date): string {
                   Revisar y confirmar
                 </h2>
 
-                <div class="max-w-md space-y-4">
+                <div class="confirm-form">
 
                   <!-- Nombre completo -->
                   <bk-form-field label="Nombre completo *">
@@ -866,19 +835,6 @@ function toDateStr(date: Date): string {
                     Al continuar, autorizas que te recordemos tus citas y servicios.
                     Podrás modificar estas preferencias en tu perfil.
                   </p>
-
-                  <!-- Política de cancelación -->
-                  <bk-card [padding]="true">
-                    <h4 class="text-sm font-semibold mb-2 flex items-center gap-2"
-                        style="color: var(--bk-color-text-primary)">
-                      <bk-icon name="calendar" size="sm" />
-                      Política de cancelación
-                    </h4>
-                    <p class="text-xs leading-relaxed" style="color: var(--bk-color-text-secondary)">
-                      Puedes cancelar o modificar tu cita con al menos 24 horas de anticipación
-                      sin ningún cargo. Cancelaciones tardías pueden estar sujetas a una tarifa.
-                    </p>
-                  </bk-card>
                 </div>
               </div>
             }
@@ -899,6 +855,20 @@ function toDateStr(date: Date): string {
               [loading]="submitting()"
               [buttonLabel]="sidebarButtonLabel()"
               (continued)="onSidebarContinue()" />
+
+            @if (isStepConfirm()) {
+              <bk-card [padding]="true" class="mt-4">
+                <h4 class="text-sm font-semibold mb-2 flex items-center gap-2"
+                    style="color: var(--bk-color-text-primary)">
+                  <bk-icon name="calendar" size="sm" />
+                  Política de cancelación
+                </h4>
+                <p class="text-xs leading-relaxed" style="color: var(--bk-color-text-secondary)">
+                  Puedes cancelar o modificar tu cita con al menos 24 horas de anticipación
+                  sin ningún cargo. Cancelaciones tardías pueden estar sujetas a una tarifa.
+                </p>
+              </bk-card>
+            }
           </aside>
 
         </div>
@@ -1142,6 +1112,16 @@ export class PublicBookingPageComponent implements OnInit {
   });
 
   weekDays = computed<WeekDay[]>(() => this.generateWeekDates(this.currentWeekStart()));
+
+  dayPickerItems = computed<DayPickerItem[]>(() =>
+    this.weekDays().map(d => ({
+      dateStr: d.dateStr,
+      dayName: d.dayName,
+      dayNumber: d.date.getDate(),
+      isToday: d.isToday,
+      isPast: d.isPast,
+    }))
+  );
 
   weekRangeLabel = computed(() => {
     const days = this.weekDays();

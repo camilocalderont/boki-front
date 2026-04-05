@@ -26,9 +26,9 @@ import { ROUTES } from '@shared/config/route.constants';
         </div>
 
         <div class="bk-onboarding-start__header">
-          <h1 class="bk-onboarding-start__title">Empezá a usar BokiBot</h1>
+          <h1 class="bk-onboarding-start__title">Empieza a usar BokiBot</h1>
           <p class="bk-onboarding-start__subtitle">
-            Ingresá tu correo electrónico y te enviaremos un enlace para completar tu registro.
+            Ingresa tu correo electrónico y te enviaremos un enlace para completar tu registro.
           </p>
         </div>
 
@@ -36,7 +36,7 @@ import { ROUTES } from '@shared/config/route.constants';
           <div class="bk-onboarding-start__success">
             <span class="bk-onboarding-start__success-icon">✅</span>
             <p class="bk-onboarding-start__success-text">
-              ¡Revisá tu correo! Te enviamos un enlace para continuar.
+              ¡Revisa tu correo! Te enviamos un enlace para continuar.
             </p>
           </div>
         } @else {
@@ -68,7 +68,7 @@ import { ROUTES } from '@shared/config/route.constants';
 
         <div class="bk-onboarding-start__footer">
           <a [routerLink]="['/', ROUTES.AUTH.LOGIN]" class="bk-onboarding-start__login-link">
-            ¿Ya tenés cuenta? Iniciá sesión
+            ¿Ya tienes cuenta? Inicia sesión
           </a>
         </div>
 
@@ -230,7 +230,7 @@ export class OnboardingStartPageComponent {
     if (error.error?.errors?.[0]?.message) return error.error.errors[0].message;
     if (error.status === 409) return 'Ya existe un registro con este correo.';
     if (error.status === 404) return 'No se encontró el recurso solicitado.';
-    if (error.status === 0) return 'Error de conexión. Verificá tu internet.';
-    return 'Ocurrió un error. Intentá de nuevo.';
+    if (error.status === 0) return 'Error de conexión. Verifica tu internet.';
+    return 'Ocurrió un error. Intenta de nuevo.';
   }
 }

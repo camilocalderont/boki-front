@@ -93,7 +93,7 @@ function passwordMatchValidator(group: AbstractControl): ValidationErrors | null
         type="tel"
         placeholder="Ej: 3001234567"
         formControlName="VcPhone"
-        [error]="fieldError('VcPhone', 'Ingresá un teléfono válido (ej: 3001234567)')"
+        [error]="fieldError('VcPhone', 'Ingresa un teléfono válido (ej: 3001234567)')"
       />
 
       <bk-input
@@ -232,7 +232,7 @@ export class OnboardingStep1Component implements OnInit {
   confirmPasswordError(): string {
     const control = this.form.get('VcConfirmPassword');
     if (!control?.touched) return '';
-    if (control.hasError('required')) return 'Confirmá tu contraseña';
+    if (control.hasError('required')) return 'Confirma tu contraseña';
     if (this.form.hasError('passwordMismatch')) return 'Las contraseñas no coinciden';
     return '';
   }
