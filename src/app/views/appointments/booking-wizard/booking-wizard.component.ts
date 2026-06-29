@@ -215,8 +215,6 @@ export class BookingWizardComponent extends BaseComponent {
       DtDate: date,
       TStartTime: time,
       CurrentStateId: 1,
-      BIsCompleted: false,
-      BIsAbsent: false,
     };
 
     this.appointmentService.create(request).subscribe({

@@ -187,7 +187,7 @@ function toDateStr(date: Date): string {
       padding: 6px 14px;
       border: 1px solid var(--bk-border-color-default);
       border-radius: var(--bk-border-radius-md);
-      background-color: var(--bk-bg-muted, #f3f4f6);
+      background-color: var(--bk-bg-surface);
       transition: border-color 0.15s;
       font-size: 13px;
       color: var(--bk-color-text-primary);

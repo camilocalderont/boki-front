@@ -7,8 +7,6 @@ export interface Appointment {
   TStartTime: string;
   TEndTime: string;
   CurrentStateId: number;
-  BIsCompleted: boolean;
-  BIsAbsent: boolean;
   DtCreatedAt: string;
   DtUpdatedAt: string;
   Client?: {
@@ -55,6 +53,4 @@ export interface CreateAppointmentRequest {
   DtDate: string;
   TStartTime: string;
   CurrentStateId: number;
-  BIsCompleted: boolean;
-  BIsAbsent: boolean;
 }

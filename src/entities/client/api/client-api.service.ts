@@ -14,7 +14,7 @@ export class ClientApiService {
   search(companyId: number, query: string): Observable<ApiSuccessResponse<Client[]>> {
     const params = new HttpParams()
       .set('companyId', companyId.toString())
-      .set('query', query);
+      .set('q', query);
 
     return this.http
       .get<ApiSuccessResponse<Client[]>>(`${this.baseUrl}/search`, { params })

@@ -74,6 +74,10 @@ import type { PublicAppointment } from '@entities/public-booking';
 
         <bk-card [padding]="true">
           <div class="detail-row" style="border-bottom: 1px solid var(--bk-border-color-default)">
+            <span class="detail-label">Fecha</span>
+            <span class="detail-value">{{ formatAppointmentDate(appt.DtDate) }}</span>
+          </div>
+          <div class="detail-row" style="border-bottom: 1px solid var(--bk-border-color-default)">
             <span class="detail-label">Servicio</span>
             <span class="detail-value">{{ appt.Service.VcName }}</span>
           </div>
@@ -166,6 +170,19 @@ export class PublicAppointmentPageComponent implements OnInit {
         this.appointment.set(res.data);
         this.isConfirming.set(true);
       },
+    });
+  }
+
+  formatAppointmentDate(dtDate: string): string {
+    if (!dtDate) return '';
+    const dateStr = dtDate.split(' ')[0].split('T')[0];
+    const [y, m, d] = dateStr.split('-').map(Number);
+    const dateObj = new Date(y, m - 1, d);
+    return dateObj.toLocaleDateString('es-CO', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
     });
   }
 

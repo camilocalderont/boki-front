@@ -7,8 +7,6 @@ export interface Appointment {
   TStartTime: string;
   TEndTime: string;
   CurrentStateId: number;
-  BIsCompleted: boolean;
-  BIsAbsent: boolean;
   DtCreatedAt: string;
   DtUpdatedAt: string;
   Client?: {
@@ -18,17 +16,27 @@ export interface Appointment {
     VcPhone: string;
     VcIdentificationNumber: string;
   };
+  VcBookingNotes?: string;
   Service?: {
     Id: number;
     VcName: string;
     IRegularPrice: number;
     VcTime: string;
+    ServiceStages?: {
+      Id: number;
+      ISequence: number;
+      IDurationMinutes: number;
+      VcDescription?: string;
+      BIsProfessionalBussy: boolean;
+    }[];
   };
   Professional?: {
     Id: number;
     VcFirstName: string;
     VcFirstLastName: string;
     VcSpecialization: string;
+    VcEmail?: string;
+    VcPhone?: string;
   };
   CurrentState?: {
     Id: number;
@@ -43,6 +51,11 @@ export interface AvailableSlots {
   mensaje?: string;
 }
 
+export interface AppointmentState {
+  Id: number;
+  VcName: string;
+}
+
 export interface CreateAppointmentRequest {
   ClientId: number;
   ServiceId: number;
@@ -50,6 +63,17 @@ export interface CreateAppointmentRequest {
   DtDate: string;
   TStartTime: string;
   CurrentStateId: number;
-  BIsCompleted: boolean;
-  BIsAbsent: boolean;
+}
+
+export interface UpdateAppointmentRequest {
+  ClientId?: number;
+  ServiceId?: number;
+  ProfessionalId?: number;
+  DtDate?: string;
+  TStartTime?: string;
+  CurrentStateId?: number;
+}
+
+export interface ChangeStateRequest {
+  CurrentStateId: number;
 }

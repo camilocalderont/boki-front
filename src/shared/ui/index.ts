@@ -24,3 +24,5 @@ export { BkSkeletonComponent } from './skeleton/skeleton.component';
 export { BkFileUploadComponent } from './file-upload/file-upload.component';
 export { BkDayPickerComponent } from './day-picker/day-picker.component';
 export type { DayPickerItem } from './day-picker/day-picker.component';
+export { BkViewToggleComponent } from './view-toggle/view-toggle.component';
+export type { BkViewToggleOption } from './view-toggle/view-toggle.component';

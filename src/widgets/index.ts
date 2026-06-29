@@ -11,3 +11,6 @@ export { BkStatCardComponent } from './stat-card';
 export type { StatCardColor } from './stat-card';
 export { GalleryViewerComponent } from './gallery-viewer';
 export type { GalleryImageItem } from './gallery-viewer';
+export { CalendarHeaderComponent, CalendarGridComponent } from './calendar';
+export type { CalendarEvent, CalendarViewMode } from './calendar';
+export { STATE_COLORS } from './calendar';

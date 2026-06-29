@@ -1,2 +1,2 @@
-export type { Appointment, AvailableSlots, CreateAppointmentRequest } from './model/appointment.model';
+export type { Appointment, AppointmentState, AvailableSlots, CreateAppointmentRequest, UpdateAppointmentRequest, ChangeStateRequest } from './model/appointment.model';
 export { AppointmentApiService } from './api/appointment-api.service';
